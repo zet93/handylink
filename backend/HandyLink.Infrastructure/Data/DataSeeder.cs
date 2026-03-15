@@ -12,9 +12,8 @@ namespace HandyLink.Infrastructure.Data;
 /// </summary>
 public static class DataSeeder
 {
-    // TODO: replace with real UUIDs from Supabase Auth dashboard
-    private static readonly Guid TestClientId = Guid.Parse("00000000-0000-0000-0000-000000000001");
-    private static readonly Guid TestWorkerId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+    private static readonly Guid TestClientId = Guid.Parse("81c9169c-df7b-4f9b-b4e4-a0d6c1026170");
+    private static readonly Guid TestWorkerId = Guid.Parse("0ca4a197-f38e-40e3-a1f3-466eb23cc1af");
 
     public static async Task SeedAsync(IServiceProvider services)
     {
