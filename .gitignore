@@ -423,3 +423,6 @@ CLAUDE.local.md
 
 # Frontend env secrets
 frontend/.env.local
+
+# Git worktrees
+.worktrees/
