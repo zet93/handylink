@@ -1,3 +1,5 @@
+using HandyLink.Core.Entities.Enums;
+
 namespace HandyLink.Core.Entities;
 
 public class Bid
@@ -7,7 +9,7 @@ public class Bid
     public Guid WorkerId { get; set; }
     public decimal PriceEstimate { get; set; }
     public string Message { get; set; } = string.Empty;
-    public string Status { get; set; } = "pending";
+    public BidStatus Status { get; set; } = BidStatus.Pending;
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 

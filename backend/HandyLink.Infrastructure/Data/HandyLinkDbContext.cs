@@ -1,4 +1,5 @@
 using HandyLink.Core.Entities;
+using HandyLink.Core.Entities.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace HandyLink.Infrastructure.Data;
@@ -65,6 +66,11 @@ public class HandyLinkDbContext(DbContextOptions<HandyLinkDbContext> options) : 
             e.Property(b => b.JobId).HasColumnName("job_id");
             e.Property(b => b.WorkerId).HasColumnName("worker_id");
             e.Property(b => b.PriceEstimate).HasColumnName("price_estimate");
+            e.Property(b => b.Status)
+                .HasColumnName("status")
+                .HasConversion(
+                    v => v.ToString().ToLower(),
+                    v => Enum.Parse<BidStatus>(v, ignoreCase: true));
             e.Property(b => b.CreatedAt).HasColumnName("created_at");
             e.Property(b => b.UpdatedAt).HasColumnName("updated_at");
             e.HasOne(b => b.Job).WithMany(j => j.Bids).HasForeignKey(b => b.JobId);
@@ -81,6 +87,9 @@ public class HandyLinkDbContext(DbContextOptions<HandyLinkDbContext> options) : 
             e.Property(r => r.WorkerId).HasColumnName("worker_id");
             e.Property(r => r.CreatedAt).HasColumnName("created_at");
             e.HasIndex(r => new { r.JobId, r.ReviewerId }).IsUnique();
+            e.HasOne(r => r.Reviewer).WithMany().HasForeignKey(r => r.ReviewerId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(r => r.Worker).WithMany().HasForeignKey(r => r.WorkerId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(r => r.Job).WithMany().HasForeignKey(r => r.JobId);
         });
 
         modelBuilder.Entity<Notification>(e =>

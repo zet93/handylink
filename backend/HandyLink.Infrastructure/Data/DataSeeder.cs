@@ -118,7 +118,7 @@ public static class DataSeeder
             WorkerId = TestWorkerId,
             PriceEstimate = 180,
             Message = "I can be there tomorrow morning. I'll bring my own tools.",
-            Status = "pending",
+            Status = BidStatus.Pending,
             CreatedAt = now,
             UpdatedAt = now
         });
