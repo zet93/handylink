@@ -16,6 +16,8 @@ public class HandyLinkDbContext(DbContextOptions<HandyLinkDbContext> options) : 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("public");
+        modelBuilder.HasPostgresEnum<JobCategory>("public", "job_category");
+        modelBuilder.HasPostgresEnum<JobStatus>("public", "job_status");
 
         modelBuilder.Entity<Profile>(e =>
         {

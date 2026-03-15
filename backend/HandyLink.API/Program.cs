@@ -1,5 +1,6 @@
 using System.Text;
 using HandyLink.API.Middleware;
+using HandyLink.Core.Entities.Enums;
 using HandyLink.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<HandyLinkDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        npgsql => npgsql
+            .MapEnum<JobCategory>("job_category", "public")
+            .MapEnum<JobStatus>("job_status", "public")));
 
 var app = builder.Build();
 
