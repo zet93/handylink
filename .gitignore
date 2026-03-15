@@ -420,3 +420,24 @@ FodyWeavers.xsd
 # Claude Code local overrides
 CLAUDE.local.md
 .claude/settings.local.json
+
+# Frontend env secrets
+frontend/.env.local
+
+# Mobile env secrets
+mobile/.env.local
+mobile/.env
+
+# Expo / React Native
+mobile/.expo/
+mobile/ios/
+mobile/android/
+mobile/dist/
+mobile/web-build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git worktrees
+.worktrees/
