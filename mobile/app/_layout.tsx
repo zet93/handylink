@@ -21,7 +21,7 @@ function AuthGuard() {
       const role = (user.user_metadata?.role as string) ?? 'client';
       router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
     }
-  }, [user, loading, segments]);
+  }, [user, loading, segments, router]);
 
   return <Slot />;
 }
