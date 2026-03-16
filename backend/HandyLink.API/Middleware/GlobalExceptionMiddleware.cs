@@ -1,3 +1,5 @@
+using HandyLink.Core.Exceptions;
+
 namespace HandyLink.API.Middleware;
 
 public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
@@ -10,10 +12,18 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Unhandled exception");
-            context.Response.StatusCode = 500;
+            var (status, message) = ex switch
+            {
+                NotFoundException  => (404, ex.Message),
+                ForbiddenException => (403, ex.Message),
+                ConflictException  => (409, ex.Message),
+                Core.Exceptions.ValidationException => (400, ex.Message),
+                _                  => (500, "An unexpected error occurred")
+            };
+            if (status == 500) logger.LogError(ex, "Unhandled exception");
+            context.Response.StatusCode = status;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsJsonAsync(new { error = ex.Message, statusCode = 500 });
+            await context.Response.WriteAsJsonAsync(new { error = message, statusCode = status });
         }
     }
 }
