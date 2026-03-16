@@ -1,7 +1,10 @@
 using System.Text;
 using HandyLink.API.Middleware;
 using HandyLink.Core.Entities.Enums;
+using HandyLink.Core.Interfaces;
+using HandyLink.Core.Services;
 using HandyLink.Infrastructure.Data;
+using HandyLink.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -36,6 +39,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<JobService>();
 
 builder.Services.AddDbContext<HandyLinkDbContext>(options =>
     options.UseNpgsql(
