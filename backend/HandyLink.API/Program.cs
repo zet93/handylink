@@ -51,6 +51,7 @@ builder.Services.AddScoped<BidService>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<WorkerService>();
 
 builder.Services.AddDbContext<HandyLinkDbContext>(options =>
     options.UseNpgsql(
