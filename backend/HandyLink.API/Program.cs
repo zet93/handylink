@@ -63,7 +63,15 @@ app.MapGet("/health", () => Results.Ok());
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
-    await DataSeeder.SeedAsync(scope.ServiceProvider);
+    try
+    {
+        await DataSeeder.SeedAsync(scope.ServiceProvider);
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning(ex, "DataSeeder failed — database may be unreachable. Continuing startup.");
+    }
 }
 
 app.Run();
