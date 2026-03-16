@@ -43,6 +43,11 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<JobService>();
 
+builder.Services.AddScoped<IBidRepository, BidRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<BidService>();
+
 builder.Services.AddDbContext<HandyLinkDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
