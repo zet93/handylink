@@ -53,6 +53,9 @@ builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
 builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<WorkerService>();
 
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<UserService>();
+
 builder.Services.AddDbContext<HandyLinkDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
