@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import NavBar from './components/NavBar';
@@ -16,6 +18,7 @@ import EditProfilePage from './pages/EditProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 
 const queryClient = new QueryClient();
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function AuthLayout() {
   return (
@@ -32,6 +35,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <Elements stripe={stripePromise}>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -49,6 +53,7 @@ export default function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        </Elements>
       </AuthProvider>
     </QueryClientProvider>
   );

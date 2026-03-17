@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
 
 function StarRating({ value }) {
@@ -14,6 +16,20 @@ function StarRating({ value }) {
 
 export default function WorkerProfilePage() {
   const { id } = useParams();
+  const { userProfile } = useAuth();
+  const [connectLoading, setConnectLoading] = useState(false);
+  const isOwnProfile = userProfile?.id === id;
+
+  async function handleConnectStripe() {
+    setConnectLoading(true);
+    try {
+      const { data } = await axiosClient.post('/api/payments/connect-onboard');
+      window.location.href = data.onboardingUrl;
+    } catch (err) {
+      alert(err.response?.data?.error ?? 'Failed to start Stripe onboarding.');
+      setConnectLoading(false);
+    }
+  }
 
   const { data: worker, isLoading } = useQuery({
     queryKey: ['worker', id],
@@ -67,6 +83,24 @@ export default function WorkerProfilePage() {
         <h2 className="font-semibold mb-3">Reviews</h2>
         <p className="text-sm text-gray-500">No reviews yet.</p>
       </div>
+
+      {isOwnProfile && (
+        <div className="bg-white border rounded-xl p-6 mt-6">
+          <h2 className="font-semibold mb-1">Stripe Payouts</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            {worker.stripeAccountId
+              ? 'Your Stripe account is connected. You can re-open onboarding to update your details.'
+              : 'Connect your Stripe account to receive payments from clients.'}
+          </p>
+          <button
+            onClick={handleConnectStripe}
+            disabled={connectLoading}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {connectLoading ? 'Redirecting…' : worker.stripeAccountId ? 'Manage Stripe Account' : 'Connect to Stripe'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

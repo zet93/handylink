@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useStripe } from '@stripe/stripe-react-native';
 import api from '../../services/api';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
@@ -30,6 +31,30 @@ const BID_STATUS_COLORS: Record<string, { bg: string; text: string }> = {
 export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const queryClient = useQueryClient();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+  async function handlePay() {
+    try {
+      const { data } = await api.post('/api/payments/create-intent', { jobId: id });
+      const { error: initError } = await initPaymentSheet({
+        paymentIntentClientSecret: data.clientSecret,
+        merchantDisplayName: 'HandyLink',
+      });
+      if (initError) {
+        Alert.alert('Error', initError.message);
+        return;
+      }
+      const { error } = await presentPaymentSheet();
+      if (error) {
+        Alert.alert('Payment failed', error.message);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['job', id] });
+        Alert.alert('Success', 'Payment complete! The job is now finished.');
+      }
+    } catch (err: any) {
+      Alert.alert('Error', err.response?.data?.error ?? 'Something went wrong.');
+    }
+  }
 
   const { data: job, isLoading } = useQuery({
     queryKey: ['job', id],
@@ -102,6 +127,12 @@ export default function JobDetailScreen() {
           </Text>
         </View>
       </View>
+
+      {job.status === 'in_progress' && (
+        <TouchableOpacity style={styles.payBtn} onPress={handlePay}>
+          <Text style={styles.payBtnText}>Pay Now</Text>
+        </TouchableOpacity>
+      )}
 
       <Text style={styles.sectionTitle}>Bids ({bids.length})</Text>
 
@@ -206,4 +237,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   rejectText: { color: '#DC2626', fontWeight: '600', fontSize: 14 },
+  payBtn: {
+    backgroundColor: '#16A34A',
+    borderRadius: 10,
+    paddingVertical: 13,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  payBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
 });

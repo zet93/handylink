@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { Slot, useRouter } from 'expo-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { StripeProvider } from '@stripe/stripe-react-native';
 import { supabase } from '../services/supabase';
 import { registerForPushNotifications, setUpNotificationHandlers } from '../services/notifications';
 
@@ -46,8 +47,10 @@ function AppRoot() {
 
 export default function RootLayout() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppRoot />
-    </QueryClientProvider>
+    <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_KEY ?? ''}>
+      <QueryClientProvider client={queryClient}>
+        <AppRoot />
+      </QueryClientProvider>
+    </StripeProvider>
   );
 }

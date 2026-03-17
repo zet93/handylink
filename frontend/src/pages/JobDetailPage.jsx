@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
+import PaymentForm from '../components/PaymentForm';
 
 const bidSchema = z.object({
   priceEstimate: z.coerce.number().positive('Must be a positive number'),
@@ -45,12 +46,7 @@ function ClientView({ job, bids, onStatusChange }) {
           </button>
         )}
         {job.status === 'in_progress' && (
-          <button
-            onClick={() => onStatusChange('completed')}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700"
-          >
-            Mark as Completed
-          </button>
+          <PaymentForm jobId={job.id} />
         )}
       </div>
 

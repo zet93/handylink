@@ -67,7 +67,7 @@ Phase 3:    Clean Architecture — Controllers → Services → Repositories →
 Phase 3.5+: VSA + CQRS via MediatR — Controllers → MediatR → Feature Handlers → EF Core
 After Phase 3.5, NEVER create a Service class. Use Handlers only.
 
-## Current phase: Phase 6 — Mobile App
+## Current phase: Phase 7 — Stripe Payments
 
 ## Feature Folder Structure (Phase 3.5+)
 Path: backend/HandyLink.API/Features/{Domain}/{Action}/

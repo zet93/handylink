@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
+  Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -39,6 +40,20 @@ export default function WorkerProfileScreen() {
     },
     onError: () => Alert.alert('Error', 'Failed to save profile.'),
   });
+
+  const [connectLoading, setConnectLoading] = useState(false);
+
+  async function handleConnectStripe() {
+    setConnectLoading(true);
+    try {
+      const { data } = await api.post('/api/payments/connect-onboard');
+      await Linking.openURL(data.onboardingUrl);
+    } catch (err: any) {
+      Alert.alert('Error', err.response?.data?.error ?? 'Failed to start Stripe onboarding.');
+    } finally {
+      setConnectLoading(false);
+    }
+  }
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -127,6 +142,16 @@ export default function WorkerProfileScreen() {
           )}
         </View>
 
+        <TouchableOpacity
+          style={[styles.stripeBtn, connectLoading && styles.buttonDisabled]}
+          onPress={handleConnectStripe}
+          disabled={connectLoading}
+        >
+          {connectLoading
+            ? <ActivityIndicator color="#fff" />
+            : <Text style={styles.stripeBtnText}>Connect to Stripe</Text>}
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
@@ -181,6 +206,14 @@ const styles = StyleSheet.create({
   buttonText: { color: '#fff', fontWeight: '600', fontSize: 15 },
   cancelBtn: { flex: 1, borderWidth: 1, borderColor: '#ddd', borderRadius: 10, paddingVertical: 11, alignItems: 'center' },
   cancelText: { color: '#555', fontSize: 15 },
+  stripeBtn: {
+    backgroundColor: '#4F46E5',
+    borderRadius: 10,
+    paddingVertical: 13,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  stripeBtnText: { color: '#fff', fontWeight: '600', fontSize: 15 },
   signOutBtn: {
     borderRadius: 10,
     paddingVertical: 13,
