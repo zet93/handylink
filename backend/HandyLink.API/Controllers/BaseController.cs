@@ -1,5 +1,4 @@
-using System.Security.Claims;
-using HandyLink.Core.Exceptions;
+using HandyLink.API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HandyLink.API.Controllers;
@@ -7,11 +6,5 @@ namespace HandyLink.API.Controllers;
 [ApiController]
 public abstract class BaseController : ControllerBase
 {
-    protected Guid GetUserId()
-    {
-        var sub = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? User.FindFirst("sub")?.Value
-            ?? throw new ForbiddenException("User ID not found in token");
-        return Guid.Parse(sub);
-    }
+    protected Guid GetUserId() => User.GetSupabaseUserId();
 }

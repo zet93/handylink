@@ -9,6 +9,10 @@ namespace HandyLink.API.Controllers;
 [Authorize]
 public class BidsController(BidService bidService) : BaseController
 {
+    [HttpGet("jobs/{jobId:guid}/bids")]
+    public async Task<IActionResult> GetBidsForJob(Guid jobId, CancellationToken ct)
+        => Ok(await bidService.GetBidsForJobAsync(jobId, ct));
+
     [HttpPost("jobs/{jobId:guid}/bids")]
     public async Task<IActionResult> SubmitBid(Guid jobId, [FromBody] SubmitBidDto dto, CancellationToken ct)
     {
