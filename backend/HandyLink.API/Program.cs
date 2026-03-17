@@ -14,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 builder.Services.AddCors(options =>
 {
@@ -26,6 +28,9 @@ builder.Services.AddCors(options =>
 var jwtSecret = builder.Configuration["Supabase:JwtSecret"]
     ?? throw new InvalidOperationException("Supabase:JwtSecret is not configured.");
 
+var supabaseUrl = builder.Configuration["Supabase:Url"]
+    ?? throw new InvalidOperationException("Supabase:Url is not configured.");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -33,8 +38,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = supabaseUrl + "/auth/v1",
+            ValidateAudience = true,
+            ValidAudience = "authenticated",
+            ClockSkew = TimeSpan.Zero,
         };
     });
 
