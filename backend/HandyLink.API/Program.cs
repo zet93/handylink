@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using HandyLink.API.Behaviours;
 using HandyLink.API.Middleware;
@@ -15,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
@@ -57,18 +59,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<IJobRepository, JobRepository>();
-builder.Services.AddScoped<JobService>();
-
-builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped<BidService>();
-
-builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
-builder.Services.AddScoped<ReviewService>();
-builder.Services.AddScoped<WorkerService>();
 
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<UserService>();
@@ -111,3 +103,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+public partial class Program { }
