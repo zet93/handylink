@@ -1,4 +1,6 @@
 using System.Text;
+using FluentValidation;
+using HandyLink.API.Behaviours;
 using HandyLink.API.Middleware;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Interfaces;
@@ -17,7 +19,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+});
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddCors(options =>
 {

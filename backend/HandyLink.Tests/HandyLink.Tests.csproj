@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HandyLink.API\HandyLink.API.csproj" />
     <ProjectReference Include="..\HandyLink.Core\HandyLink.Core.csproj" />
     <ProjectReference Include="..\HandyLink.Infrastructure\HandyLink.Infrastructure.csproj" />
   </ItemGroup>
