@@ -1,3 +1,4 @@
+# Build context: backend/ directory (e.g. docker build -f HandyLink.API/Dockerfile .)
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 8080
