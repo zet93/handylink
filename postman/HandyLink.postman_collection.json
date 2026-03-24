@@ -1,0 +1,229 @@
+{
+  "info": {
+    "name": "HandyLink API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5272" },
+    { "key": "jwt_token", "value": "" },
+    { "key": "job_id", "value": "" },
+    { "key": "bid_id", "value": "" },
+    { "key": "worker_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Dev Token",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/dev-token"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('jwt_token', pm.response.json().token);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "List Jobs",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/jobs",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        },
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/jobs",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Fix leaking pipe\",\n  \"description\": \"Kitchen sink leaks under cabinet\",\n  \"category\": \"Plumbing\",\n  \"city\": \"Bucharest\",\n  \"budgetMin\": 50,\n  \"budgetMax\": 200\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) { pm.collectionVariables.set('job_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Job by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/jobs/{{job_id}}",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        },
+        {
+          "name": "Update Job Status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/jobs/{{job_id}}/status",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"status\": \"InProgress\" }",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bids",
+      "item": [
+        {
+          "name": "Submit Bid",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/jobs/{{job_id}}/bids",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"priceEstimate\": 150,\n  \"message\": \"I can fix this within 2 hours.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) { pm.collectionVariables.set('bid_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Accept Bid",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/bids/{{bid_id}}/accept",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        },
+        {
+          "name": "Reject Bid",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/bids/{{bid_id}}/reject",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/reviews",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": \"{{job_id}}\",\n  \"workerId\": \"{{worker_id}}\",\n  \"rating\": 5,\n  \"comment\": \"Excellent work!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment Intent",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/payments/create-intent",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"jobId\": \"{{job_id}}\" }",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Connect Onboard",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/payments/connect-onboard",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workers",
+      "item": [
+        {
+          "name": "List Workers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/workers",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        },
+        {
+          "name": "Get Worker by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/workers/{{worker_id}}",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/users/me",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/users/me",
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{jwt_token}}" }] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"displayName\": \"John Doe\",\n  \"bio\": \"Experienced plumber\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
