@@ -16,6 +16,7 @@ import MyJobsPage from './pages/MyJobsPage';
 import WorkerProfilePage from './pages/WorkerProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
+import PasswordGate from './components/PasswordGate';
 
 const queryClient = new QueryClient();
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -33,6 +34,7 @@ function AuthLayout() {
 
 export default function App() {
   return (
+    <PasswordGate>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Elements stripe={stripePromise}>
@@ -56,5 +58,6 @@ export default function App() {
         </Elements>
       </AuthProvider>
     </QueryClientProvider>
+    </PasswordGate>
   );
 }
