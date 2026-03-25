@@ -7,5 +7,6 @@ public record JobFilter(
     string? City = null,
     string? Country = null,
     JobStatus? Status = null,
+    Guid? ClientId = null,
     int Page = 1,
     int PageSize = 20);

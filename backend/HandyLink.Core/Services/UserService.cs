@@ -24,6 +24,7 @@ public class UserService(IProfileRepository profiles)
         if (dto.City is not null) profile.City = dto.City;
         if (dto.Country is not null) profile.Country = dto.Country;
         if (dto.Bio is not null) profile.Bio = dto.Bio;
+        if (dto.ExpoPushToken is not null) profile.ExpoPushToken = dto.ExpoPushToken;
         profile.UpdatedAt = DateTimeOffset.UtcNow;
         await profiles.SaveChangesAsync(ct);
         return ToDto(profile);

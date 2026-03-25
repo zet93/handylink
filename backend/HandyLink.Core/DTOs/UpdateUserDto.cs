@@ -6,4 +6,5 @@ public record UpdateUserDto(
     string? Phone,
     string? City,
     string? Country,
-    string? Bio);
+    string? Bio,
+    string? ExpoPushToken);

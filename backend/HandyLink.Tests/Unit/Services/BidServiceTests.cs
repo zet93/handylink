@@ -2,10 +2,13 @@ using HandyLink.Core.DTOs;
 using HandyLink.Core.Entities;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Exceptions;
+using HandyLink.Core.Interfaces;
 using HandyLink.Core.Services;
 using HandyLink.Infrastructure.Data;
 using HandyLink.Infrastructure.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace HandyLink.Tests.Unit.Services;
 
@@ -17,7 +20,9 @@ public class BidServiceTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
         var ctx = new HandyLinkDbContext(opts);
         var notifSvc = new NotificationService(new NotificationRepository(ctx));
-        var svc = new BidService(new BidRepository(ctx), new JobRepository(ctx), notifSvc);
+        var mediator = new Mock<IMediator>().Object;
+        var profiles = new Mock<IProfileRepository>().Object;
+        var svc = new BidService(new BidRepository(ctx), new JobRepository(ctx), notifSvc, mediator, profiles);
         return (ctx, svc);
     }
 

@@ -1,4 +1,7 @@
 using System.Text;
+using System.Text.Json.Serialization;
+using FluentValidation;
+using HandyLink.API.Behaviours;
 using HandyLink.API.Middleware;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Interfaces;
@@ -11,9 +14,21 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.WebHost.UseUrls($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "8080"}");
+
+Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+});
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddCors(options =>
 {
@@ -26,6 +41,9 @@ builder.Services.AddCors(options =>
 var jwtSecret = builder.Configuration["Supabase:JwtSecret"]
     ?? throw new InvalidOperationException("Supabase:JwtSecret is not configured.");
 
+var supabaseUrl = builder.Configuration["Supabase:Url"]
+    ?? throw new InvalidOperationException("Supabase:Url is not configured.");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -33,25 +51,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidIssuer = supabaseUrl + "/auth/v1",
+            ValidateAudience = true,
+            ValidAudience = "authenticated",
+            ClockSkew = TimeSpan.Zero,
         };
     });
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<IJobRepository, JobRepository>();
-builder.Services.AddScoped<JobService>();
-
-builder.Services.AddScoped<IBidRepository, BidRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped<BidService>();
-
-builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
-builder.Services.AddScoped<ReviewService>();
-builder.Services.AddScoped<WorkerService>();
 
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<UserService>();
@@ -94,3 +105,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+public partial class Program { }

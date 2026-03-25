@@ -1,12 +1,14 @@
+using HandyLink.Core.Commands;
 using HandyLink.Core.DTOs;
 using HandyLink.Core.Entities;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Exceptions;
 using HandyLink.Core.Interfaces;
+using MediatR;
 
 namespace HandyLink.Core.Services;
 
-public class BidService(IBidRepository bids, IJobRepository jobs, NotificationService notifications)
+public class BidService(IBidRepository bids, IJobRepository jobs, NotificationService notifications, IMediator mediator, IProfileRepository profiles)
 {
     public async Task<BidResponseDto> SubmitBidAsync(Guid workerId, Guid jobId, SubmitBidDto dto, CancellationToken ct = default)
     {
@@ -40,6 +42,16 @@ public class BidService(IBidRepository bids, IJobRepository jobs, NotificationSe
 
         await notifications.CreateAsync(job.ClientId, "New bid received",
             $"A worker submitted a bid of {dto.PriceEstimate:C} on your job", "bid_received", bid.Id, ct);
+
+        var workerProfile = await profiles.GetByIdAsync(workerId, ct);
+        var workerName = workerProfile?.FullName ?? "A worker";
+        await mediator.Send(new SendPushNotificationCommand(
+            job.ClientId,
+            "New bid received",
+            $"{workerName} placed a bid on your job",
+            "bid_received",
+            jobId), ct);
+
         return ToDto(bid);
     }
 
@@ -67,6 +79,14 @@ public class BidService(IBidRepository bids, IJobRepository jobs, NotificationSe
 
         await notifications.CreateAsync(bid.WorkerId, "Your bid was accepted",
             $"Congratulations! Your bid on '{job.Title}' was accepted.", "bid_accepted", bidId, ct);
+
+        await mediator.Send(new SendPushNotificationCommand(
+            bid.WorkerId,
+            "Bid accepted!",
+            "Your bid has been accepted",
+            "bid_accepted",
+            job.Id), ct);
+
         return ToDto(bid);
     }
 
@@ -84,7 +104,21 @@ public class BidService(IBidRepository bids, IJobRepository jobs, NotificationSe
 
         await notifications.CreateAsync(bid.WorkerId, "Your bid was not selected",
             $"The client has rejected your bid on '{job.Title}'.", "bid_rejected", bidId, ct);
+
+        await mediator.Send(new SendPushNotificationCommand(
+            bid.WorkerId,
+            "Bid update",
+            "Your bid was not selected for this job",
+            "bid_rejected",
+            job.Id), ct);
+
         return ToDto(bid);
+    }
+
+    public async Task<IReadOnlyList<BidResponseDto>> GetBidsForJobAsync(Guid jobId, CancellationToken ct = default)
+    {
+        var result = await bids.GetByJobIdAsync(jobId, ct);
+        return result.Select(ToDto).ToList();
     }
 
     private static BidResponseDto ToDto(Bid b) => new(

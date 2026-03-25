@@ -21,6 +21,7 @@ public class JobRepository(HandyLinkDbContext context) : IJobRepository
         if (filter.Status.HasValue)   query = query.Where(j => j.Status == filter.Status);
         if (!string.IsNullOrEmpty(filter.City))    query = query.Where(j => j.City == filter.City);
         if (!string.IsNullOrEmpty(filter.Country)) query = query.Where(j => j.Country == filter.Country);
+        if (filter.ClientId.HasValue) query = query.Where(j => j.ClientId == filter.ClientId);
 
         var total = await query.CountAsync(ct);
         var items = await query
