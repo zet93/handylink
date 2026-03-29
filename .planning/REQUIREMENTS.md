@@ -116,16 +116,45 @@ These are the requirements for the beta release — a functional demo for friend
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUG-01 – BUG-04 | Phase 8 (Bug Fixes) | Pending |
-| UX-01 – UX-05 | Phase 9 (Browse-First UX) | Pending |
-| SEC-01 – SEC-05 | Phase 10 (Security) | Pending |
-| DSG-01 – DSG-05 | Phase 11 (Design) | Pending |
-| AUTH-01 – AUTH-03 | Phase 12 (Social Login) | Pending |
-| MOB-01 – MOB-04 | Phase 13 (Mobile Testing) | Pending |
-| MAP-01 – MAP-03 | Phase 14 (Maps) | Pending |
-| NOTF-01 – NOTF-03 | Phase 15 (Notifications) | Pending |
-| ANLX-01 – ANLX-03 | Phase 16 (Analytics) | Pending |
-| OPS-01 – OPS-04 | Phase 17 (Operations) | Pending |
+| BUG-01 | Phase 8 (Critical Bug Fixes) | Pending |
+| BUG-02 | Phase 8 (Critical Bug Fixes) | Pending |
+| BUG-03 | Phase 8 (Critical Bug Fixes) | Pending |
+| BUG-04 | Phase 8 (Critical Bug Fixes) | Pending |
+| SEC-01 | Phase 9 (Security Hardening) | Pending |
+| SEC-02 | Phase 9 (Security Hardening) | Pending |
+| SEC-03 | Phase 9 (Security Hardening) | Pending |
+| SEC-04 | Phase 9 (Security Hardening) | Pending |
+| SEC-05 | Phase 9 (Security Hardening) | Pending |
+| UX-01 | Phase 10 (Browse-First UX) | Pending |
+| UX-02 | Phase 10 (Browse-First UX) | Pending |
+| UX-03 | Phase 10 (Browse-First UX) | Pending |
+| UX-04 | Phase 10 (Browse-First UX) | Pending |
+| UX-05 | Phase 10 (Browse-First UX) | Pending |
+| DSG-01 | Phase 11 (App Design) | Pending |
+| DSG-02 | Phase 11 (App Design) | Pending |
+| DSG-03 | Phase 11 (App Design) | Pending |
+| DSG-04 | Phase 11 (App Design) | Pending |
+| DSG-05 | Phase 11 (App Design) | Pending |
+| AUTH-01 | Phase 12 (Social Login) | Pending |
+| AUTH-02 | Phase 12 (Social Login) | Pending |
+| AUTH-03 | Phase 12 (Social Login) | Pending |
+| NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| MOB-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| MOB-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| MOB-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| MOB-04 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| MAP-01 | Phase 14 (Maps & Location) | Pending |
+| MAP-02 | Phase 14 (Maps & Location) | Pending |
+| MAP-03 | Phase 14 (Maps & Location) | Pending |
+| ANLX-01 | Phase 15 (Analytics + Observability) | Pending |
+| ANLX-02 | Phase 15 (Analytics + Observability) | Pending |
+| ANLX-03 | Phase 15 (Analytics + Observability) | Pending |
+| OPS-01 | Phase 15 (Analytics + Observability) | Pending |
+| OPS-02 | Phase 15 (Analytics + Observability) | Pending |
+| OPS-03 | Phase 15 (Analytics + Observability) | Pending |
+| OPS-04 | Phase 15 (Analytics + Observability) | Pending |
 
 **Coverage:**
 - v1 requirements: 37 total
@@ -134,4 +163,4 @@ These are the requirements for the beta release — a functional demo for friend
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-29 after initialization*
+*Last updated: 2026-03-29 — traceability updated for Beta Polish roadmap (Phases 8-15)*
