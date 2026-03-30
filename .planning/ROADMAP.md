@@ -47,7 +47,10 @@
   2. Client can reject a specific bid from the job detail page
   3. Client can advance a job from Accepted to In Progress and through to Completed
   4. Worker profile and bid endpoints do not return 500 errors at runtime
-**Plans**: TBD
+**Plans:** 2 plans
+Plans:
+- [ ] 08-01-PLAN.md — GetBidsForJob query + RejectBid command (BUG-01, BUG-04)
+- [ ] 08-02-PLAN.md — UpdateJobStatus command + Worker DI fix (BUG-02, BUG-03)
 
 ### Phase 9: Security Hardening
 **Goal**: The API is safe to expose to anonymous users — PII is protected, CORS is locked, webhooks are validated, and brute-force attacks are rate-limited
@@ -144,7 +147,7 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7. Core Platform | v1.0 | - | Complete | 2026-03-29 |
-| 8. Critical Bug Fixes | Beta Polish | 0/TBD | Not started | - |
+| 8. Critical Bug Fixes | Beta Polish | 0/2 | Planning complete | - |
 | 9. Security Hardening | Beta Polish | 0/TBD | Not started | - |
 | 10. Browse-First UX | Beta Polish | 0/TBD | Not started | - |
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
