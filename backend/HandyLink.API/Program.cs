@@ -67,6 +67,9 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
+builder.Services.AddScoped<WorkerService>();
+
 builder.Services.AddDbContext<HandyLinkDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
