@@ -34,9 +34,9 @@ These are the requirements for the beta release — a functional demo for friend
 
 - [x] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
 - [x] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
-- [ ] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
-- [ ] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
-- [ ] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
+- [x] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
+- [x] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
+- [x] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
 
 ### Mobile
 
@@ -122,9 +122,9 @@ These are the requirements for the beta release — a functional demo for friend
 | BUG-04 | Phase 8 (Critical Bug Fixes) | Complete |
 | SEC-01 | Phase 9 (Security Hardening) | Complete |
 | SEC-02 | Phase 9 (Security Hardening) | Complete |
-| SEC-03 | Phase 9 (Security Hardening) | Pending |
-| SEC-04 | Phase 9 (Security Hardening) | Pending |
-| SEC-05 | Phase 9 (Security Hardening) | Pending |
+| SEC-03 | Phase 9 (Security Hardening) | Complete |
+| SEC-04 | Phase 9 (Security Hardening) | Complete |
+| SEC-05 | Phase 9 (Security Hardening) | Complete |
 | UX-01 | Phase 10 (Browse-First UX) | Pending |
 | UX-02 | Phase 10 (Browse-First UX) | Pending |
 | UX-03 | Phase 10 (Browse-First UX) | Pending |
