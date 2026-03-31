@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 08-01-PLAN.md
-last_updated: "2026-03-31T03:10:39.694Z"
+status: verifying
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-31T03:11:48.982Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 8
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 40
 ---
 
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 Phase: 08 (critical-bug-fixes) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-03-31
 
 Progress: [████████░░░░░░░░░░░░] 40% (phases 1-7 complete)
@@ -53,6 +53,7 @@ Progress: [████████░░░░░░░░░░░░] 40% (ph
 
 *Updated after each plan completion*
 | Phase 08 P01 | 8 | 2 tasks | 11 files |
+| Phase 08-critical-bug-fixes P02 | 160s | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,8 @@ Recent decisions affecting current work:
 - [Beta Polish]: Notifications audit before maps — notification infrastructure exists, gaps are known; maps needs schema migration
 - [Beta Polish]: Analytics last — GDPR consent gate must wrap all analytics initialization
 - [Phase 08]: GetBidsForJobHandler and RejectBidHandler take no IMediator dependency — pure query and simple command with no push notifications needed
+- [Phase 08]: UpdateJobStatusDto changed from enum to string Status to enable snake_case parsing in handler
+- [Phase 08]: Custom ValidationException (not FluentValidation) used for transition errors, consistent with existing codebase pattern
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T03:10:39.691Z
-Stopped at: Completed 08-01-PLAN.md
+Last session: 2026-03-31T03:11:48.979Z
+Stopped at: Completed 08-02-PLAN.md
 Resume file: None

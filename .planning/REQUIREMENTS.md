@@ -10,8 +10,8 @@ These are the requirements for the beta release — a functional demo for friend
 ### Bug Fixes (Core flow is broken without these)
 
 - [x] **BUG-01**: Client can view all bids submitted on their job (`GET /api/jobs/{id}/bids` endpoint missing)
-- [ ] **BUG-02**: Client can advance job status from Accepted to In Progress (`PATCH /api/jobs/{id}/status` endpoint missing)
-- [ ] **BUG-03**: Worker profile endpoints do not crash at runtime (DI registrations for `WorkerService` and `WorkerRepository` missing)
+- [x] **BUG-02**: Client can advance job status from Accepted to In Progress (`PATCH /api/jobs/{id}/status` endpoint missing)
+- [x] **BUG-03**: Worker profile endpoints do not crash at runtime (DI registrations for `WorkerService` and `WorkerRepository` missing)
 - [x] **BUG-04**: Client can reject individual bids from the UI (`PATCH /api/bids/{id}/reject` endpoint missing)
 
 ### Browse-First UX
@@ -117,8 +117,8 @@ These are the requirements for the beta release — a functional demo for friend
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | BUG-01 | Phase 8 (Critical Bug Fixes) | Complete |
-| BUG-02 | Phase 8 (Critical Bug Fixes) | Pending |
-| BUG-03 | Phase 8 (Critical Bug Fixes) | Pending |
+| BUG-02 | Phase 8 (Critical Bug Fixes) | Complete |
+| BUG-03 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-04 | Phase 8 (Critical Bug Fixes) | Complete |
 | SEC-01 | Phase 9 (Security Hardening) | Pending |
 | SEC-02 | Phase 9 (Security Hardening) | Pending |
