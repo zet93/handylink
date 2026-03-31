@@ -32,4 +32,16 @@ public static class TestDbSeeder
         await db.SaveChangesAsync();
         return job;
     }
+
+    public static async Task<Bid> SeedBidAsync(IServiceProvider sp, Guid workerId, Guid jobId)
+    {
+        using var scope = sp.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<HandyLinkDbContext>();
+        var bid = new Bid { Id = Guid.NewGuid(), WorkerId = workerId, JobId = jobId,
+            PriceEstimate = 200, Message = "Test bid", Status = BidStatus.Pending,
+            CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow };
+        db.Bids.Add(bid);
+        await db.SaveChangesAsync();
+        return bid;
+    }
 }
