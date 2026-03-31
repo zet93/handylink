@@ -32,8 +32,8 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Security
 
-- [ ] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
-- [ ] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
+- [x] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
+- [x] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
 - [ ] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
 - [ ] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
 - [ ] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
@@ -120,8 +120,8 @@ These are the requirements for the beta release — a functional demo for friend
 | BUG-02 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-03 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-04 | Phase 8 (Critical Bug Fixes) | Complete |
-| SEC-01 | Phase 9 (Security Hardening) | Pending |
-| SEC-02 | Phase 9 (Security Hardening) | Pending |
+| SEC-01 | Phase 9 (Security Hardening) | Complete |
+| SEC-02 | Phase 9 (Security Hardening) | Complete |
 | SEC-03 | Phase 9 (Security Hardening) | Pending |
 | SEC-04 | Phase 9 (Security Hardening) | Pending |
 | SEC-05 | Phase 9 (Security Hardening) | Pending |
