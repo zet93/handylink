@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-03-31T03:15:54.775Z"
+stopped_at: Completed 09-02-PLAN.md
+last_updated: "2026-03-31T19:26:16.616Z"
 last_activity: 2026-03-31
 progress:
   total_phases: 8
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 4
+  completed_plans: 3
   percent: 40
 ---
 
@@ -54,6 +54,7 @@ Progress: [████████░░░░░░░░░░░░] 40% (ph
 *Updated after each plan completion*
 | Phase 08 P01 | 8 | 2 tasks | 11 files |
 | Phase 08-critical-bug-fixes P02 | 160s | 2 tasks | 9 files |
+| Phase 09 P02 | 18 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -69,6 +70,9 @@ Recent decisions affecting current work:
 - [Phase 08]: GetBidsForJobHandler and RejectBidHandler take no IMediator dependency — pure query and simple command with no push notifications needed
 - [Phase 08]: UpdateJobStatusDto changed from enum to string Status to enable snake_case parsing in handler
 - [Phase 08]: Custom ValidationException (not FluentValidation) used for transition errors, consistent with existing codebase pattern
+- [Phase 09]: SecurityTestFactory subclasses CustomWebAppFactory with PermitLimit=3 to isolate rate-limit test without polluting shared factory state
+- [Phase 09]: CORS falls back to AllowAnyOrigin when Cors:AllowedOrigins is empty to preserve zero-config dev setups
+- [Phase 09]: Webhook endpoint excluded from rate limiting to avoid throttling Stripe IP pool
 
 ### Pending Todos
 
@@ -83,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T03:11:48.979Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-03-31T19:26:16.613Z
+Stopped at: Completed 09-02-PLAN.md
 Resume file: None
