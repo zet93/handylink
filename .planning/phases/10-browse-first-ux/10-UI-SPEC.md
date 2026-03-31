@@ -1,7 +1,8 @@
 ---
 phase: 10
 slug: browse-first-ux
-status: draft
+status: approved
+reviewed_at: 2026-03-31
 shadcn_initialized: false
 preset: none
 created: 2026-03-31
@@ -56,13 +57,14 @@ Source: Detected from existing `JobCard.jsx`, `NavBar.jsx`, `LandingPage.jsx` ut
 |------|------|--------|-------------|
 | Body | 14px (`text-sm`) | 400 (regular) | 1.5 |
 | Label | 12px (`text-xs`) | 400 (regular) | 1.4 |
-| Heading | 20px (`text-xl`) / `text-2xl` (24px) | 600 (semibold) | 1.2 |
-| Display | 28px (`text-4xl` = 36px on hero) | 700 (bold) | 1.1 |
+| Heading | 24px (`text-2xl`) | 600 (semibold) | 1.2 |
+| Display | 36px (`text-4xl`) | 600 (semibold) | 1.1 |
 
 Notes:
 - Body `text-sm text-gray-500` is the established pattern for secondary content (job description in `JobCard`).
 - `font-semibold text-gray-900` is the established heading pattern within cards.
 - No custom font is introduced in this phase. All sizes reference existing Tailwind scale.
+- The previous 20px (`text-xl`) card heading role is consolidated into the 24px Heading role.
 
 Source: Detected from `JobCard.jsx` and `LandingPage.jsx`.
 
@@ -80,6 +82,8 @@ Source: Detected from `JobCard.jsx` and `LandingPage.jsx`.
 Accent reserved for: primary CTA buttons ("Log in to continue" / "Post a Job" / "Find Work"), logo wordmark, link hover color (`hover:text-blue-600`), category hover border/bg (`hover:border-blue-400 hover:bg-blue-50`), category badge (`bg-blue-100 text-blue-700`), step number circles (client).
 
 Note: `green-600` is used for worker-flow step indicators in the existing landing page — preserve this; it is not a new token.
+
+Primary visual anchor: the hero headline and "Post a Job" CTA. The 6-job grid is a secondary focal region.
 
 Source: Detected from `LandingPage.jsx`, `JobCard.jsx`, `NavBar.jsx`. Aligns with REQUIREMENTS.md DSG-01 ("neutral palette, grays, whites, one accent").
 
@@ -110,7 +114,7 @@ Behavior:
 - Fixed overlay (`fixed inset-0 bg-black/50 z-50`) renders behind a centered card (`bg-white rounded-xl p-6 shadow-xl max-w-sm w-full mx-4`).
 - Current URL is preserved — the page content remains visible beneath the overlay.
 - Return URL is passed to login/register routes: `/login?return={currentPath}` and `/register?return={currentPath}`.
-- Cancel button (secondary, text style) dismisses the modal without navigation.
+- Dismiss button (secondary, text style) dismisses the modal without navigation.
 - Focus trap inside modal while open.
 - Closes on Escape key.
 
@@ -121,7 +125,7 @@ Trigger: Same gated actions on mobile.
 Behavior:
 - Uses `@gorhom/bottom-sheet` (v5.2.8, already installed).
 - `snapPoints`: `['35%']` — fixed half-sheet, not full screen.
-- Same Login / Register / Cancel actions as web modal.
+- Same Login / Register / dismiss actions as web modal.
 - Return destination threaded via navigation params.
 
 ### Landing Page 6-Job Grid
@@ -158,7 +162,7 @@ Behavior:
 | Auth modal body | "Create a free account or log in to post a job or submit a bid." |
 | Auth modal primary CTA | "Log in" |
 | Auth modal secondary CTA | "Create account" |
-| Auth modal dismiss | "Cancel" |
+| Auth modal dismiss | "Maybe later" |
 | Landing 6-job section heading | "Recent open jobs" |
 | Landing 6-job empty state heading | "No open jobs yet" |
 | Landing 6-job empty state body | "Be the first — post a job and get bids from skilled workers." |
