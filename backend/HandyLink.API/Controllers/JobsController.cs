@@ -1,6 +1,7 @@
 using HandyLink.API.Features.Jobs.CreateJob;
 using HandyLink.API.Features.Jobs.GetJobById;
 using HandyLink.API.Features.Jobs.GetJobs;
+using HandyLink.API.Features.Jobs.UpdateJobStatus;
 using HandyLink.Core.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -27,4 +28,8 @@ public class JobsController(IMediator mediator) : BaseController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetJobById(Guid id, CancellationToken ct)
         => Ok(await mediator.Send(new GetJobByIdQuery(id), ct));
+
+    [HttpPatch("{id:guid}/status")]
+    public async Task<IActionResult> UpdateJobStatus(Guid id, [FromBody] UpdateJobStatusDto dto, CancellationToken ct)
+        => Ok(await mediator.Send(new UpdateJobStatusCommand(GetUserId(), id, dto.Status), ct));
 }
