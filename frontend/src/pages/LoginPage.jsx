@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const schema = z.object({
@@ -12,6 +12,7 @@ const schema = z.object({
 export default function LoginPage() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
     resolver: zodResolver(schema),
   });
@@ -22,7 +23,8 @@ export default function LoginPage() {
       setError('root', { message: error.message });
       return;
     }
-    navigate('/jobs');
+    const returnTo = searchParams.get('return') || '/jobs';
+    navigate(returnTo);
   }
 
   return (
@@ -59,7 +61,7 @@ export default function LoginPage() {
         </form>
         <p className="mt-4 text-sm text-center text-gray-600">
           No account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">Create one</Link>
+          <Link to={`/register${searchParams.get('return') ? `?return=${searchParams.get('return')}` : ''}`} className="text-blue-600 hover:underline">Create one</Link>
         </p>
       </div>
     </div>

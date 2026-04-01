@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import axiosClient from '../api/axiosClient';
+import JobCard from '../components/JobCard';
 
 const CATEGORIES = [
   { emoji: '⚡', label: 'Electrical' },
@@ -22,6 +25,13 @@ const WORKER_STEPS = [
 ];
 
 export default function LandingPage() {
+  const { data: recentJobs, isLoading: jobsLoading, isError: jobsError } = useQuery({
+    queryKey: ['landing-jobs'],
+    queryFn: () => axiosClient.get('/api/jobs', { params: { status: 'Open', pageSize: 6 } })
+      .then(r => r.data.items ?? r.data),
+    staleTime: 60_000,
+  });
+
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-blue-600 text-white py-20 px-6 text-center">
@@ -30,10 +40,10 @@ export default function LandingPage() {
           Post a job or bid on work — HandyLink connects clients with skilled workers globally.
         </p>
         <div className="flex gap-4 justify-center">
-          <Link to="/register" className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50">
+          <Link to="/post-job" className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg hover:bg-blue-50">
             Post a Job
           </Link>
-          <Link to="/register" className="border border-white text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-500">
+          <Link to="/worker/browse" className="border border-white text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-500">
             Find Work
           </Link>
         </div>
@@ -53,6 +63,38 @@ export default function LandingPage() {
             </Link>
           ))}
         </div>
+      </section>
+
+      <section className="py-16 px-6 max-w-5xl mx-auto">
+        <h2 className="text-2xl font-bold text-center mb-10">Recent open jobs</h2>
+        {jobsLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-100 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        ) : jobsError ? (
+          <p className="text-center text-gray-500">Couldn't load jobs. Try refreshing the page.</p>
+        ) : recentJobs?.length === 0 ? (
+          <div className="text-center">
+            <h3 className="text-lg font-semibold mb-2">No open jobs yet</h3>
+            <p className="text-sm text-gray-500 mb-4">Be the first — post a job and get bids from skilled workers.</p>
+            <Link to="/post-job" className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 inline-block">
+              Post a Job
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {recentJobs.map(job => <JobCard key={job.id} job={job} />)}
+            </div>
+            <div className="text-center mt-6">
+              <Link to="/jobs" className="text-blue-600 font-medium hover:underline">
+                Browse all jobs &rarr;
+              </Link>
+            </div>
+          </>
+        )}
       </section>
 
       <section className="py-16 px-6 bg-gray-50">
