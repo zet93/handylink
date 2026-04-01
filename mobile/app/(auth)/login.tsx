@@ -11,11 +11,12 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { supabase } from '../../services/supabase';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,8 +33,12 @@ export default function LoginScreen() {
       Alert.alert('Sign In Failed', error.message);
       return;
     }
-    const role = data.session?.user.user_metadata?.role;
-    router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+    if (returnTo) {
+      router.replace(returnTo as any);
+    } else {
+      const role = data.session?.user.user_metadata?.role;
+      router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+    }
   }
 
   return (

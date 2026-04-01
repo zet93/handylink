@@ -11,7 +11,7 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { supabase } from '../../services/supabase';
 import api from '../../services/api';
 
@@ -19,6 +19,7 @@ type Role = 'client' | 'worker';
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,7 +56,11 @@ export default function RegisterScreen() {
       }
     }
     setLoading(false);
-    router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+    if (returnTo) {
+      router.replace(returnTo as any);
+    } else {
+      router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+    }
   }
 
   return (
