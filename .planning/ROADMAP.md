@@ -75,7 +75,11 @@ Plans:
   3. A visitor can browse worker profiles without being redirected to login
   4. When a visitor attempts to post a job or submit a bid, a login prompt appears and after login they are returned to where they were
   5. The landing page communicates what HandyLink does without requiring a user to log in first
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 10-01-PLAN.md — Backend auth restructuring: public GET endpoints + integration tests (UX-01, UX-02, UX-03)
+- [ ] 10-02-PLAN.md — Web frontend: route split, NavBar auth state, AuthPromptModal, landing 6-job grid, return URL (UX-01, UX-02, UX-03, UX-04, UX-05)
+- [ ] 10-03-PLAN.md — Mobile: public route group, layout restructuring, auth bottom sheet (UX-01, UX-02, UX-03, UX-04)
 **UI hint**: yes
 
 ### Phase 11: App Design
@@ -149,7 +153,7 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 1-7. Core Platform | v1.0 | - | Complete | 2026-03-29 |
 | 8. Critical Bug Fixes | Beta Polish | 2/2 | Complete   | 2026-03-31 |
 | 9. Security Hardening | Beta Polish | 1/2 | In Progress|  |
-| 10. Browse-First UX | Beta Polish | 0/TBD | Not started | - |
+| 10. Browse-First UX | Beta Polish | 0/3 | Not started | - |
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
 | 12. Social Login | Beta Polish | 0/TBD | Not started | - |
 | 13. Notifications + Mobile Testing | Beta Polish | 0/TBD | Not started | - |
