@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 09-02-PLAN.md
-last_updated: "2026-03-31T19:35:50.000Z"
-last_activity: 2026-03-31
+status: executing
+stopped_at: Completed 10-01-PLAN.md
+last_updated: "2026-04-01T03:57:17.580Z"
+last_activity: 2026-04-01
 progress:
   total_phases: 8
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 7
+  completed_plans: 5
   percent: 40
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** A client can find a trusted local tradesperson and a worker can find their next job — without friction, without guesswork.
-**Current focus:** Phase 08 — critical-bug-fixes
+**Current focus:** Phase 10 — browse-first-ux
 
 ## Current Position
 
-Phase: 10
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-03-31
+Phase: 10 (browse-first-ux) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-04-01
 
 Progress: [████████░░░░░░░░░░░░] 40% (phases 1-7 complete)
 
@@ -56,6 +56,7 @@ Progress: [████████░░░░░░░░░░░░] 40% (ph
 | Phase 08-critical-bug-fixes P02 | 160s | 2 tasks | 9 files |
 | Phase 09-security-hardening P01 | 10min | 2 tasks | 3 files |
 | Phase 09 P02 | 18min | 2 tasks | 6 files |
+| Phase 10 P01 | 94s | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,7 @@ Recent decisions affecting current work:
 - [Phase 09]: SecurityTestFactory subclasses CustomWebAppFactory with PermitLimit=3 to isolate rate-limit test without polluting shared factory state
 - [Phase 09]: CORS falls back to AllowAnyOrigin when Cors:AllowedOrigins is empty to preserve zero-config dev setups
 - [Phase 09]: Webhook endpoint excluded from rate limiting to avoid throttling Stripe IP pool
+- [Phase 10]: Method-level [AllowAnonymous] overrides class-level [Authorize] — class attribute dropped entirely for clarity
 
 ### Pending Todos
 
@@ -89,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T19:26:16.613Z
-Stopped at: Completed 09-02-PLAN.md
+Last session: 2026-04-01T03:57:17.577Z
+Stopped at: Completed 10-01-PLAN.md
 Resume file: None
