@@ -15,7 +15,7 @@ function AppRoot() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        router.replace('/(auth)/login');
+        router.replace('/(public)/browse');
       } else {
         const role = session.user.user_metadata?.role;
         router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
@@ -25,9 +25,9 @@ function AppRoot() {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        router.replace('/(auth)/login');
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, _session) => {
+      if (event === 'SIGNED_OUT') {
+        router.replace('/(public)/browse');
       }
     });
 
