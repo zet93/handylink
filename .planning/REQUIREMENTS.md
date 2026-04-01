@@ -19,8 +19,8 @@ These are the requirements for the beta release — a functional demo for friend
 - [x] **UX-01**: Visitor can browse all open jobs without logging in
 - [x] **UX-02**: Visitor can view individual job details without logging in
 - [x] **UX-03**: Visitor can browse worker profiles without logging in
-- [ ] **UX-04**: Login prompt appears only when visitor attempts to post a job or submit a bid
-- [ ] **UX-05**: Anonymous landing experience communicates the app's value clearly
+- [x] **UX-04**: Login prompt appears only when visitor attempts to post a job or submit a bid
+- [x] **UX-05**: Anonymous landing experience communicates the app's value clearly
 
 ### Design
 
@@ -128,8 +128,8 @@ These are the requirements for the beta release — a functional demo for friend
 | UX-01 | Phase 10 (Browse-First UX) | Complete |
 | UX-02 | Phase 10 (Browse-First UX) | Complete |
 | UX-03 | Phase 10 (Browse-First UX) | Complete |
-| UX-04 | Phase 10 (Browse-First UX) | Pending |
-| UX-05 | Phase 10 (Browse-First UX) | Pending |
+| UX-04 | Phase 10 (Browse-First UX) | Complete |
+| UX-05 | Phase 10 (Browse-First UX) | Complete |
 | DSG-01 | Phase 11 (App Design) | Pending |
 | DSG-02 | Phase 11 (App Design) | Pending |
 | DSG-03 | Phase 11 (App Design) | Pending |

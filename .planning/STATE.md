@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 10-01-PLAN.md
-last_updated: "2026-04-01T03:57:17.580Z"
+status: verifying
+stopped_at: Completed 10-02-PLAN.md
+last_updated: "2026-04-01T04:04:14.469Z"
 last_activity: 2026-04-01
 progress:
   total_phases: 8
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 7
-  completed_plans: 5
+  completed_plans: 7
   percent: 40
 ---
 
@@ -26,8 +26,8 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 ## Current Position
 
 Phase: 10 (browse-first-ux) — EXECUTING
-Plan: 2 of 3
-Status: Ready to execute
+Plan: 3 of 3
+Status: Phase complete — ready for verification
 Last activity: 2026-04-01
 
 Progress: [████████░░░░░░░░░░░░] 40% (phases 1-7 complete)
@@ -57,6 +57,8 @@ Progress: [████████░░░░░░░░░░░░] 40% (ph
 | Phase 09-security-hardening P01 | 10min | 2 tasks | 3 files |
 | Phase 09 P02 | 18min | 2 tasks | 6 files |
 | Phase 10 P01 | 94s | 2 tasks | 4 files |
+| Phase 10-browse-first-ux P03 | 232s | 2 tasks | 9 files |
+| Phase 10 P02 | 6min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -77,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 09]: CORS falls back to AllowAnyOrigin when Cors:AllowedOrigins is empty to preserve zero-config dev setups
 - [Phase 09]: Webhook endpoint excluded from rate limiting to avoid throttling Stripe IP pool
 - [Phase 10]: Method-level [AllowAnonymous] overrides class-level [Authorize] — class attribute dropped entirely for clarity
+- [Phase 10]: Public route group uses bare AuthLayout (no ProtectedRoute) for /jobs, /jobs/:id, /worker/browse, /worker/:id
+- [Phase 10]: NotificationBell not rendered when user is null — prevents 401 cascade via axiosClient redirect interceptor
+- [Phase 10]: JobDetailPage bids query gated on user auth (enabled: !!job && !!user) — prevents 401 for anonymous visitors
 
 ### Pending Todos
 
@@ -91,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T03:57:17.577Z
-Stopped at: Completed 10-01-PLAN.md
+Last session: 2026-04-01T04:04:14.466Z
+Stopped at: Completed 10-02-PLAN.md
 Resume file: None
