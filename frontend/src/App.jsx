@@ -43,13 +43,18 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>}>
+            {/* Public routes — browsable without auth */}
+            <Route element={<AuthLayout />}>
               <Route path="/jobs" element={<JobsPage />} />
               <Route path="/jobs/:id" element={<JobDetailPage />} />
-              <Route path="/post-job" element={<PostJobPage />} />
               <Route path="/worker/browse" element={<WorkerBrowsePage />} />
-              <Route path="/my-jobs" element={<MyJobsPage />} />
               <Route path="/worker/:id" element={<WorkerProfilePage />} />
+            </Route>
+
+            {/* Protected routes — require auth */}
+            <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>}>
+              <Route path="/post-job" element={<PostJobPage />} />
+              <Route path="/my-jobs" element={<MyJobsPage />} />
               <Route path="/profile" element={<EditProfilePage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
             </Route>

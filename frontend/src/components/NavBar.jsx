@@ -79,7 +79,7 @@ function NotificationBell() {
 }
 
 export default function NavBar() {
-  const { userProfile, signOut } = useAuth();
+  const { user, userProfile, signOut } = useAuth();
   const navigate = useNavigate();
 
   async function handleSignOut() {
@@ -88,6 +88,22 @@ export default function NavBar() {
   }
 
   const isWorker = userProfile?.role === 'worker' || userProfile?.role === 'both';
+
+  if (!user) {
+    return (
+      <nav className="bg-white border-b px-6 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="font-bold text-lg text-blue-600">HandyLink</Link>
+          <Link to="/jobs" className="text-sm text-gray-700 hover:text-blue-600">Jobs</Link>
+          <Link to="/worker/browse" className="text-sm text-gray-700 hover:text-blue-600">Browse Workers</Link>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link to="/login" className="text-sm text-gray-700 hover:text-blue-600">Log in</Link>
+          <Link to="/register" className="text-sm bg-blue-600 text-white px-4 py-1.5 rounded-lg hover:bg-blue-700">Register</Link>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="bg-white border-b px-6 py-3 flex items-center justify-between">
