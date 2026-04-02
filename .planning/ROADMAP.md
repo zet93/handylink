@@ -155,7 +155,7 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 9. Security Hardening | Beta Polish | 1/2 | In Progress|  |
 | 10. Browse-First UX | Beta Polish | 3/3 | Complete   | 2026-04-01 |
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
-| 12. Social Login | Beta Polish | 0/TBD | Not started | - |
+| 12. Social Login | Beta Polish | 1/1 | Complete   | 2026-04-02 |
 | 13. Notifications + Mobile Testing | Beta Polish | 0/TBD | Not started | - |
 | 14. Maps & Location | Beta Polish | 0/TBD | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 0/TBD | Not started | - |

@@ -47,9 +47,9 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Social Login
 
-- [ ] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
-- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
-- [ ] **AUTH-03**: Social login creates a profile with correct role assignment
+- [x] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
+- [x] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
+- [x] **AUTH-03**: Social login creates a profile with correct role assignment
 
 ### Maps & Location
 
@@ -135,9 +135,9 @@ These are the requirements for the beta release — a functional demo for friend
 | DSG-03 | Phase 11 (App Design) | Pending |
 | DSG-04 | Phase 11 (App Design) | Pending |
 | DSG-05 | Phase 11 (App Design) | Pending |
-| AUTH-01 | Phase 12 (Social Login) | Pending |
-| AUTH-02 | Phase 12 (Social Login) | Pending |
-| AUTH-03 | Phase 12 (Social Login) | Pending |
+| AUTH-01 | Phase 12 (Social Login) | Complete |
+| AUTH-02 | Phase 12 (Social Login) | Complete |
+| AUTH-03 | Phase 12 (Social Login) | Complete |
 | NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
