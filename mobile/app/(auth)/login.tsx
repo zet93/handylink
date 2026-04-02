@@ -24,8 +24,13 @@ export default function LoginScreen() {
   async function handleGoogleSignIn() {
     setLoading(true);
     const { error } = await signInWithGoogle();
-    setLoading(false);
-    if (error) Alert.alert('Google Sign In Failed', error.message);
+    if (error) {
+      setLoading(false);
+      Alert.alert('Google Sign In Failed', error.message);
+    }
+    // On success: signInWithGoogle() triggers the OS browser for OAuth.
+    // The SIGNED_IN event in _layout.tsx handles routing after the deep-link callback.
+    // Loading state is intentionally left as true during the OAuth browser flow.
   }
 
   async function handleSignIn() {
