@@ -16,11 +16,11 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Browse-First UX
 
-- [x] **UX-01**: Visitor can browse all open jobs without logging in
-- [x] **UX-02**: Visitor can view individual job details without logging in
-- [x] **UX-03**: Visitor can browse worker profiles without logging in
-- [x] **UX-04**: Login prompt appears only when visitor attempts to post a job or submit a bid
-- [x] **UX-05**: Anonymous landing experience communicates the app's value clearly
+- [ ] **UX-01**: Visitor can browse all open jobs without logging in
+- [ ] **UX-02**: Visitor can view individual job details without logging in
+- [ ] **UX-03**: Visitor can browse worker profiles without logging in
+- [ ] **UX-04**: Login prompt appears only when visitor attempts to post a job or submit a bid
+- [ ] **UX-05**: Anonymous landing experience communicates the app's value clearly
 
 ### Design
 
@@ -32,11 +32,11 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Security
 
-- [x] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
-- [x] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
-- [x] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
-- [x] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
-- [x] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
+- [ ] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
+- [ ] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
+- [ ] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
+- [ ] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
+- [ ] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
 
 ### Mobile
 
@@ -48,7 +48,7 @@ These are the requirements for the beta release — a functional demo for friend
 ### Social Login
 
 - [x] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
-- [x] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
+- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
 - [x] **AUTH-03**: Social login creates a profile with correct role assignment
 
 ### Maps & Location
@@ -120,23 +120,23 @@ These are the requirements for the beta release — a functional demo for friend
 | BUG-02 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-03 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-04 | Phase 8 (Critical Bug Fixes) | Complete |
-| SEC-01 | Phase 9 (Security Hardening) | Complete |
-| SEC-02 | Phase 9 (Security Hardening) | Complete |
-| SEC-03 | Phase 9 (Security Hardening) | Complete |
-| SEC-04 | Phase 9 (Security Hardening) | Complete |
-| SEC-05 | Phase 9 (Security Hardening) | Complete |
-| UX-01 | Phase 10 (Browse-First UX) | Complete |
-| UX-02 | Phase 10 (Browse-First UX) | Complete |
-| UX-03 | Phase 10 (Browse-First UX) | Complete |
-| UX-04 | Phase 10 (Browse-First UX) | Complete |
-| UX-05 | Phase 10 (Browse-First UX) | Complete |
+| SEC-01 | Phase 9 (Security Hardening) | Pending |
+| SEC-02 | Phase 9 (Security Hardening) | Pending |
+| SEC-03 | Phase 9 (Security Hardening) | Pending |
+| SEC-04 | Phase 9 (Security Hardening) | Pending |
+| SEC-05 | Phase 9 (Security Hardening) | Pending |
+| UX-01 | Phase 10 (Browse-First UX) | Pending |
+| UX-02 | Phase 10 (Browse-First UX) | Pending |
+| UX-03 | Phase 10 (Browse-First UX) | Pending |
+| UX-04 | Phase 10 (Browse-First UX) | Pending |
+| UX-05 | Phase 10 (Browse-First UX) | Pending |
 | DSG-01 | Phase 11 (App Design) | Pending |
 | DSG-02 | Phase 11 (App Design) | Pending |
 | DSG-03 | Phase 11 (App Design) | Pending |
 | DSG-04 | Phase 11 (App Design) | Pending |
 | DSG-05 | Phase 11 (App Design) | Pending |
 | AUTH-01 | Phase 12 (Social Login) | Complete |
-| AUTH-02 | Phase 12 (Social Login) | Complete |
+| AUTH-02 | Phase 12 (Social Login) | Pending |
 | AUTH-03 | Phase 12 (Social Login) | Complete |
 | NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
