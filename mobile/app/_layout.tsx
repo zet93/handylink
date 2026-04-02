@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { supabase } from '../services/supabase';
 import { registerForPushNotifications, setUpNotificationHandlers } from '../services/notifications';
+import api from '../services/api';
 
 const queryClient = new QueryClient();
 
@@ -13,21 +14,40 @@ function AppRoot() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) {
         router.replace('/(public)/browse');
       } else {
-        const role = session.user.user_metadata?.role;
-        router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+        try {
+          const res = await api.get('/api/users/me');
+          const role = res.data?.role;
+          router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+        } catch (e: any) {
+          if (e?.response?.status === 404) {
+            router.replace('/(auth)/select-role');
+          } else {
+            router.replace('/(public)/browse');
+          }
+        }
         registerForPushNotifications();
         setUpNotificationHandlers(router);
       }
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, _session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT') {
         router.replace('/(public)/browse');
+      } else if (event === 'SIGNED_IN' && session) {
+        try {
+          const res = await api.get('/api/users/me');
+          const role = res.data?.role;
+          router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+        } catch (e: any) {
+          if (e?.response?.status === 404) {
+            router.replace('/(auth)/select-role');
+          }
+        }
       }
     });
 
