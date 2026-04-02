@@ -16,6 +16,8 @@ import MyJobsPage from './pages/MyJobsPage';
 import WorkerProfilePage from './pages/WorkerProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
+import RoleSelectPage from './pages/RoleSelectPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 import PasswordGate from './components/PasswordGate';
 
 const queryClient = new QueryClient();
@@ -43,6 +45,8 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/auth-callback" element={<AuthCallbackPage />} />
+            <Route path="/select-role" element={<RoleSelectPage />} />
             <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>}>
               <Route path="/jobs" element={<JobsPage />} />
               <Route path="/jobs/:id" element={<JobDetailPage />} />

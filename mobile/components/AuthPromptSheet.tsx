@@ -1,7 +1,8 @@
 import { forwardRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
+import { signInWithGoogle } from '../services/supabase';
 
 interface AuthPromptSheetProps {
   returnTo?: string;
@@ -25,6 +26,12 @@ const AuthPromptSheet = forwardRef<BottomSheet, AuthPromptSheetProps>(
       (ref as React.RefObject<BottomSheet>)?.current?.close();
     }, [ref]);
 
+    const handleGoogle = useCallback(async () => {
+      (ref as React.RefObject<BottomSheet>)?.current?.close();
+      const { error } = await signInWithGoogle();
+      if (error) Alert.alert('Google Sign In Failed', error.message);
+    }, [ref]);
+
     return (
       <BottomSheet
         ref={ref}
@@ -42,6 +49,9 @@ const AuthPromptSheet = forwardRef<BottomSheet, AuthPromptSheetProps>(
           </TouchableOpacity>
           <TouchableOpacity style={styles.secondaryButton} onPress={handleRegister}>
             <Text style={styles.secondaryButtonText}>Create account</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.googleButton} onPress={handleGoogle}>
+            <Text style={styles.googleButtonText}>Continue with Google</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleDismiss}>
             <Text style={styles.dismissText}>Maybe later</Text>
@@ -83,5 +93,17 @@ const styles = StyleSheet.create({
     minHeight: 44,
   },
   secondaryButtonText: { fontWeight: '600', fontSize: 16 },
+  googleButton: {
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 12,
+    minHeight: 44,
+  },
+  googleButtonText: { fontWeight: '600', fontSize: 16 },
   dismissText: { color: '#6b7280', fontSize: 14, paddingVertical: 8 },
 });
