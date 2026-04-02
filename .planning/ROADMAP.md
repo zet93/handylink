@@ -104,7 +104,11 @@ Plans:
   2. A new OAuth user is shown a role-selection screen before being admitted to the app
   3. An existing email/password user who attempts Google OAuth with the same email is linked to their existing account, not given a new one
   4. Social login creates a profile row with the correct role (client or worker)
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [x] 12-01-PLAN.md - Google OAuth on web + mobile, role-selection screen, backend profile upsert (AUTH-01, AUTH-03)
+- [ ] 12-02-PLAN.md - Fix mobile Google OAuth routing to select-role (AUTH-01, AUTH-03)
+- [ ] 12-03-PLAN.md - Facebook OAuth on web and mobile (AUTH-02)
 **UI hint**: yes
 
 ### Phase 13: Notifications + Mobile Testing
@@ -155,7 +159,7 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 9. Security Hardening | Beta Polish | 1/2 | In Progress|  |
 | 10. Browse-First UX | Beta Polish | 3/3 | Complete   | 2026-04-01 |
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
-| 12. Social Login | Beta Polish | 1/1 | Complete   | 2026-04-02 |
+| 12. Social Login | Beta Polish | 1/3 | Gap Closure | 2026-04-02 |
 | 13. Notifications + Mobile Testing | Beta Polish | 0/TBD | Not started | - |
 | 14. Maps & Location | Beta Polish | 0/TBD | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 0/TBD | Not started | - |
