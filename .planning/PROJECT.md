@@ -22,6 +22,7 @@ A client can find a trusted local tradesperson and a worker can find their next 
 - ✓ React Native/Expo mobile app with role-based navigation — Phase 6
 - ✓ CI/CD pipeline (Render backend, Vercel frontend) — Phase 9
 - ✓ Password gate for private beta access — Phase 8
+- ✓ Google social login (web + mobile) with role selection for new users — Phase 12 (AUTH-01, AUTH-03; AUTH-02 Facebook deferred to Phase 13)
 
 ### Active
 
