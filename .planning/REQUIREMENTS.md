@@ -48,7 +48,7 @@ These are the requirements for the beta release — a functional demo for friend
 ### Social Login
 
 - [x] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
-- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
+- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth) _(deferred to Phase 13)_
 - [x] **AUTH-03**: Social login creates a profile with correct role assignment
 
 ### Maps & Location

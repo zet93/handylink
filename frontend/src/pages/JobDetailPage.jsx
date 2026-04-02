@@ -205,6 +205,8 @@ export default function JobDetailPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white border rounded-xl p-6 mb-6">
+      <div className="mb-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">Secure your work: Workers should submit a bid using the form, and clients can choose the best offer and proceed by marking in progress. Communicate openly in bid messages.</div>
+
         <div className="flex items-start justify-between gap-4 mb-3">
           <h1 className="text-2xl font-bold">{job.title}</h1>
           <span className={`text-sm px-3 py-1 rounded-full capitalize whitespace-nowrap ${
