@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
 import PaymentForm from '../components/PaymentForm';
+import AuthPromptModal from '../components/AuthPromptModal';
 
 const bidSchema = z.object({
   priceEstimate: z.coerce.number().positive('Must be a positive number'),
@@ -178,8 +179,10 @@ function WorkerView({ job, bids, userId }) {
 
 export default function JobDetailPage() {
   const { id } = useParams();
-  const { userProfile } = useAuth();
+  const location = useLocation();
+  const { user, userProfile } = useAuth();
   const queryClient = useQueryClient();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const { data: job, isLoading: jobLoading } = useQuery({
     queryKey: ['job', id],
@@ -189,7 +192,7 @@ export default function JobDetailPage() {
   const { data: bids = [] } = useQuery({
     queryKey: ['bids', id],
     queryFn: () => axiosClient.get(`/api/jobs/${id}/bids`).then(r => r.data),
-    enabled: !!job,
+    enabled: !!job && !!user,
   });
 
   const updateStatus = useMutation({
@@ -226,9 +229,25 @@ export default function JobDetailPage() {
 
       {isOwner ? (
         <ClientView job={job} bids={bids} onStatusChange={s => updateStatus.mutate(s)} />
-      ) : (
+      ) : user ? (
         <WorkerView job={job} bids={bids} userId={userProfile?.id} />
-      )}
+      ) : (job.status === 'open' || job.status === 'bidding') ? (
+        <div className="border rounded-xl p-4 bg-white text-center">
+          <h2 className="font-semibold mb-2">Interested in this job?</h2>
+          <p className="text-sm text-gray-500 mb-4">Log in to submit a bid.</p>
+          <button
+            onClick={() => setShowAuthModal(true)}
+            className="bg-blue-600 text-white rounded-lg px-6 py-2 text-sm font-medium hover:bg-blue-700"
+          >
+            Submit a Bid
+          </button>
+          <AuthPromptModal
+            isOpen={showAuthModal}
+            onClose={() => setShowAuthModal(false)}
+            returnPath={location.pathname}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

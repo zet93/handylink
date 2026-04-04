@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const schema = z.object({
@@ -20,6 +20,7 @@ const ROLES = [
 export default function RegisterPage() {
   const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { role: 'client' },
@@ -31,7 +32,8 @@ export default function RegisterPage() {
       setError('root', { message: error.message });
       return;
     }
-    navigate('/jobs');
+    const returnTo = searchParams.get('return') || '/jobs';
+    navigate(returnTo);
   }
 
   return (
@@ -103,7 +105,7 @@ export default function RegisterPage() {
         </button>
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:underline">Sign in</Link>
+          <Link to={`/login${searchParams.get('return') ? `?return=${searchParams.get('return')}` : ''}`} className="text-blue-600 hover:underline">Sign in</Link>
         </p>
       </div>
     </div>

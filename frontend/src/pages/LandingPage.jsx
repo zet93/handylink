@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import axiosClient from '../api/axiosClient';
+import JobCard from '../components/JobCard';
 
 const CATEGORIES = [
   { emoji: '⚡', label: 'Electrical' },
@@ -22,6 +25,13 @@ const WORKER_STEPS = [
 ];
 
 export default function LandingPage() {
+  const { data: recentJobs, isLoading: jobsLoading, isError: jobsError } = useQuery({
+    queryKey: ['landing-jobs'],
+    queryFn: () => axiosClient.get('/api/jobs', { params: { status: 'Open', pageSize: 6 } })
+      .then(r => r.data.items ?? r.data),
+    staleTime: 60_000,
+  });
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
       <header className="py-20 px-6 text-center" style={{ backgroundColor: 'var(--accent)', color: '#ffffff' }}>
