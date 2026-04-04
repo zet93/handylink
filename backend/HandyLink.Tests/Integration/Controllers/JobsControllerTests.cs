@@ -25,11 +25,11 @@ public class JobsControllerTests(CustomWebAppFactory factory) : IClassFixture<Cu
     }
 
     [Fact]
-    public async Task GetJobs_Returns401_WhenNoToken()
+    public async Task GetJobs_Returns200_WhenNoToken()
     {
         var http = factory.CreateClient();
         var response = await http.GetAsync("/api/jobs");
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [Fact]

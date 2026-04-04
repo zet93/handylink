@@ -32,8 +32,8 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Security
 
-- [x] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
-- [x] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
+- [ ] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
+- [ ] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
 - [ ] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
 - [ ] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
 - [ ] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
@@ -47,9 +47,9 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Social Login
 
-- [ ] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
-- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
-- [ ] **AUTH-03**: Social login creates a profile with correct role assignment
+- [x] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
+- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth) _(deferred to Phase 13)_
+- [x] **AUTH-03**: Social login creates a profile with correct role assignment
 
 ### Maps & Location
 
@@ -120,8 +120,8 @@ These are the requirements for the beta release — a functional demo for friend
 | BUG-02 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-03 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-04 | Phase 8 (Critical Bug Fixes) | Complete |
-| SEC-01 | Phase 9 (Security Hardening) | Complete |
-| SEC-02 | Phase 9 (Security Hardening) | Complete |
+| SEC-01 | Phase 9 (Security Hardening) | Pending |
+| SEC-02 | Phase 9 (Security Hardening) | Pending |
 | SEC-03 | Phase 9 (Security Hardening) | Pending |
 | SEC-04 | Phase 9 (Security Hardening) | Pending |
 | SEC-05 | Phase 9 (Security Hardening) | Pending |
@@ -135,9 +135,9 @@ These are the requirements for the beta release — a functional demo for friend
 | DSG-03 | Phase 11 (App Design) | Pending |
 | DSG-04 | Phase 11 (App Design) | Pending |
 | DSG-05 | Phase 11 (App Design) | Pending |
-| AUTH-01 | Phase 12 (Social Login) | Pending |
+| AUTH-01 | Phase 12 (Social Login) | Complete |
 | AUTH-02 | Phase 12 (Social Login) | Pending |
-| AUTH-03 | Phase 12 (Social Login) | Pending |
+| AUTH-03 | Phase 12 (Social Login) | Complete |
 | NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Pending |

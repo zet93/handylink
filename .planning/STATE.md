@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 09-01-PLAN.md
-last_updated: "2026-03-31T19:23:44.837Z"
-last_activity: 2026-03-31
+stopped_at: Completed 12-02-PLAN.md
+last_updated: "2026-04-02T09:48:31.336Z"
+last_activity: 2026-04-02
 progress:
   total_phases: 8
-  completed_phases: 1
-  total_plans: 4
-  completed_plans: 3
+  completed_phases: 5
+  total_plans: 12
+  completed_plans: 12
   percent: 40
 ---
 
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-29)
 
 ## Current Position
 
-Phase: 9
+Phase: 13
 Plan: Not started
 Status: Phase complete — ready for verification
-Last activity: 2026-03-31
+Last activity: 2026-04-02
 
 Progress: [████████░░░░░░░░░░░░] 40% (phases 1-7 complete)
 
@@ -54,8 +54,7 @@ Progress: [████████░░░░░░░░░░░░] 40% (ph
 *Updated after each plan completion*
 | Phase 08 P01 | 8 | 2 tasks | 11 files |
 | Phase 08-critical-bug-fixes P02 | 160s | 2 tasks | 9 files |
-| Phase 09-security-hardening P01 | 526563min | 2 tasks | 3 files |
-| Phase 09-security-hardening P01 | 10min | 2 tasks | 3 files |
+| Phase 12-social-login P02 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -71,7 +70,8 @@ Recent decisions affecting current work:
 - [Phase 08]: GetBidsForJobHandler and RejectBidHandler take no IMediator dependency — pure query and simple command with no push notifications needed
 - [Phase 08]: UpdateJobStatusDto changed from enum to string Status to enable snake_case parsing in handler
 - [Phase 08]: Custom ValidationException (not FluentValidation) used for transition errors, consistent with existing codebase pattern
-- [Phase 09-security-hardening]: No production code changes needed — existing handlers already enforce ownership via ForbiddenException; tests are proof, not fixes
+- [Phase 12-social-login]: Root layout routes by GET /api/users/me profile presence not user_metadata.role
+- [Phase 12-social-login]: SIGNED_IN event in onAuthStateChange is the single routing trigger after OAuth deep-link callback
 
 ### Pending Todos
 
@@ -86,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-31T19:23:44.834Z
-Stopped at: Completed 09-01-PLAN.md
+Last session: 2026-04-02T09:39:08.737Z
+Stopped at: Completed 12-02-PLAN.md
 Resume file: None

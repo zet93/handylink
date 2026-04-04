@@ -39,6 +39,26 @@ export function AuthProvider({ children }) {
   const signIn = (email, password) =>
     supabase.auth.signInWithPassword({ email, password });
 
+  const signInWithGoogle = () =>
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/auth-callback' },
+    });
+
+  async function completeRoleSelection(role) {
+    if (!user) return;
+    const { data } = await supabase.auth.getSession();
+    const token = data?.session?.access_token;
+    if (!token) return;
+    const res = await fetch('/api/users/me/role', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ role }),
+    });
+    if (!res.ok) return;
+    await loadProfile(user.id);
+  }
+
   async function signUp(email, password, fullName, role) {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) return { error };
@@ -60,7 +80,7 @@ export function AuthProvider({ children }) {
   const signOut = () => supabase.auth.signOut();
 
   return (
-    <AuthContext.Provider value={{ user, session, userProfile, signIn, signUp, signOut, loading }}>
+    <AuthContext.Provider value={{ user, session, userProfile, signIn, signInWithGoogle, completeRoleSelection, signUp, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   );

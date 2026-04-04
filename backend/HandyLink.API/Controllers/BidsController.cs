@@ -6,6 +6,7 @@ using HandyLink.Core.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace HandyLink.API.Controllers;
 
@@ -14,6 +15,7 @@ namespace HandyLink.API.Controllers;
 public class BidsController(IMediator mediator) : BaseController
 {
     [HttpPost("jobs/{jobId:guid}/bids")]
+    [EnableRateLimiting("api_write")]
     public async Task<IActionResult> SubmitBid(Guid jobId, [FromBody] SubmitBidDto dto, CancellationToken ct)
     {
         var result = await mediator.Send(new SubmitBidCommand(GetUserId(), jobId, dto.PriceEstimate, dto.Message), ct);

@@ -16,4 +16,10 @@ public class UsersController(UserService userService) : BaseController
     [HttpPut("me")]
     public async Task<IActionResult> UpdateMe([FromBody] UpdateUserDto dto, CancellationToken ct)
         => Ok(await userService.UpdateCurrentUserAsync(GetUserId(), dto, ct));
+
+    [HttpPost("me/role")]
+    public async Task<IActionResult> EnsureRole([FromBody] EnsureRoleDto dto, CancellationToken ct)
+        => Ok(await userService.EnsureUserProfileAsync(GetUserId(), dto.Role, ct));
 }
+
+public record EnsureRoleDto(string Role);

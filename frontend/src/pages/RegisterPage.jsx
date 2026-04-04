@@ -18,7 +18,7 @@ const ROLES = [
 ];
 
 export default function RegisterPage() {
-  const { signUp } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
@@ -91,6 +91,18 @@ export default function RegisterPage() {
             {isSubmitting ? 'Creating account…' : 'Create account'}
           </button>
         </form>
+        <div className="flex items-center gap-3 my-2">
+          <hr className="flex-1 border-gray-200" />
+          <span className="text-xs text-gray-400">or</span>
+          <hr className="flex-1 border-gray-200" />
+        </div>
+        <button
+          type="button"
+          onClick={signInWithGoogle}
+          className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 font-medium hover:bg-gray-50"
+        >
+          Continue with Google
+        </button>
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{' '}
           <Link to={`/login${searchParams.get('return') ? `?return=${searchParams.get('return')}` : ''}`} className="text-blue-600 hover:underline">Sign in</Link>

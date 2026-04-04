@@ -18,6 +18,9 @@ public class CustomWebAppFactory : WebApplicationFactory<Program>
         builder.UseSetting("Stripe:SecretKey", "sk_test_fake");
         builder.UseSetting("Stripe:WebhookSecret", "whsec_fake");
         builder.UseSetting("ConnectionStrings:DefaultConnection", "Host=unused");
+        builder.UseSetting("Cors:AllowedOrigins:0", "http://localhost:5173");
+        builder.UseSetting("RateLimit:PermitLimit", "1000");
+        builder.UseSetting("RateLimit:WindowMinutes", "1");
 
         builder.ConfigureServices(services =>
         {
