@@ -40,10 +40,10 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Mobile
 
-- [ ] **MOB-01**: App runs without errors on a physical Android device
-- [ ] **MOB-02**: App runs without errors on a physical iOS device (or simulator)
-- [ ] **MOB-03**: All navigation flows work correctly on physical devices
-- [ ] **MOB-04**: Push notifications are delivered and tappable on physical devices
+- [x] **MOB-01**: App runs without errors on a physical Android device
+- [x] **MOB-02**: App runs without errors on a physical iOS device (or simulator)
+- [x] **MOB-03**: All navigation flows work correctly on physical devices
+- [x] **MOB-04**: Push notifications are delivered and tappable on physical devices
 
 ### Social Login
 
@@ -141,10 +141,10 @@ These are the requirements for the beta release — a functional demo for friend
 | NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Complete |
 | NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Complete |
 | NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Complete |
-| MOB-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-04 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| MOB-01 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-02 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-03 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-04 | Phase 13 (Notifications + Mobile Testing) | Complete |
 | MAP-01 | Phase 14 (Maps & Location) | Pending |
 | MAP-02 | Phase 14 (Maps & Location) | Pending |
 | MAP-03 | Phase 14 (Maps & Location) | Pending |
