@@ -59,9 +59,9 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Notifications
 
-- [ ] **NOTF-01**: Worker receives push notification when a new bid is submitted on their job (client perspective: when bid accepted)
-- [ ] **NOTF-02**: Client receives notification when a worker bids on their job
-- [ ] **NOTF-03**: Both parties receive notification on key job status transitions
+- [x] **NOTF-01**: Worker receives push notification when a new bid is submitted on their job (client perspective: when bid accepted)
+- [x] **NOTF-02**: Client receives notification when a worker bids on their job
+- [x] **NOTF-03**: Both parties receive notification on key job status transitions
 
 ### Analytics
 
@@ -138,9 +138,9 @@ These are the requirements for the beta release — a functional demo for friend
 | AUTH-01 | Phase 12 (Social Login) | Complete |
 | AUTH-02 | Phase 12 (Social Login) | Pending |
 | AUTH-03 | Phase 12 (Social Login) | Complete |
-| NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Complete |
 | MOB-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | MOB-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
 | MOB-03 | Phase 13 (Notifications + Mobile Testing) | Pending |

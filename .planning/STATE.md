@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: Completed 12-02-PLAN.md
-last_updated: "2026-04-02T09:48:31.336Z"
-last_activity: 2026-04-02
+status: executing
+stopped_at: Completed 13-01-PLAN.md
+last_updated: "2026-04-09T13:41:25.872Z"
+last_activity: 2026-04-09
 progress:
   total_phases: 8
   completed_phases: 5
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 14
   percent: 40
 ---
 
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** A client can find a trusted local tradesperson and a worker can find their next job — without friction, without guesswork.
-**Current focus:** Phase 08 — critical-bug-fixes
+**Current focus:** Phase 13 — notifications-mobile-testing
 
 ## Current Position
 
-Phase: 13
-Plan: Not started
-Status: Phase complete — ready for verification
-Last activity: 2026-04-02
+Phase: 13 (notifications-mobile-testing) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-04-09
 
 Progress: [████████░░░░░░░░░░░░] 40% (phases 1-7 complete)
 
@@ -55,6 +55,7 @@ Progress: [████████░░░░░░░░░░░░] 40% (ph
 | Phase 08 P01 | 8 | 2 tasks | 11 files |
 | Phase 08-critical-bug-fixes P02 | 160s | 2 tasks | 9 files |
 | Phase 12-social-login P02 | 3 | 2 tasks | 3 files |
+| Phase 13-notifications-mobile-testing P01 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Recent decisions affecting current work:
 - [Phase 08]: Custom ValidationException (not FluentValidation) used for transition errors, consistent with existing codebase pattern
 - [Phase 12-social-login]: Root layout routes by GET /api/users/me profile presence not user_metadata.role
 - [Phase 12-social-login]: SIGNED_IN event in onAuthStateChange is the single routing trigger after OAuth deep-link callback
+- [Phase 13]: RejectBidHandler sends bid_rejected notification to worker after bid rejection; matches AcceptBidHandler pattern
+- [Phase 13]: UpdateJobStatusHandler sends job_in_progress/job_completed/job_cancelled to worker via AcceptedBid; silently skips when AcceptedBid is null
 
 ### Pending Todos
 
@@ -86,6 +89,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T09:39:08.737Z
-Stopped at: Completed 12-02-PLAN.md
+Last session: 2026-04-09T13:41:25.868Z
+Stopped at: Completed 13-01-PLAN.md
 Resume file: None

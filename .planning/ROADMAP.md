@@ -122,10 +122,10 @@ Plans:
   4. The app opens and all navigation flows complete without errors on a physical Android device
   5. The app opens and all navigation flows complete without errors on a physical iOS device or simulator
   6. Push notifications are delivered and tappable on physical devices
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 Plans:
-- [ ] 13-01-PLAN.md — Backend notification wiring: RejectBid + UpdateJobStatus push notifications + tests (NOTF-01, NOTF-02, NOTF-03)
-- [ ] 13-02-PLAN.md — Mobile tap-routing for job-status notification types (NOTF-03)
+- [x] 13-01-PLAN.md — Backend notification wiring: RejectBid + UpdateJobStatus push notifications + tests (NOTF-01, NOTF-02, NOTF-03)
+- [x] 13-02-PLAN.md — Mobile tap-routing for job-status notification types (NOTF-03)
 - [ ] 13-03-PLAN.md — Physical device smoke test: Android + iOS (MOB-01, MOB-02, MOB-03, MOB-04)
 
 ### Phase 14: Maps & Location
@@ -164,6 +164,6 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 10. Browse-First UX | Beta Polish | 3/3 | Complete   | 2026-04-01 |
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
 | 12. Social Login | Beta Polish | 1/3 | Complete    | 2026-04-02 |
-| 13. Notifications + Mobile Testing | Beta Polish | 0/3 | Not started | - |
+| 13. Notifications + Mobile Testing | Beta Polish | 2/3 | In Progress|  |
 | 14. Maps & Location | Beta Polish | 0/TBD | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 0/TBD | Not started | - |
