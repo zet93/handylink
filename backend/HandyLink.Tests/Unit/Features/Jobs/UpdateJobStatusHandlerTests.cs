@@ -1,24 +1,28 @@
 using FluentAssertions;
 using HandyLink.API.Features.Jobs.UpdateJobStatus;
+using HandyLink.Core.Commands;
 using HandyLink.Core.Entities;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Exceptions;
 using HandyLink.Infrastructure.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace HandyLink.Tests.Unit.Features.Jobs;
 
 public class UpdateJobStatusHandlerTests
 {
-    private static (HandyLinkDbContext ctx, UpdateJobStatusHandler handler) Build()
+    private static (HandyLinkDbContext ctx, UpdateJobStatusHandler handler, Mock<IMediator> mediator) Build()
     {
         var opts = new DbContextOptionsBuilder<HandyLinkDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
         var ctx = new HandyLinkDbContext(opts);
-        return (ctx, new UpdateJobStatusHandler(ctx));
+        var mediator = new Mock<IMediator>();
+        return (ctx, new UpdateJobStatusHandler(ctx, mediator.Object), mediator);
     }
 
-    private static async Task<(Profile client, Job job)> Seed(HandyLinkDbContext ctx, JobStatus status = JobStatus.Accepted)
+    private static async Task<(Profile client, Job job)> Seed(HandyLinkDbContext ctx, JobStatus status = JobStatus.Accepted, bool withAcceptedBid = false)
     {
         var client = new Profile
         {
@@ -34,6 +38,25 @@ public class UpdateJobStatusHandlerTests
         };
         ctx.Profiles.Add(client);
         ctx.Jobs.Add(job);
+
+        if (withAcceptedBid)
+        {
+            var worker = new Profile
+            {
+                Id = Guid.NewGuid(), FullName = "Worker", Role = "worker",
+                Country = "RO", CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow
+            };
+            ctx.Profiles.Add(worker);
+            var bid = new Bid
+            {
+                Id = Guid.NewGuid(), JobId = job.Id, WorkerId = worker.Id,
+                PriceEstimate = 100, Message = "msg", Status = BidStatus.Accepted,
+                CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow
+            };
+            ctx.Bids.Add(bid);
+            job.AcceptedBidId = bid.Id;
+        }
+
         await ctx.SaveChangesAsync();
         return (client, job);
     }
@@ -41,7 +64,7 @@ public class UpdateJobStatusHandlerTests
     [Fact]
     public async Task Handle_TransitionsAcceptedToInProgress_ForJobOwner()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (client, job) = await Seed(ctx, JobStatus.Accepted);
 
         var result = await handler.Handle(
@@ -55,7 +78,7 @@ public class UpdateJobStatusHandlerTests
     [Fact]
     public async Task Handle_TransitionsInProgressToCompleted_ForJobOwner()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (client, job) = await Seed(ctx, JobStatus.InProgress);
 
         var result = await handler.Handle(
@@ -69,7 +92,7 @@ public class UpdateJobStatusHandlerTests
     [Fact]
     public async Task Handle_ThrowsForbiddenException_WhenNotJobOwner()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (_, job) = await Seed(ctx, JobStatus.Accepted);
 
         var act = () => handler.Handle(
@@ -80,7 +103,7 @@ public class UpdateJobStatusHandlerTests
     [Fact]
     public async Task Handle_ThrowsNotFoundException_WhenJobMissing()
     {
-        var (_, handler) = Build();
+        var (_, handler, _) = Build();
 
         var act = () => handler.Handle(
             new UpdateJobStatusCommand(Guid.NewGuid(), Guid.NewGuid(), "InProgress"), CancellationToken.None);
@@ -90,7 +113,7 @@ public class UpdateJobStatusHandlerTests
     [Fact]
     public async Task Handle_ThrowsValidationException_ForInvalidTransition()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (client, job) = await Seed(ctx, JobStatus.Open);
 
         var act = () => handler.Handle(
@@ -101,7 +124,7 @@ public class UpdateJobStatusHandlerTests
     [Fact]
     public async Task Handle_ParsesSnakeCaseStatus_Correctly()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (client, job) = await Seed(ctx, JobStatus.Accepted);
 
         var result = await handler.Handle(
@@ -110,5 +133,61 @@ public class UpdateJobStatusHandlerTests
         result.Status.Should().Be("InProgress");
         var updated = await ctx.Jobs.FindAsync(job.Id);
         updated!.Status.Should().Be(JobStatus.InProgress);
+    }
+
+    [Fact]
+    public async Task Handle_SendsNotification_WhenTransitionToInProgress()
+    {
+        var (ctx, handler, mediator) = Build();
+        var (client, job) = await Seed(ctx, JobStatus.Accepted, withAcceptedBid: true);
+
+        await handler.Handle(
+            new UpdateJobStatusCommand(client.Id, job.Id, "InProgress"), CancellationToken.None);
+
+        mediator.Verify(m => m.Send(
+            It.Is<SendPushNotificationCommand>(c => c.Type == "job_in_progress"),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_SendsNotification_WhenTransitionToCompleted()
+    {
+        var (ctx, handler, mediator) = Build();
+        var (client, job) = await Seed(ctx, JobStatus.InProgress, withAcceptedBid: true);
+
+        await handler.Handle(
+            new UpdateJobStatusCommand(client.Id, job.Id, "Completed"), CancellationToken.None);
+
+        mediator.Verify(m => m.Send(
+            It.Is<SendPushNotificationCommand>(c => c.Type == "job_completed"),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_SendsNotification_WhenTransitionToCancelled()
+    {
+        var (ctx, handler, mediator) = Build();
+        var (client, job) = await Seed(ctx, JobStatus.Accepted, withAcceptedBid: true);
+
+        await handler.Handle(
+            new UpdateJobStatusCommand(client.Id, job.Id, "Cancelled"), CancellationToken.None);
+
+        mediator.Verify(m => m.Send(
+            It.Is<SendPushNotificationCommand>(c => c.Type == "job_cancelled"),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Handle_SkipsNotification_WhenNoAcceptedBid()
+    {
+        var (ctx, handler, mediator) = Build();
+        var (client, job) = await Seed(ctx, JobStatus.Accepted, withAcceptedBid: false);
+
+        await handler.Handle(
+            new UpdateJobStatusCommand(client.Id, job.Id, "Cancelled"), CancellationToken.None);
+
+        mediator.Verify(m => m.Send(
+            It.IsAny<SendPushNotificationCommand>(),
+            It.IsAny<CancellationToken>()), Times.Never);
     }
 }
