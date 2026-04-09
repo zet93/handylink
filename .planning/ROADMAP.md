@@ -75,7 +75,11 @@ Plans:
   3. A visitor can browse worker profiles without being redirected to login
   4. When a visitor attempts to post a job or submit a bid, a login prompt appears and after login they are returned to where they were
   5. The landing page communicates what HandyLink does without requiring a user to log in first
-**Plans**: TBD
+**Plans:** 3/3 plans complete
+Plans:
+- [x] 10-01-PLAN.md — Backend auth restructuring: public GET endpoints + integration tests (UX-01, UX-02, UX-03)
+- [x] 10-02-PLAN.md — Web frontend: route split, NavBar auth state, AuthPromptModal, landing 6-job grid, return URL (UX-01, UX-02, UX-03, UX-04, UX-05)
+- [x] 10-03-PLAN.md — Mobile: public route group, layout restructuring, auth bottom sheet (UX-01, UX-02, UX-03, UX-04)
 **UI hint**: yes
 
 ### Phase 11: App Design
@@ -100,7 +104,11 @@ Plans:
   2. A new OAuth user is shown a role-selection screen before being admitted to the app
   3. An existing email/password user who attempts Google OAuth with the same email is linked to their existing account, not given a new one
   4. Social login creates a profile row with the correct role (client or worker)
-**Plans**: TBD
+**Plans:** 2/2 plans complete
+Plans:
+- [x] 12-01-PLAN.md - Google OAuth on web + mobile, role-selection screen, backend profile upsert (AUTH-01, AUTH-03)
+- [ ] 12-02-PLAN.md - Fix mobile Google OAuth routing to select-role (AUTH-01, AUTH-03)
+- [ ] 12-03-PLAN.md - Facebook OAuth on web and mobile (AUTH-02)
 **UI hint**: yes
 
 ### Phase 13: Notifications + Mobile Testing
@@ -114,7 +122,11 @@ Plans:
   4. The app opens and all navigation flows complete without errors on a physical Android device
   5. The app opens and all navigation flows complete without errors on a physical iOS device or simulator
   6. Push notifications are delivered and tappable on physical devices
-**Plans**: TBD
+**Plans:** 3/3 plans complete
+Plans:
+- [x] 13-01-PLAN.md — Backend notification wiring: RejectBid + UpdateJobStatus push notifications + tests (NOTF-01, NOTF-02, NOTF-03)
+- [x] 13-02-PLAN.md — Mobile tap-routing for job-status notification types (NOTF-03)
+- [x] 13-03-PLAN.md — Physical device smoke test: Android + iOS (MOB-01, MOB-02, MOB-03, MOB-04)
 
 ### Phase 14: Maps & Location
 **Goal**: Jobs can have a location, and that location is visible to both clients and workers on a map
@@ -149,9 +161,9 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 1-7. Core Platform | v1.0 | - | Complete | 2026-03-29 |
 | 8. Critical Bug Fixes | Beta Polish | 2/2 | Complete   | 2026-03-31 |
 | 9. Security Hardening | Beta Polish | 1/2 | In Progress|  |
-| 10. Browse-First UX | Beta Polish | 0/TBD | Not started | - |
+| 10. Browse-First UX | Beta Polish | 3/3 | Complete   | 2026-04-01 |
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
-| 12. Social Login | Beta Polish | 0/TBD | Not started | - |
-| 13. Notifications + Mobile Testing | Beta Polish | 0/TBD | Not started | - |
+| 12. Social Login | Beta Polish | 1/3 | Complete    | 2026-04-02 |
+| 13. Notifications + Mobile Testing | Beta Polish | 3/3 | Complete   | 2026-04-09 |
 | 14. Maps & Location | Beta Polish | 0/TBD | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 0/TBD | Not started | - |

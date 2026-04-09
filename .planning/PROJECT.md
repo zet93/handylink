@@ -22,6 +22,7 @@ A client can find a trusted local tradesperson and a worker can find their next 
 - ✓ React Native/Expo mobile app with role-based navigation — Phase 6
 - ✓ CI/CD pipeline (Render backend, Vercel frontend) — Phase 9
 - ✓ Password gate for private beta access — Phase 8
+- ✓ Google social login (web + mobile) with role selection for new users — Phase 12 (AUTH-01, AUTH-03; AUTH-02 Facebook deferred to Phase 13)
 
 ### Active
 
@@ -42,11 +43,12 @@ A client can find a trusted local tradesperson and a worker can find their next 
 - [ ] Mobile-first UI polish on both web and Expo app
 - [ ] Responsive layouts for common screen sizes
 
-**Security:**
-- [ ] Protect user personal data (emails, phone numbers) from unauthenticated access
-- [ ] Authorization audit — verify users can only modify their own resources
-- [ ] Stripe webhook signature validation
-- [ ] Basic rate limiting on auth and bid submission endpoints
+**Security:** ✓ Validated in Phase 9
+- ✓ PII audit — integration tests prove no email/phone in public-facing responses (SEC-01)
+- ✓ Authorization audit — non-owners get 403 on job/bid mutations, proven by tests (SEC-02)
+- ✓ Stripe webhook invalid signature returns 400 instead of 500 (SEC-03)
+- ✓ Rate limiting (20 req/min) on payment and bid write endpoints (SEC-04)
+- ✓ CORS replaced with config-driven WithOrigins (localhost:5173 default) (SEC-05)
 
 **Mobile:**
 - [ ] End-to-end test on physical Android and iOS devices
@@ -79,7 +81,7 @@ A client can find a trusted local tradesperson and a worker can find their next 
 
 **Design state:** No visual identity yet. Both web and mobile use unstyled or default Tailwind. The app works but looks unpolished.
 
-**CORS:** Currently `AllowAll` (any origin/method/header) — intentionally permissive for dev, must be tightened before public beta.
+**CORS:** Config-driven via `Cors:AllowedOrigins` (Phase 9 complete). Ships `localhost:5173` in appsettings; production origins must be set in environment.
 
 **Auth:** JWT HS256 via Supabase. `ValidateIssuer` and `ValidateAudience` are both false — acceptable for now with Supabase-issued tokens.
 

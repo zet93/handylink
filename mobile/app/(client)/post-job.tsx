@@ -14,6 +14,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
+import { palette, typography } from '../constants/design';
 
 const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
 
@@ -145,24 +146,25 @@ export default function PostJobScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#fff' },
-  container: { padding: 24, paddingBottom: 48 },
-  heading: { fontSize: 24, fontWeight: 'bold', color: '#111', marginBottom: 24 },
-  label: { fontSize: 13, fontWeight: '600', color: '#444', marginBottom: 6 },
+  safe: { flex: 1, backgroundColor: palette.background },
+  container: { padding: 24, paddingBottom: 48, backgroundColor: palette.background },
+  heading: { fontSize: typography.headingSize, fontWeight: 'bold', color: palette.text, marginBottom: 24 },
+  label: { fontSize: 13, fontWeight: '600', color: palette.text, marginBottom: 6 },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: palette.border,
     borderRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 15,
-    color: '#111',
+    fontSize: typography.bodySize,
+    color: palette.text,
     marginBottom: 16,
+    backgroundColor: palette.panel,
   },
   textArea: { minHeight: 100, textAlignVertical: 'top' },
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: palette.border,
     borderRadius: 10,
     marginBottom: 16,
     overflow: 'hidden',
@@ -171,7 +173,7 @@ const styles = StyleSheet.create({
   budgetRow: { flexDirection: 'row', gap: 12 },
   budgetField: { flex: 1 },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: palette.accent,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',

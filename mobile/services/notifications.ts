@@ -33,7 +33,13 @@ export function setUpNotificationHandlers(router: any): void {
     const data = response.notification.request.content.data as any;
     if (data?.type === 'bid_received' && data?.reference_id) {
       router.push({ pathname: '/(client)/job-detail', params: { id: data.reference_id } });
-    } else if (data?.type === 'bid_accepted' || data?.type === 'bid_rejected') {
+    } else if (
+      data?.type === 'bid_accepted' ||
+      data?.type === 'bid_rejected' ||
+      data?.type === 'job_in_progress' ||
+      data?.type === 'job_completed' ||
+      data?.type === 'job_cancelled'
+    ) {
       router.push('/(worker)/my-bids');
     }
   });

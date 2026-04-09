@@ -12,6 +12,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStripe } from '@stripe/stripe-react-native';
 import api from '../../services/api';
+import { palette, typography } from '../constants/design';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   open: { bg: '#DBEAFE', text: '#1D4ED8' },
@@ -108,23 +109,24 @@ export default function JobDetailScreen() {
       <View style={styles.jobCard}>
         <View style={styles.jobHeader}>
           <Text style={styles.jobTitle}>{job.title}</Text>
-          <View style={[styles.badge, { backgroundColor: jobColors.bg }]}>
+          <View style={[styles.badge, { backgroundColor: jobColors.bg }]}> 
             <Text style={[styles.badgeText, { color: jobColors.text }]}>
               {job.status.replace('_', ' ')}
             </Text>
           </View>
         </View>
-        {job.description ? (
-          <Text style={styles.description}>{job.description}</Text>
-        ) : null}
+
+        <View style={styles.helpBox}>
+          <Text style={styles.helpText}>Submit bid if you are a worker. Clients can choose the best offer and press Accept or Mark In Progress.</Text>
+        </View>
+
+        {job.description ? <Text style={styles.description}>{job.description}</Text> : null}
         <View style={styles.metaGrid}>
           {job.city ? <Text style={styles.meta}>Location: {job.city}</Text> : null}
           {job.category ? <Text style={styles.meta}>Category: {job.category}</Text> : null}
           {job.budgetMin ? <Text style={styles.meta}>Min: {job.budgetMin} RON</Text> : null}
           {job.budgetMax ? <Text style={styles.meta}>Max: {job.budgetMax} RON</Text> : null}
-          <Text style={styles.meta}>
-            Posted: {new Date(job.createdAt).toLocaleDateString()}
-          </Text>
+          <Text style={styles.meta}>Posted: {new Date(job.createdAt).toLocaleDateString()}</Text>
         </View>
       </View>
 
@@ -145,19 +147,15 @@ export default function JobDetailScreen() {
             <View key={bid.id} style={styles.bidCard}>
               <View style={styles.bidHeader}>
                 <View>
-                  <Text style={styles.bidWorker}>
-                    Worker: {bid.workerId?.slice(0, 8) ?? 'Unknown'}...
-                  </Text>
+                  <Text style={styles.bidWorker}>Worker: {bid.workerId?.slice(0, 8) ?? 'Unknown'}...</Text>
                   <Text style={styles.bidPrice}>{bid.priceEstimate} RON</Text>
                 </View>
                 <View style={[styles.badge, { backgroundColor: bidColors.bg }]}>
-                  <Text style={[styles.badgeText, { color: bidColors.text }]}>
-                    {bid.status}
-                  </Text>
+                  <Text style={[styles.badgeText, { color: bidColors.text }]}>{bid.status}</Text>
                 </View>
               </View>
               {bid.message ? <Text style={styles.bidMessage}>{bid.message}</Text> : null}
-              {canAct && bid.status === 'pending' ? (
+              {canAct && bid.status === 'pending' && (
                 <View style={styles.bidActions}>
                   <TouchableOpacity
                     style={styles.acceptBtn}
@@ -174,7 +172,7 @@ export default function JobDetailScreen() {
                     <Text style={styles.rejectText}>Reject</Text>
                   </TouchableOpacity>
                 </View>
-              ) : null}
+              )}
             </View>
           );
         })
@@ -184,65 +182,52 @@ export default function JobDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB' },
-  content: { padding: 16, paddingBottom: 48 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  notFound: { color: '#888', fontSize: 16 },
+  container: { flex: 1, backgroundColor: palette.background },
+  content: { padding: 16, paddingBottom: 72 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: palette.background },
+  notFound: { color: palette.muted, fontSize: typography.bodySize },
   jobCard: {
-    backgroundColor: '#fff',
+    backgroundColor: palette.panel,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: palette.border,
   },
   jobHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 },
-  jobTitle: { fontSize: 20, fontWeight: 'bold', color: '#111', flex: 1, marginRight: 8 },
+  jobTitle: { fontSize: typography.headingSize, fontWeight: '700', color: palette.text, flex: 1, marginRight: 8 },
   badge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 12 },
   badgeText: { fontSize: 11, fontWeight: '600', textTransform: 'capitalize' },
-  description: { fontSize: 14, color: '#555', lineHeight: 20, marginBottom: 12 },
+  helpBox: { backgroundColor: '#E0F2FE', padding: 10, borderRadius: 10, marginBottom: 10 },
+  helpText: { fontSize: typography.bodySize, color: '#0C4A6E' },
+  description: { fontSize: typography.bodySize, color: palette.text, lineHeight: 20, marginBottom: 12 },
   metaGrid: { gap: 4 },
-  meta: { fontSize: 13, color: '#666' },
-  sectionTitle: { fontSize: 17, fontWeight: '700', color: '#111', marginBottom: 12 },
-  emptyText: { color: '#888', fontSize: 14, marginBottom: 20 },
+  meta: { fontSize: typography.bodySize, color: palette.muted },
+  sectionTitle: { fontSize: typography.titleSize, fontWeight: '700', color: palette.text, marginBottom: 12 },
+  emptyText: { color: palette.muted, fontSize: typography.bodySize, marginBottom: 20 },
   bidCard: {
-    backgroundColor: '#fff',
+    backgroundColor: palette.panel,
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    elevation: 1,
+    borderWidth: 1,
+    borderColor: palette.border,
   },
   bidHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 },
-  bidWorker: { fontSize: 13, color: '#555', marginBottom: 2 },
-  bidPrice: { fontSize: 18, fontWeight: 'bold', color: '#007AFF' },
-  bidMessage: { fontSize: 13, color: '#666', marginBottom: 10 },
+  bidWorker: { fontSize: typography.bodySize, color: palette.text, marginBottom: 2 },
+  bidPrice: { fontSize: typography.titleSize, fontWeight: 'bold', color: palette.accent },
+  bidMessage: { fontSize: typography.bodySize, color: palette.muted, marginBottom: 10 },
   bidActions: { flexDirection: 'row', gap: 10 },
-  acceptBtn: {
-    backgroundColor: '#16A34A',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  acceptText: { color: '#fff', fontWeight: '600', fontSize: 14 },
-  rejectBtn: {
-    borderWidth: 1,
-    borderColor: '#DC2626',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  rejectText: { color: '#DC2626', fontWeight: '600', fontSize: 14 },
+  acceptBtn: { backgroundColor: palette.accent, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 },
+  acceptText: { color: '#fff', fontWeight: '600', fontSize: typography.bodySize },
+  rejectBtn: { borderWidth: 1, borderColor: '#DC2626', borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 },
+  rejectText: { color: '#DC2626', fontWeight: '600', fontSize: typography.bodySize },
   payBtn: {
-    backgroundColor: '#16A34A',
+    backgroundColor: palette.accent,
     borderRadius: 10,
     paddingVertical: 13,
     alignItems: 'center',
     marginBottom: 20,
   },
-  payBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  payBtnText: { color: '#fff', fontWeight: '700', fontSize: typography.bodySize },
 });
