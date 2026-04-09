@@ -1,3 +1,4 @@
+using HandyLink.Core.Commands;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Exceptions;
 using HandyLink.Infrastructure.Data;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HandyLink.API.Features.Bids.RejectBid;
 
-public class RejectBidHandler(HandyLinkDbContext context)
+public class RejectBidHandler(HandyLinkDbContext context, IMediator mediator)
     : IRequestHandler<RejectBidCommand, RejectBidResponse>
 {
     public async Task<RejectBidResponse> Handle(RejectBidCommand command, CancellationToken cancellationToken)
@@ -26,6 +27,13 @@ public class RejectBidHandler(HandyLinkDbContext context)
         bid.UpdatedAt = DateTimeOffset.UtcNow;
 
         await context.SaveChangesAsync(cancellationToken);
+
+        await mediator.Send(new SendPushNotificationCommand(
+            bid.WorkerId,
+            "Bid not accepted",
+            "The client chose another worker for this job.",
+            "bid_rejected",
+            bid.JobId), cancellationToken);
 
         return new RejectBidResponse(bid.Id, bid.Status.ToString());
     }
