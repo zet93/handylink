@@ -55,13 +55,13 @@ Source: `mobile/app/constants/design.ts` — `typography` object; web matches vi
 |------|------|--------|-------------|
 | Body | 16px | 400 (regular) | 1.5 (24px) |
 | Label | 13px | 600 (semibold) | 1.2 |
-| Heading | 24px | 700 (bold) | 1.2 |
+| Heading | 24px | 600 (semibold) | 1.2 |
 | Display | 20px | 600 (semibold) | 1.2 |
 
 Notes:
 - Label size (13px) is taken from the existing `post-job.tsx` `styles.label` — `fontSize: 13, fontWeight: '600'`
 - Heading (24px) is `typography.headingSize`; Display (20px) is `typography.titleSize`
-- Only 2 weights in use: 400 (regular inputs, body text) and 600/700 (labels, buttons, headings)
+- Exactly 2 weights in use: 400 (body text, regular inputs) and 600 (labels, buttons, headings, display)
 
 ---
 
@@ -183,6 +183,12 @@ Additional semantic colors carried over from existing codebase:
 | npm (react-native-maps, expo-location) | npm packages | same — Expo managed versions, not shadcn blocks |
 
 No third-party shadcn registries used in this phase. Registry safety gate: not applicable.
+
+---
+
+## Visuals
+
+When coordinates are present, the embedded map is the primary visual anchor on job-detail.
 
 ---
 
