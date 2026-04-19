@@ -136,7 +136,11 @@ Plans:
   1. A client can optionally add a location (address or map pin) when creating a job
   2. Job listings display a map or address so workers know where the work is
   3. A worker's profile can include a service area or home location
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 14-01-PLAN.md — Backend: SQL migration, entity/DTO updates, extend Job slices with location, new UpdateWorkerLocation slice (MAP-01, MAP-02, MAP-03)
+- [ ] 14-02-PLAN.md — Web frontend: LocationPicker, JobMap components, PostJobPage, JobDetailPage, EditProfilePage (MAP-01, MAP-02, MAP-03)
+- [ ] 14-03-PLAN.md — Mobile: LocationPickerMobile, JobMapMobile components, post-job, job-detail, worker profile (MAP-01, MAP-02, MAP-03)
 **UI hint**: yes
 
 ### Phase 15: Analytics + Observability
@@ -165,5 +169,5 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 11. App Design | Beta Polish | 0/TBD | Not started | - |
 | 12. Social Login | Beta Polish | 1/3 | Complete    | 2026-04-02 |
 | 13. Notifications + Mobile Testing | Beta Polish | 3/3 | Complete   | 2026-04-09 |
-| 14. Maps & Location | Beta Polish | 0/TBD | Not started | - |
+| 14. Maps & Location | Beta Polish | 0/3 | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 0/TBD | Not started | - |
