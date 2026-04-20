@@ -41,6 +41,7 @@ public class HandyLinkDbContext(DbContextOptions<HandyLinkDbContext> options) : 
             e.Property(w => w.IsVerified).HasColumnName("is_verified");
             e.Property(w => w.AverageRating).HasColumnName("average_rating");
             e.Property(w => w.TotalReviews).HasColumnName("total_reviews");
+            e.Property(w => w.ServiceRadiusKm).HasColumnName("service_radius_km");
             e.Property(w => w.CreatedAt).HasColumnName("created_at");
             e.HasOne(w => w.Profile).WithOne(p => p.WorkerProfile).HasForeignKey<WorkerProfile>(w => w.Id);
         });
@@ -55,6 +56,7 @@ public class HandyLinkDbContext(DbContextOptions<HandyLinkDbContext> options) : 
             e.Property(j => j.BudgetMax).HasColumnName("budget_max");
             e.Property(j => j.AcceptedBidId).HasColumnName("accepted_bid_id");
             e.Property(j => j.StripePaymentIntentId).HasColumnName("stripe_payment_intent_id");
+            e.Property(j => j.Address).HasColumnName("address");
             e.Property(j => j.CreatedAt).HasColumnName("created_at");
             e.Property(j => j.UpdatedAt).HasColumnName("updated_at");
             e.HasOne(j => j.Client).WithMany(p => p.Jobs).HasForeignKey(j => j.ClientId);
