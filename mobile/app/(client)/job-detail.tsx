@@ -13,6 +13,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useStripe } from '@stripe/stripe-react-native';
 import api from '../../services/api';
 import { palette, typography } from '../constants/design';
+import JobMapMobile from '../../components/JobMapMobile';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   open: { bg: '#DBEAFE', text: '#1D4ED8' },
@@ -121,6 +122,14 @@ export default function JobDetailScreen() {
         </View>
 
         {job.description ? <Text style={styles.description}>{job.description}</Text> : null}
+
+        {job.latitude && job.longitude && (
+          <View style={{ marginTop: 16, marginBottom: 16 }}>
+            <Text style={{ fontSize: 17, fontWeight: '600', marginBottom: 8, color: palette.text }}>Location</Text>
+            <JobMapMobile latitude={job.latitude} longitude={job.longitude} address={job.address} />
+          </View>
+        )}
+
         <View style={styles.metaGrid}>
           {job.city ? <Text style={styles.meta}>Location: {job.city}</Text> : null}
           {job.category ? <Text style={styles.meta}>Category: {job.category}</Text> : null}

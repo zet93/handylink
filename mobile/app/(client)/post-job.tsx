@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../../services/api';
 import { palette, typography } from '../constants/design';
+import LocationPickerMobile from '../../components/LocationPickerMobile';
 
 const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
 
@@ -28,6 +29,7 @@ export default function PostJobScreen() {
   const [category, setCategory] = useState('electrical');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
+  const [location, setLocation] = useState<{ latitude: number | null; longitude: number | null; address: string | null }>({ latitude: null, longitude: null, address: null });
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
@@ -38,6 +40,9 @@ export default function PostJobScreen() {
         category,
         budget_min: budgetMin ? Number(budgetMin) : undefined,
         budget_max: budgetMax ? Number(budgetMax) : undefined,
+        latitude: location.latitude || null,
+        longitude: location.longitude || null,
+        address: location.address || null,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-jobs'] });
@@ -89,6 +94,13 @@ export default function PostJobScreen() {
           value={city}
           onChangeText={setCity}
           autoCapitalize="words"
+        />
+
+        <LocationPickerMobile
+          latitude={location.latitude}
+          longitude={location.longitude}
+          address={location.address}
+          onChange={setLocation}
         />
 
         <Text style={styles.label}>Category</Text>

@@ -15,6 +15,39 @@ import { useRouter } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../services/supabase';
 import api from '../../services/api';
+import { palette } from '../constants/design';
+import LocationPickerMobile from '../../components/LocationPickerMobile';
+
+function RadiusSelector({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  const options = [10, 20, 50, 100];
+  return (
+    <View style={{ flexDirection: 'row', gap: 8 }}>
+      {options.map(km => (
+        <TouchableOpacity
+          key={km}
+          onPress={() => onChange(km)}
+          style={{
+            paddingHorizontal: 16,
+            paddingVertical: 10,
+            borderRadius: 10,
+            minHeight: 44,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: value === km ? palette.accent : palette.panel,
+            borderWidth: 1,
+            borderColor: palette.border,
+          }}
+        >
+          <Text style={{
+            fontSize: 14,
+            fontWeight: value === km ? '600' : '400',
+            color: value === km ? '#ffffff' : palette.text,
+          }}>{km} km</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
 
 export default function WorkerProfileScreen() {
   const router = useRouter();
@@ -40,6 +73,9 @@ export default function WorkerProfileScreen() {
     },
     onError: () => Alert.alert('Error', 'Failed to save profile.'),
   });
+
+  const [serviceLocation, setServiceLocation] = useState<{ latitude: number | null; longitude: number | null; address: string | null }>({ latitude: null, longitude: null, address: null });
+  const [radiusKm, setRadiusKm] = useState(20);
 
   const [connectLoading, setConnectLoading] = useState(false);
 
@@ -152,6 +188,32 @@ export default function WorkerProfileScreen() {
             : <Text style={styles.stripeBtnText}>Connect to Stripe</Text>}
         </TouchableOpacity>
 
+        <View style={{ marginTop: 24 }}>
+          <Text style={{ fontSize: 17, fontWeight: '600', marginBottom: 8, color: palette.text }}>Service Area (optional)</Text>
+          <LocationPickerMobile
+            latitude={serviceLocation.latitude}
+            longitude={serviceLocation.longitude}
+            address={serviceLocation.address}
+            onChange={setServiceLocation}
+          />
+          {serviceLocation.latitude ? (
+            <View style={{ marginTop: 12 }}>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: palette.text, marginBottom: 4 }}>Work radius</Text>
+              <RadiusSelector value={radiusKm} onChange={setRadiusKm} />
+              <TouchableOpacity
+                style={[styles.saveLocationBtn]}
+                onPress={() => api.put('/api/users/me/location', {
+                  latitude: serviceLocation.latitude,
+                  longitude: serviceLocation.longitude,
+                  serviceRadiusKm: radiusKm,
+                }).then(() => Alert.alert('Saved', 'Service area updated.')).catch(() => Alert.alert('Error', 'Failed to save service area.'))}
+              >
+                <Text style={styles.saveLocationText}>Save Service Area</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
+        </View>
+
         <TouchableOpacity style={styles.signOutBtn} onPress={handleSignOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
@@ -222,4 +284,12 @@ const styles = StyleSheet.create({
     borderColor: '#DC2626',
   },
   signOutText: { color: '#DC2626', fontWeight: '600', fontSize: 15 },
+  saveLocationBtn: {
+    backgroundColor: palette.accent,
+    borderRadius: 10,
+    paddingVertical: 11,
+    alignItems: 'center' as const,
+    marginTop: 12,
+  },
+  saveLocationText: { color: '#fff', fontWeight: '600' as const, fontSize: 15 },
 });
