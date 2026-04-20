@@ -128,7 +128,7 @@ Plans:
 - [x] 13-02-PLAN.md — Mobile tap-routing for job-status notification types (NOTF-03)
 - [x] 13-03-PLAN.md — Physical device smoke test: Android + iOS (MOB-01, MOB-02, MOB-03, MOB-04)
 
-### Phase 14: Maps & Location
+### Phase 14: Maps & Location ✅ 2026-04-20
 **Goal**: Jobs can have a location, and that location is visible to both clients and workers on a map
 **Depends on**: Phase 13
 **Requirements**: MAP-01, MAP-02, MAP-03
@@ -138,9 +138,9 @@ Plans:
   3. A worker's profile can include a service area or home location
 **Plans:** 3 plans
 Plans:
-- [ ] 14-01-PLAN.md — Backend: SQL migration, entity/DTO updates, extend Job slices with location, new UpdateWorkerLocation slice (MAP-01, MAP-02, MAP-03)
-- [ ] 14-02-PLAN.md — Web frontend: LocationPicker, JobMap components, PostJobPage, JobDetailPage, EditProfilePage (MAP-01, MAP-02, MAP-03)
-- [ ] 14-03-PLAN.md — Mobile: LocationPickerMobile, JobMapMobile components, post-job, job-detail, worker profile (MAP-01, MAP-02, MAP-03)
+- [x] 14-01-PLAN.md — Backend: SQL migration, entity/DTO updates, extend Job slices with location, new UpdateWorkerLocation slice (MAP-01, MAP-02, MAP-03)
+- [x] 14-02-PLAN.md — Web frontend: LocationPicker, JobMap components, PostJobPage, JobDetailPage, EditProfilePage (MAP-01, MAP-02, MAP-03)
+- [x] 14-03-PLAN.md — Mobile: LocationPickerMobile, JobMapMobile components, post-job, job-detail, worker profile (MAP-01, MAP-02, MAP-03)
 **UI hint**: yes
 
 ### Phase 15: Analytics + Observability
