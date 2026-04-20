@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
 import PaymentForm from '../components/PaymentForm';
 import AuthPromptModal from '../components/AuthPromptModal';
+import JobMap from '../components/JobMap';
 
 const bidSchema = z.object({
   priceEstimate: z.coerce.number().positive('Must be a positive number'),
@@ -219,6 +220,12 @@ export default function JobDetailPage() {
           </span>
         </div>
         <p className="text-gray-700 mb-4">{job.description}</p>
+        {job.latitude && job.longitude && (
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-2">Location</h2>
+            <JobMap latitude={job.latitude} longitude={job.longitude} address={job.address} />
+          </div>
+        )}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-600">
           <div><span className="font-medium">Category:</span> {job.category.replace('_', ' ')}</div>
           <div><span className="font-medium">Location:</span> {job.city}, {job.country}</div>
