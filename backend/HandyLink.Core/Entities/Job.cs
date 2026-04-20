@@ -14,6 +14,9 @@ public class Job
     public string[] Photos { get; set; } = [];
     public decimal? BudgetMin { get; set; }
     public decimal? BudgetMax { get; set; }
+    public decimal? Latitude { get; set; }
+    public decimal? Longitude { get; set; }
+    public string? Address { get; set; }
     public JobStatus Status { get; set; } = JobStatus.Open;
     public Guid? AcceptedBidId { get; set; }
     public string? StripePaymentIntentId { get; set; }

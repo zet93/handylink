@@ -13,4 +13,7 @@ public record CreateJobResponse(
     decimal? BudgetMin,
     decimal? BudgetMax,
     JobStatus Status,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address);

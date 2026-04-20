@@ -10,4 +10,7 @@ public record CreateJobDto(
     string Country,
     decimal? BudgetMin,
     decimal? BudgetMax,
-    string[]? Photos);
+    string[]? Photos,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address);

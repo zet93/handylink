@@ -11,6 +11,9 @@ public record JobSummary(
     decimal? BudgetMax,
     string Status,
     int BidCount,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address);
 
 public record GetJobsResponse(List<JobSummary> Items, int TotalCount, int Page, int PageSize);

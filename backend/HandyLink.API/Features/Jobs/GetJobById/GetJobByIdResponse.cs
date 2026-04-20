@@ -12,4 +12,7 @@ public record GetJobByIdResponse(
     decimal? BudgetMin,
     decimal? BudgetMax,
     string Status,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address);
