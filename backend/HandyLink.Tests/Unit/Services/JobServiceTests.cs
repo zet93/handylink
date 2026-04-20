@@ -32,7 +32,7 @@ public class JobServiceTests
     {
         var (ctx, svc) = Build();
         var userId = SeedProfile(ctx).Id;
-        var dto = new CreateJobDto("Fix sink", "Leaking pipe", JobCategory.Plumbing, "Bucharest", "RO", null, null, null);
+        var dto = new CreateJobDto("Fix sink", "Leaking pipe", JobCategory.Plumbing, "Bucharest", "RO", null, null, null, null, null, null);
 
         var result = await svc.CreateJobAsync(userId, dto);
 
@@ -53,7 +53,7 @@ public class JobServiceTests
     {
         var (ctx, svc) = Build();
         var userId = SeedProfile(ctx).Id;
-        var created = await svc.CreateJobAsync(userId, new CreateJobDto("Tile work", "Bathroom", JobCategory.General, "Cluj", "RO", null, null, null));
+        var created = await svc.CreateJobAsync(userId, new CreateJobDto("Tile work", "Bathroom", JobCategory.General, "Cluj", "RO", null, null, null, null, null, null));
 
         var result = await svc.GetJobByIdAsync(created.Id);
 
@@ -66,7 +66,7 @@ public class JobServiceTests
         var (ctx, svc) = Build();
         var ownerId = SeedProfile(ctx).Id;
         var otherId = SeedProfile(ctx).Id;
-        var job = await svc.CreateJobAsync(ownerId, new CreateJobDto("Job", "Desc", JobCategory.General, "City", "RO", null, null, null));
+        var job = await svc.CreateJobAsync(ownerId, new CreateJobDto("Job", "Desc", JobCategory.General, "City", "RO", null, null, null, null, null, null));
 
         await Assert.ThrowsAsync<ForbiddenException>(() => svc.UpdateJobStatusAsync(otherId, job.Id, JobStatus.Cancelled));
     }
@@ -76,7 +76,7 @@ public class JobServiceTests
     {
         var (ctx, svc) = Build();
         var userId = SeedProfile(ctx).Id;
-        var job = await svc.CreateJobAsync(userId, new CreateJobDto("Job", "Desc", JobCategory.General, "City", "RO", null, null, null));
+        var job = await svc.CreateJobAsync(userId, new CreateJobDto("Job", "Desc", JobCategory.General, "City", "RO", null, null, null, null, null, null));
 
         var result = await svc.UpdateJobStatusAsync(userId, job.Id, JobStatus.Cancelled);
 
@@ -88,8 +88,8 @@ public class JobServiceTests
     {
         var (ctx, svc) = Build();
         var userId = SeedProfile(ctx).Id;
-        await svc.CreateJobAsync(userId, new CreateJobDto("A", "D", JobCategory.Plumbing, "City", "RO", null, null, null));
-        await svc.CreateJobAsync(userId, new CreateJobDto("B", "D", JobCategory.Electrical, "City", "RO", null, null, null));
+        await svc.CreateJobAsync(userId, new CreateJobDto("A", "D", JobCategory.Plumbing, "City", "RO", null, null, null, null, null, null));
+        await svc.CreateJobAsync(userId, new CreateJobDto("B", "D", JobCategory.Electrical, "City", "RO", null, null, null, null, null, null));
 
         var result = await svc.GetJobsAsync(new JobFilter(Category: JobCategory.Plumbing));
 

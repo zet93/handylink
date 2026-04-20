@@ -30,7 +30,8 @@ public class GetJobsHandler(HandyLinkDbContext context)
         var summaries = items.Select(j => new JobSummary(
             j.Id, j.ClientId, j.Title, j.Category.ToString(),
             j.City, j.Country, j.BudgetMin, j.BudgetMax,
-            j.Status.ToString(), j.Bids.Count, j.CreatedAt)).ToList();
+            j.Status.ToString(), j.Bids.Count, j.CreatedAt,
+            j.Latitude, j.Longitude, j.Address)).ToList();
 
         return new GetJobsResponse(summaries, total, query.Page, query.PageSize);
     }

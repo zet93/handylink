@@ -22,7 +22,8 @@ public class JobsController(IMediator mediator) : BaseController
     public async Task<IActionResult> CreateJob([FromBody] CreateJobDto dto, CancellationToken ct)
     {
         var result = await mediator.Send(new CreateJobCommand(
-            GetUserId(), dto.Title, dto.Description, dto.Category, dto.City, dto.Country, dto.Photos, dto.BudgetMin, dto.BudgetMax), ct);
+            GetUserId(), dto.Title, dto.Description, dto.Category, dto.City, dto.Country, dto.Photos, dto.BudgetMin, dto.BudgetMax,
+            dto.Latitude, dto.Longitude, dto.Address), ct);
         return CreatedAtAction(nameof(GetJobById), new { id = result.Id }, result);
     }
 
