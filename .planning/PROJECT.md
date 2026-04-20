@@ -56,7 +56,7 @@ A client can find a trusted local tradesperson and a worker can find their next 
 
 **Integrations:**
 - [ ] Social login — Google and/or Facebook (lower friction for Romanian users)
-- [ ] Maps/location — pin job locations, show nearby workers (Google Maps or Mapbox)
+- [x] Maps/location — job location with Nominatim address search + Leaflet/react-native-maps display — Validated in Phase 14 (MAP-01, MAP-02, MAP-03)
 - [ ] Push/SMS notifications for key events (new bid, bid accepted, job update)
 - [ ] Analytics — user behavior tracking, funnel visibility, drop-off identification
 
@@ -125,4 +125,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-29 after initialization*
+*Last updated: 2026-04-20 — Phase 14 (Maps & Location) complete*
