@@ -3,15 +3,25 @@ import { ActivityIndicator, View } from 'react-native';
 import { Slot, useRouter } from 'expo-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StripeProvider } from '@stripe/stripe-react-native';
+import { PostHogProvider, usePostHog } from 'posthog-react-native';
+import * as Sentry from '@sentry/react-native';
 import { supabase } from '../services/supabase';
+import { posthogOptions } from '../services/posthog';
+import { ConsentModal } from '../components/ConsentModal';
 import { registerForPushNotifications, setUpNotificationHandlers } from '../services/notifications';
 import api from '../services/api';
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  tracesSampleRate: 0.1,
+});
 
 const queryClient = new QueryClient();
 
 function AppRoot() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const posthog = usePostHog();
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -37,6 +47,7 @@ function AppRoot() {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT') {
+        posthog?.reset();
         router.replace('/(public)/browse');
       } else if (event === 'SIGNED_IN' && session) {
         try {
@@ -65,12 +76,18 @@ function AppRoot() {
   return <Slot />;
 }
 
-export default function RootLayout() {
+export default Sentry.wrap(function RootLayout() {
   return (
-    <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_KEY ?? ''}>
-      <QueryClientProvider client={queryClient}>
-        <AppRoot />
-      </QueryClientProvider>
-    </StripeProvider>
+    <PostHogProvider
+      apiKey={process.env.EXPO_PUBLIC_POSTHOG_KEY!}
+      options={posthogOptions}
+    >
+      <StripeProvider publishableKey={process.env.EXPO_PUBLIC_STRIPE_KEY ?? ''}>
+        <QueryClientProvider client={queryClient}>
+          <AppRoot />
+          <ConsentModal />
+        </QueryClientProvider>
+      </StripeProvider>
+    </PostHogProvider>
   );
-}
+});

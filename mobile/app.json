@@ -38,7 +38,9 @@
         {
           "androidGoogleMapsApiKey": "$GOOGLE_MAPS_API_KEY"
         }
-      ]
+      ],
+      "expo-localization",
+      "@sentry/react-native/expo"
     ]
   }
 }
