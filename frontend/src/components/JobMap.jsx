@@ -9,6 +9,7 @@ delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({ iconRetinaUrl: markerIcon2x, iconUrl: markerIcon, shadowUrl: markerShadow });
 
 export default function JobMap({ latitude, longitude, address }) {
+  if (!latitude || !longitude) return null;
   return (
     <div>
       <div className="h-64 w-full rounded-lg overflow-hidden border border-gray-200">
