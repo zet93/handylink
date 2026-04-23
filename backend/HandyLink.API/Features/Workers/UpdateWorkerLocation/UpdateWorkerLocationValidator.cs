@@ -20,5 +20,10 @@ public class UpdateWorkerLocationValidator : AbstractValidator<UpdateWorkerLocat
             .Must(v => AllowedRadii.Contains(v!.Value))
             .WithMessage("Service radius must be 10, 20, 50, or 100 km")
             .When(x => x.ServiceRadiusKm.HasValue);
+
+        RuleFor(x => x)
+            .Must(x => (x.Latitude.HasValue && x.Longitude.HasValue)
+                       || (!x.Latitude.HasValue && !x.Longitude.HasValue))
+            .WithMessage("Latitude and longitude must both be provided or both omitted.");
     }
 }
