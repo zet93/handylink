@@ -15,6 +15,9 @@ public class UpdateWorkerLocationHandler(HandyLinkDbContext context)
             .FirstOrDefaultAsync(w => w.Id == command.WorkerId, cancellationToken)
             ?? throw new NotFoundException("Worker profile not found.");
 
+        if (worker.Id != command.WorkerId)
+            throw new ForbiddenException("You can only update your own location.");
+
         worker.Latitude = command.Latitude;
         worker.Longitude = command.Longitude;
         worker.ServiceRadiusKm = command.ServiceRadiusKm;
