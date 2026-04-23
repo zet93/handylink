@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { usePostHog } from '@posthog/react';
 import axiosClient from '../api/axiosClient';
 import LocationPicker from '../components/LocationPicker';
 
@@ -20,6 +21,7 @@ const schema = z.object({
 
 export default function PostJobPage() {
   const navigate = useNavigate();
+  const posthog = usePostHog()
   const [location, setLocation] = useState({ latitude: null, longitude: null, address: null });
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
     resolver: zodResolver(schema),
@@ -43,6 +45,7 @@ export default function PostJobPage() {
     try {
       const res = await axiosClient.post('/api/jobs', payload);
       navigate(`/jobs/${res.data.id}`);
+      posthog?.capture('job_posted', { category: payload.category })
     } catch (err) {
       setError('root', { message: err.response?.data?.error ?? 'Failed to post job' });
     }

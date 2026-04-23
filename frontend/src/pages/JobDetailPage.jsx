@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { usePostHog } from '@posthog/react';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
 import PaymentForm from '../components/PaymentForm';
@@ -101,6 +102,7 @@ function ClientView({ job, bids, onStatusChange }) {
 
 function WorkerView({ job, bids, userId }) {
   const queryClient = useQueryClient();
+  const posthog = usePostHog()
   const myBid = bids.find(b => b.workerId === userId);
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
@@ -110,6 +112,7 @@ function WorkerView({ job, bids, userId }) {
   const submitBid = useMutation({
     mutationFn: data => axiosClient.post(`/api/jobs/${job.id}/bids`, data),
     onSuccess: () => {
+      posthog?.capture('bid_submitted', { job_id: job.id })
       queryClient.invalidateQueries({ queryKey: ['bids', job.id] });
       reset();
     },
