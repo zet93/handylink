@@ -51,8 +51,17 @@ public class UpdateJobStatusHandler(HandyLinkDbContext context, IMediator mediat
             };
 
             if (title is not null)
-                await mediator.Send(new SendPushNotificationCommand(
-                    job.AcceptedBid.WorkerId, title, body!, typeStr!, job.Id), cancellationToken);
+            {
+                try
+                {
+                    await mediator.Send(new SendPushNotificationCommand(
+                        job.AcceptedBid.WorkerId, title, body!, typeStr!, job.Id), cancellationToken);
+                }
+                catch
+                {
+                    // non-fatal
+                }
+            }
         }
 
         return new UpdateJobStatusResponse(job.Id, job.Status.ToString());
