@@ -160,7 +160,7 @@ Plans:
 - [ ] 15-03-PLAN.md — Ops: Supabase backup GitHub Actions cron + OPERATIONS.md doc (OPS-02, OPS-03)
 - [x] 15-04-PLAN.md — Web: job_posted + bid_submitted captures in PostJobPage + JobDetailPage (ANLX-01)
 - [ ] 15-05-PLAN.md — Mobile: PostHog provider, ConsentModal, Sentry.wrap in _layout.tsx (ANLX-01)
-- [ ] 15-06-PLAN.md — Mobile: job_posted + bid_submitted captures in post-job + browse (ANLX-01)
+- [x] 15-06-PLAN.md — Mobile: job_posted + bid_submitted captures in post-job + browse (ANLX-01)
 
 Note: OPS-04 (content moderation) is deferred to a future v2/admin phase per D-18. UptimeRobot monitor setup (OPS-01 uptime) is a manual external service step — configure at https://uptimerobot.com pointing to the Render API /health endpoint after Plan 01 is executed.
 
@@ -179,4 +179,4 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 12. Social Login | Beta Polish | 1/3 | Complete    | 2026-04-02 |
 | 13. Notifications + Mobile Testing | Beta Polish | 3/3 | Complete   | 2026-04-09 |
 | 14. Maps & Location | Beta Polish | 0/3 | Not started | - |
-| 15. Analytics + Observability | Beta Polish | 4/6 | In Progress | - |
+| 15. Analytics + Observability | Beta Polish | 5/6 | In Progress | - |
