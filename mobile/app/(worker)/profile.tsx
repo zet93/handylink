@@ -77,6 +77,16 @@ export default function WorkerProfileScreen() {
   const [serviceLocation, setServiceLocation] = useState<{ latitude: number | null; longitude: number | null; address: string | null }>({ latitude: null, longitude: null, address: null });
   const [radiusKm, setRadiusKm] = useState(20);
 
+  const { mutate: saveLocation, isPending: savingLocation } = useMutation({
+    mutationFn: () => api.put('/api/users/me/location', {
+      latitude: serviceLocation.latitude,
+      longitude: serviceLocation.longitude,
+      serviceRadiusKm: radiusKm,
+    }),
+    onSuccess: () => Alert.alert('Saved', 'Service area updated.'),
+    onError: () => Alert.alert('Error', 'Failed to save service area.'),
+  });
+
   const [connectLoading, setConnectLoading] = useState(false);
 
   async function handleConnectStripe() {
@@ -201,14 +211,13 @@ export default function WorkerProfileScreen() {
               <Text style={{ fontSize: 13, fontWeight: '600', color: palette.text, marginBottom: 4 }}>Work radius</Text>
               <RadiusSelector value={radiusKm} onChange={setRadiusKm} />
               <TouchableOpacity
-                style={[styles.saveLocationBtn]}
-                onPress={() => api.put('/api/users/me/location', {
-                  latitude: serviceLocation.latitude,
-                  longitude: serviceLocation.longitude,
-                  serviceRadiusKm: radiusKm,
-                }).then(() => Alert.alert('Saved', 'Service area updated.')).catch(() => Alert.alert('Error', 'Failed to save service area.'))}
+                style={[styles.saveLocationBtn, savingLocation && styles.buttonDisabled]}
+                onPress={() => saveLocation()}
+                disabled={savingLocation}
               >
-                <Text style={styles.saveLocationText}>Save Service Area</Text>
+                {savingLocation
+                  ? <ActivityIndicator color="#fff" />
+                  : <Text style={styles.saveLocationText}>Save Service Area</Text>}
               </TouchableOpacity>
             </View>
           ) : null}
