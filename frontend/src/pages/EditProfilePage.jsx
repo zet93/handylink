@@ -57,6 +57,8 @@ export default function EditProfilePage() {
     }
   }, [userProfile, reset]);
 
+  const isWorker = userProfile?.role === 'worker' || userProfile?.role === 'both';
+
   async function onSubmit(data) {
     try {
       const calls = [
@@ -84,8 +86,6 @@ export default function EditProfilePage() {
       setError('root', { message: err.response?.data?.error ?? 'Failed to save profile' });
     }
   }
-
-  const isWorker = userProfile?.role === 'worker' || userProfile?.role === 'both';
 
   return (
     <div className="max-w-2xl mx-auto p-6">
