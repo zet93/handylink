@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { usePostHog } from '@posthog/react';
 
 const AuthContext = createContext(null);
 
@@ -8,6 +9,7 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const posthog = usePostHog();
 
   async function loadProfile(userId) {
     const { data } = await supabase
@@ -16,6 +18,9 @@ export function AuthProvider({ children }) {
       .eq('id', userId)
       .single();
     setUserProfile(data ?? null);
+    if (data) {
+      posthog?.identify(userId, { role: data.role })
+    }
   }
 
   useEffect(() => {
@@ -29,8 +34,13 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      if (session?.user) loadProfile(session.user.id);
-      else setUserProfile(null);
+      if (session?.user) {
+        loadProfile(session.user.id);
+        posthog?.capture('login');
+      } else {
+        setUserProfile(null);
+        posthog?.reset();
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -69,6 +79,8 @@ export function AuthProvider({ children }) {
       .from('profiles')
       .insert({ id: userId, full_name: fullName, role });
     if (profileError) return { error: profileError };
+
+    posthog?.capture('account_created', { role });
 
     if (role === 'worker' || role === 'both') {
       await supabase.from('worker_profiles').insert({ id: userId });
