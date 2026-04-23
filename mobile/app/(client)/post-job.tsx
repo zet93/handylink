@@ -13,6 +13,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { usePostHog } from 'posthog-react-native';
 import api from '../../services/api';
 import { palette, typography } from '../constants/design';
 import LocationPickerMobile from '../../components/LocationPickerMobile';
@@ -22,6 +23,7 @@ const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'cleaning
 export default function PostJobScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const posthog = usePostHog();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -46,6 +48,7 @@ export default function PostJobScreen() {
         address: location.address ?? null,
       }),
     onSuccess: () => {
+      posthog?.capture('job_posted', { category });
       queryClient.invalidateQueries({ queryKey: ['my-jobs'] });
       router.back();
     },
