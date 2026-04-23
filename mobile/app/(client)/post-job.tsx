@@ -37,12 +37,13 @@ export default function PostJobScreen() {
         title,
         description,
         city,
+        country: 'RO',
         category,
-        budget_min: budgetMin ? Number(budgetMin) : undefined,
-        budget_max: budgetMax ? Number(budgetMax) : undefined,
-        latitude: location.latitude || null,
-        longitude: location.longitude || null,
-        address: location.address || null,
+        budgetMin: budgetMin ? Number(budgetMin) : null,
+        budgetMax: budgetMax ? Number(budgetMax) : null,
+        latitude: location.latitude ?? null,
+        longitude: location.longitude ?? null,
+        address: location.address ?? null,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-jobs'] });
