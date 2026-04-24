@@ -26,6 +26,8 @@ created: 2026-04-24
 
 Source: project codebase scan — no `components.json` found; existing pages use raw Tailwind; mobile uses `palette`/`typography` from `mobile/app/constants/design.ts`.
 
+Focal point: The county selector (`<select>` on web, `NomenclatorPicker` trigger on mobile) is the primary visual anchor introduced by this phase — it is the first interactive element the user encounters and drives the enabled/disabled state of the city selector below it.
+
 ---
 
 ## Spacing Scale
@@ -56,7 +58,7 @@ Source: post-job.tsx `container: { padding: 24 }`, profile.tsx `container: { pad
 |------|------|--------|-------------|
 | Body | 16px | 400 (regular) | 1.5 (24px) |
 | Label | 13px | 600 (semibold) | 1.2 |
-| Heading | 24px | 700 (bold) | 1.2 |
+| Heading | 24px | 600 (semibold) | 1.2 |
 | Sub-heading / section title | 17px | 600 (semibold) | 1.3 |
 
 Applied to new components:
