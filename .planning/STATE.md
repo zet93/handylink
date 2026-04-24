@@ -80,6 +80,10 @@ Recent decisions affecting current work:
 - [Phase 13]: UpdateJobStatusHandler sends job_in_progress/job_completed/job_cancelled to worker via AcceptedBid; silently skips when AcceptedBid is null
 - [Phase 13-notifications-mobile-testing]: All MOB requirements (MOB-01 through MOB-04) confirmed passing on physical Android and iOS devices via manual smoke test
 
+### Roadmap Evolution
+
+- Phase 16 added: Add address nomenclators
+
 ### Pending Todos
 
 None yet.

@@ -164,6 +164,16 @@ Plans:
 
 Note: OPS-04 (content moderation) is deferred to a future v2/admin phase per D-18. UptimeRobot monitor setup (OPS-01 uptime) is a manual external service step — configure at https://uptimerobot.com pointing to the Render API /health endpoint after Plan 01 is executed.
 
+### Phase 16: Add Address Nomenclators
+**Goal**: Address fields across the app use structured nomenclator data (counties, cities) instead of freeform text inputs
+**Depends on**: Phase 15
+**Requirements**: TBD
+**Success Criteria** (what must be TRUE):
+  1. Address inputs on web and mobile present selectable county/city dropdowns backed by Romanian nomenclator data
+  2. Stored addresses are normalized and consistent across job posts and worker profiles
+**Plans:** TBD
+Plans:
+
 ## Progress
 
 **Execution Order:**
@@ -180,3 +190,4 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 13. Notifications + Mobile Testing | Beta Polish | 3/3 | Complete   | 2026-04-09 |
 | 14. Maps & Location | Beta Polish | 0/3 | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 5/6 | In Progress | - |
+| 16. Add Address Nomenclators | Beta Polish | 0/TBD | Not started | - |
