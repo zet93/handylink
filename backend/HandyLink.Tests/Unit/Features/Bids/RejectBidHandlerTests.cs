@@ -1,21 +1,25 @@
 using FluentAssertions;
 using HandyLink.API.Features.Bids.RejectBid;
+using HandyLink.Core.Commands;
 using HandyLink.Core.Entities;
 using HandyLink.Core.Entities.Enums;
 using HandyLink.Core.Exceptions;
 using HandyLink.Infrastructure.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace HandyLink.Tests.Unit.Features.Bids;
 
 public class RejectBidHandlerTests
 {
-    private static (HandyLinkDbContext ctx, RejectBidHandler handler) Build()
+    private static (HandyLinkDbContext ctx, RejectBidHandler handler, Mock<IMediator> mediator) Build()
     {
         var opts = new DbContextOptionsBuilder<HandyLinkDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
         var ctx = new HandyLinkDbContext(opts);
-        return (ctx, new RejectBidHandler(ctx));
+        var mediator = new Mock<IMediator>();
+        return (ctx, new RejectBidHandler(ctx, mediator.Object), mediator);
     }
 
     private static async Task<(Profile client, Profile worker, Job job)> Seed(HandyLinkDbContext ctx)
@@ -46,7 +50,7 @@ public class RejectBidHandlerTests
     [Fact]
     public async Task Handle_ThrowsNotFoundException_WhenBidMissing()
     {
-        var (_, handler) = Build();
+        var (_, handler, _) = Build();
         var act = () => handler.Handle(
             new RejectBidCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
         await act.Should().ThrowAsync<NotFoundException>();
@@ -55,7 +59,7 @@ public class RejectBidHandlerTests
     [Fact]
     public async Task Handle_ThrowsForbiddenException_WhenNotJobOwner()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (_, worker, job) = await Seed(ctx);
         var bid = new Bid
         {
@@ -74,7 +78,7 @@ public class RejectBidHandlerTests
     [Fact]
     public async Task Handle_ThrowsValidationException_WhenBidNotPending()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (client, worker, job) = await Seed(ctx);
         var bid = new Bid
         {
@@ -93,7 +97,7 @@ public class RejectBidHandlerTests
     [Fact]
     public async Task Handle_SetsBidRejected_WhenPendingAndOwner()
     {
-        var (ctx, handler) = Build();
+        var (ctx, handler, _) = Build();
         var (client, worker, job) = await Seed(ctx);
         var bid = new Bid
         {
@@ -110,5 +114,29 @@ public class RejectBidHandlerTests
         result.Status.Should().Be("Rejected");
         var updatedBid = await ctx.Bids.FindAsync(bid.Id);
         updatedBid!.Status.Should().Be(BidStatus.Rejected);
+    }
+
+    [Fact]
+    public async Task Handle_SendsPushNotification_WhenBidRejected()
+    {
+        var (ctx, handler, mediator) = Build();
+        var (client, worker, job) = await Seed(ctx);
+        var bid = new Bid
+        {
+            Id = Guid.NewGuid(), JobId = job.Id, WorkerId = worker.Id,
+            PriceEstimate = 100, Message = "msg", Status = BidStatus.Pending,
+            CreatedAt = DateTimeOffset.UtcNow, UpdatedAt = DateTimeOffset.UtcNow
+        };
+        ctx.Bids.Add(bid);
+        await ctx.SaveChangesAsync();
+
+        await handler.Handle(new RejectBidCommand(client.Id, bid.Id), CancellationToken.None);
+
+        mediator.Verify(m => m.Send(
+            It.Is<SendPushNotificationCommand>(c =>
+                c.UserId == worker.Id &&
+                c.Type == "bid_rejected" &&
+                c.ReferenceId == job.Id),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

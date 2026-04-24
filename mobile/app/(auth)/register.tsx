@@ -11,20 +11,33 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { supabase } from '../../services/supabase';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { supabase, signInWithGoogle } from '../../services/supabase';
 import api from '../../services/api';
 
 type Role = 'client' | 'worker';
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const { returnTo } = useLocalSearchParams<{ returnTo?: string }>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [city, setCity] = useState('');
   const [role, setRole] = useState<Role>('client');
   const [loading, setLoading] = useState(false);
+
+  async function handleGoogleSignIn() {
+    setLoading(true);
+    const { error } = await signInWithGoogle();
+    if (error) {
+      setLoading(false);
+      Alert.alert('Google Sign In Failed', error.message);
+    }
+    // On success: signInWithGoogle() triggers the OS browser for OAuth.
+    // The SIGNED_IN event in _layout.tsx handles routing after the deep-link callback.
+    // Loading state is intentionally left as true during the OAuth browser flow.
+  }
 
   async function handleRegister() {
     if (!name || !email || !password || !city) {
@@ -55,7 +68,11 @@ export default function RegisterScreen() {
       }
     }
     setLoading(false);
-    router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+    if (returnTo) {
+      router.replace(returnTo as any);
+    } else {
+      router.replace(role === 'worker' ? '/(worker)/browse' : '/(client)');
+    }
   }
 
   return (
@@ -133,6 +150,20 @@ export default function RegisterScreen() {
           )}
         </TouchableOpacity>
 
+        <View style={styles.divider}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>or</Text>
+          <View style={styles.dividerLine} />
+        </View>
+
+        <TouchableOpacity
+          style={[styles.googleButton, loading && styles.buttonDisabled]}
+          onPress={handleGoogleSignIn}
+          disabled={loading}
+        >
+          <Text style={styles.googleButtonText}>Continue with Google</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
           <Text style={styles.link}>Already have an account? Sign In</Text>
         </TouchableOpacity>
@@ -179,5 +210,17 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: { opacity: 0.6 },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  divider: { flexDirection: 'row', alignItems: 'center', marginVertical: 12 },
+  dividerLine: { flex: 1, height: 1, backgroundColor: '#e5e7eb' },
+  dividerText: { marginHorizontal: 10, color: '#9ca3af', fontSize: 12 },
+  googleButton: {
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 10,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  googleButtonText: { fontSize: 16, fontWeight: '600', color: '#111' },
   link: { color: '#007AFF', textAlign: 'center', fontSize: 14 },
 });

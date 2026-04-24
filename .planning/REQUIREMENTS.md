@@ -32,24 +32,24 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Security
 
-- [x] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
-- [x] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
+- [ ] **SEC-01**: Unauthenticated users cannot access other users' personal data (email, phone)
+- [ ] **SEC-02**: Users can only edit or delete their own jobs, bids, and profiles
 - [ ] **SEC-03**: Stripe webhook requests are validated via signature (prevent spoofed payment events)
 - [ ] **SEC-04**: Auth endpoints have rate limiting to prevent brute-force and signup spam
 - [ ] **SEC-05**: CORS policy is tightened from AllowAll to allowed production origins only
 
 ### Mobile
 
-- [ ] **MOB-01**: App runs without errors on a physical Android device
-- [ ] **MOB-02**: App runs without errors on a physical iOS device (or simulator)
-- [ ] **MOB-03**: All navigation flows work correctly on physical devices
-- [ ] **MOB-04**: Push notifications are delivered and tappable on physical devices
+- [x] **MOB-01**: App runs without errors on a physical Android device
+- [x] **MOB-02**: App runs without errors on a physical iOS device (or simulator)
+- [x] **MOB-03**: All navigation flows work correctly on physical devices
+- [x] **MOB-04**: Push notifications are delivered and tappable on physical devices
 
 ### Social Login
 
-- [ ] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
-- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth)
-- [ ] **AUTH-03**: Social login creates a profile with correct role assignment
+- [x] **AUTH-01**: User can sign up and log in with Google (via Supabase OAuth)
+- [ ] **AUTH-02**: User can sign up and log in with Facebook (via Supabase OAuth) _(deferred to Phase 13)_
+- [x] **AUTH-03**: Social login creates a profile with correct role assignment
 
 ### Maps & Location
 
@@ -59,9 +59,9 @@ These are the requirements for the beta release — a functional demo for friend
 
 ### Notifications
 
-- [ ] **NOTF-01**: Worker receives push notification when a new bid is submitted on their job (client perspective: when bid accepted)
-- [ ] **NOTF-02**: Client receives notification when a worker bids on their job
-- [ ] **NOTF-03**: Both parties receive notification on key job status transitions
+- [x] **NOTF-01**: Worker receives push notification when a new bid is submitted on their job (client perspective: when bid accepted)
+- [x] **NOTF-02**: Client receives notification when a worker bids on their job
+- [x] **NOTF-03**: Both parties receive notification on key job status transitions
 
 ### Analytics
 
@@ -120,8 +120,8 @@ These are the requirements for the beta release — a functional demo for friend
 | BUG-02 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-03 | Phase 8 (Critical Bug Fixes) | Complete |
 | BUG-04 | Phase 8 (Critical Bug Fixes) | Complete |
-| SEC-01 | Phase 9 (Security Hardening) | Complete |
-| SEC-02 | Phase 9 (Security Hardening) | Complete |
+| SEC-01 | Phase 9 (Security Hardening) | Pending |
+| SEC-02 | Phase 9 (Security Hardening) | Pending |
 | SEC-03 | Phase 9 (Security Hardening) | Pending |
 | SEC-04 | Phase 9 (Security Hardening) | Pending |
 | SEC-05 | Phase 9 (Security Hardening) | Pending |
@@ -135,16 +135,16 @@ These are the requirements for the beta release — a functional demo for friend
 | DSG-03 | Phase 11 (App Design) | Pending |
 | DSG-04 | Phase 11 (App Design) | Pending |
 | DSG-05 | Phase 11 (App Design) | Pending |
-| AUTH-01 | Phase 12 (Social Login) | Pending |
+| AUTH-01 | Phase 12 (Social Login) | Complete |
 | AUTH-02 | Phase 12 (Social Login) | Pending |
-| AUTH-03 | Phase 12 (Social Login) | Pending |
-| NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-01 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-02 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-03 | Phase 13 (Notifications + Mobile Testing) | Pending |
-| MOB-04 | Phase 13 (Notifications + Mobile Testing) | Pending |
+| AUTH-03 | Phase 12 (Social Login) | Complete |
+| NOTF-01 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| NOTF-02 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| NOTF-03 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-01 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-02 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-03 | Phase 13 (Notifications + Mobile Testing) | Complete |
+| MOB-04 | Phase 13 (Notifications + Mobile Testing) | Complete |
 | MAP-01 | Phase 14 (Maps & Location) | Pending |
 | MAP-02 | Phase 14 (Maps & Location) | Pending |
 | MAP-03 | Phase 14 (Maps & Location) | Pending |

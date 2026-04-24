@@ -12,5 +12,8 @@ public record CreateJobCommand(
     string Country,
     string[]? Photos,
     decimal? BudgetMin,
-    decimal? BudgetMax
+    decimal? BudgetMax,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address
 ) : IRequest<CreateJobResponse>;

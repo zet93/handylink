@@ -6,6 +6,7 @@ import LoginPage from './LoginPage'
 
 const mockNavigate = vi.fn()
 const mockSignIn = vi.fn()
+const mockSignInWithGoogle = vi.fn()
 
 vi.mock('react-router-dom', async () => ({
   ...(await vi.importActual('react-router-dom')),
@@ -13,7 +14,7 @@ vi.mock('react-router-dom', async () => ({
 }))
 
 vi.mock('../context/AuthContext', () => ({
-  useAuth: () => ({ signIn: mockSignIn }),
+  useAuth: () => ({ signIn: mockSignIn, signInWithGoogle: mockSignInWithGoogle }),
 }))
 
 beforeEach(() => {
@@ -51,4 +52,16 @@ test('shows error when signIn returns error', async () => {
   await userEvent.type(container.querySelector('input[type="password"]'), 'wrongpass')
   await userEvent.click(screen.getByRole('button', { name: /sign in/i }))
   expect(await screen.findByText(/invalid credentials/i)).toBeInTheDocument()
+})
+
+test('renders Continue with Google button', () => {
+  render(<MemoryRouter><LoginPage /></MemoryRouter>)
+  expect(screen.getByRole('button', { name: /continue with google/i })).toBeInTheDocument()
+})
+
+test('calls signInWithGoogle when Google button clicked', async () => {
+  mockSignInWithGoogle.mockResolvedValue({})
+  render(<MemoryRouter><LoginPage /></MemoryRouter>)
+  await userEvent.click(screen.getByRole('button', { name: /continue with google/i }))
+  expect(mockSignInWithGoogle).toHaveBeenCalledOnce()
 })

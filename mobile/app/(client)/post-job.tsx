@@ -13,13 +13,17 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from 'expo-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { usePostHog } from 'posthog-react-native';
 import api from '../../services/api';
+import { palette, typography } from '../constants/design';
+import LocationPickerMobile from '../../components/LocationPickerMobile';
 
 const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
 
 export default function PostJobScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const posthog = usePostHog();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -27,6 +31,7 @@ export default function PostJobScreen() {
   const [category, setCategory] = useState('electrical');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
+  const [location, setLocation] = useState<{ latitude: number | null; longitude: number | null; address: string | null }>({ latitude: null, longitude: null, address: null });
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
@@ -34,11 +39,16 @@ export default function PostJobScreen() {
         title,
         description,
         city,
+        country: 'RO',
         category,
-        budget_min: budgetMin ? Number(budgetMin) : undefined,
-        budget_max: budgetMax ? Number(budgetMax) : undefined,
+        budgetMin: budgetMin ? Number(budgetMin) : null,
+        budgetMax: budgetMax ? Number(budgetMax) : null,
+        latitude: location.latitude ?? null,
+        longitude: location.longitude ?? null,
+        address: location.address ?? null,
       }),
     onSuccess: () => {
+      posthog?.capture('job_posted', { category });
       queryClient.invalidateQueries({ queryKey: ['my-jobs'] });
       router.back();
     },
@@ -88,6 +98,13 @@ export default function PostJobScreen() {
           value={city}
           onChangeText={setCity}
           autoCapitalize="words"
+        />
+
+        <LocationPickerMobile
+          latitude={location.latitude}
+          longitude={location.longitude}
+          address={location.address}
+          onChange={setLocation}
         />
 
         <Text style={styles.label}>Category</Text>
@@ -145,24 +162,25 @@ export default function PostJobScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#fff' },
-  container: { padding: 24, paddingBottom: 48 },
-  heading: { fontSize: 24, fontWeight: 'bold', color: '#111', marginBottom: 24 },
-  label: { fontSize: 13, fontWeight: '600', color: '#444', marginBottom: 6 },
+  safe: { flex: 1, backgroundColor: palette.background },
+  container: { padding: 24, paddingBottom: 48, backgroundColor: palette.background },
+  heading: { fontSize: typography.headingSize, fontWeight: 'bold', color: palette.text, marginBottom: 24 },
+  label: { fontSize: 13, fontWeight: '600', color: palette.text, marginBottom: 6 },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: palette.border,
     borderRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 15,
-    color: '#111',
+    fontSize: typography.bodySize,
+    color: palette.text,
     marginBottom: 16,
+    backgroundColor: palette.panel,
   },
   textArea: { minHeight: 100, textAlignVertical: 'top' },
   pickerWrapper: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: palette.border,
     borderRadius: 10,
     marginBottom: 16,
     overflow: 'hidden',
@@ -171,7 +189,7 @@ const styles = StyleSheet.create({
   budgetRow: { flexDirection: 'row', gap: 12 },
   budgetField: { flex: 1 },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: palette.accent,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',

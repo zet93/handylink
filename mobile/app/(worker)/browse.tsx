@@ -13,6 +13,7 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { usePostHog } from 'posthog-react-native';
 import api from '../../services/api';
 
 const CATEGORIES = ['all', 'electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
@@ -24,6 +25,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
 
 export default function WorkerBrowseScreen() {
   const queryClient = useQueryClient();
+  const posthog = usePostHog();
   const sheetRef = useRef<BottomSheet>(null);
 
   const [category, setCategory] = useState('all');
@@ -65,6 +67,7 @@ export default function WorkerBrowseScreen() {
         message,
       }),
     onSuccess: () => {
+      posthog?.capture('bid_submitted', { job_id: selectedJob.id });
       sheetRef.current?.close();
       queryClient.invalidateQueries({ queryKey: ['worker-jobs'] });
     },

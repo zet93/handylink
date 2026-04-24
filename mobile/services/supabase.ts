@@ -19,3 +19,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     flowType: 'pkce',
   },
 });
+
+export const signInWithGoogle = () =>
+  supabase.auth.signInWithOAuth({ provider: 'google' });

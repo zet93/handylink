@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { usePostHog } from '@posthog/react';
 import axiosClient from '../api/axiosClient';
+import LocationPicker from '../components/LocationPicker';
 
 const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'furniture_assembly', 'cleaning', 'general', 'other'];
 
@@ -18,6 +21,8 @@ const schema = z.object({
 
 export default function PostJobPage() {
   const navigate = useNavigate();
+  const posthog = usePostHog()
+  const [location, setLocation] = useState({ latitude: null, longitude: null, address: null });
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
     resolver: zodResolver(schema),
     defaultValues: { country: 'RO', category: 'general' },
@@ -33,10 +38,14 @@ export default function PostJobPage() {
       budgetMin: data.budgetMin || null,
       budgetMax: data.budgetMax || null,
       photos: [],
+      latitude: location.latitude || null,
+      longitude: location.longitude || null,
+      address: location.address || null,
     };
     try {
       const res = await axiosClient.post('/api/jobs', payload);
       navigate(`/jobs/${res.data.id}`);
+      posthog?.capture('job_posted', { category: payload.category })
     } catch (err) {
       setError('root', { message: err.response?.data?.error ?? 'Failed to post job' });
     }
@@ -96,6 +105,12 @@ export default function PostJobPage() {
             {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
           </div>
         </div>
+        <LocationPicker
+          latitude={location.latitude}
+          longitude={location.longitude}
+          address={location.address}
+          onChange={setLocation}
+        />
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Budget min (RON)</label>

@@ -14,6 +14,33 @@ public class UserService(IProfileRepository profiles)
         return ToDto(profile);
     }
 
+    public async Task<UserResponseDto> EnsureUserProfileAsync(Guid userId, string role, CancellationToken ct = default)
+    {
+        var existing = await profiles.GetByIdTrackedAsync(userId, ct);
+        if (existing is not null)
+            return ToDto(existing);
+
+        var profile = new Profile
+        {
+            Id = userId,
+            FullName = string.Empty,
+            Role = role,
+            Country = "RO",
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow,
+        };
+        await profiles.AddAsync(profile, ct);
+
+        if (role is "worker" or "both")
+        {
+            await profiles.AddWorkerProfileAsync(
+                new Entities.WorkerProfile { Id = userId, CreatedAt = DateTimeOffset.UtcNow }, ct);
+        }
+
+        await profiles.SaveChangesAsync(ct);
+        return ToDto(profile);
+    }
+
     public async Task<UserResponseDto> UpdateCurrentUserAsync(Guid userId, UpdateUserDto dto, CancellationToken ct = default)
     {
         var profile = await profiles.GetByIdTrackedAsync(userId, ct)
