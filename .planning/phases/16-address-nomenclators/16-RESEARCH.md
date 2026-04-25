@@ -553,16 +553,13 @@ No new threat patterns introduced. County/city are display strings with no privi
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `GetJobsResponse` (list endpoint) also include `county`?**
-   - What we know: `GetJobByIdResponse` should include it (detail view). List view (`GetJobsResponse`) currently includes `City`.
-   - What's unclear: Whether job cards on list views need to show county.
-   - Recommendation: Add `County?` to `GetJobsResponse` for consistency; low cost, enables future filtering without a migration.
+   - **RESOLVED: YES** — Add `County?` to `GetJobsResponse` for consistency with `GetJobByIdResponse`. Low cost, enables future filtering without a migration.
 
 2. **Does the web `CountyCityPicker` need a search/filter input inside the `<select>`?**
-   - What we know: `<select>` has no built-in search. County list (42 items) is manageable without search. City list (up to ~200 per county) is also manageable without search.
-   - Recommendation: No search input needed for beta. Native `<select>` scroll is sufficient.
+   - **RESOLVED: NO** — No search input needed for beta. Native `<select>` scroll is sufficient for 42 counties and up to ~200 cities per county.
 
 ---
 
