@@ -17,6 +17,7 @@ public class Job
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public string? Address { get; set; }
+    public string? County { get; set; }
     public JobStatus Status { get; set; } = JobStatus.Open;
     public Guid? AcceptedBidId { get; set; }
     public string? StripePaymentIntentId { get; set; }
