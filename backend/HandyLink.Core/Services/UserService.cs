@@ -59,5 +59,5 @@ public class UserService(IProfileRepository profiles)
     }
 
     private static UserResponseDto ToDto(Profile p) => new(
-        p.Id, p.FullName, p.AvatarUrl, p.Phone, p.City, p.Country, p.Bio, p.Role, p.CreatedAt);
+        p.Id, p.FullName, p.AvatarUrl, p.Phone, p.City, p.County, p.Country, p.Bio, p.Role, p.CreatedAt);
 }
