@@ -73,7 +73,7 @@ export default function WorkerProfileScreen() {
   } as any);
 
   const { mutate: saveProfile, isPending: saving } = useMutation({
-    mutationFn: () => api.put('/api/users/me', { full_name: name, city, county }),
+    mutationFn: () => api.put('/api/users/me', { fullName: name, city, county }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
       setEditing(false);
