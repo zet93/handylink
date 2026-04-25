@@ -10,6 +10,7 @@ public record CreateJobResponse(
     string Category,
     string City,
     string Country,
+    string? County,
     decimal? BudgetMin,
     decimal? BudgetMax,
     JobStatus Status,

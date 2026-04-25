@@ -17,6 +17,8 @@ import { supabase } from '../../services/supabase';
 import api from '../../services/api';
 import { palette } from '../constants/design';
 import LocationPickerMobile from '../../components/LocationPickerMobile';
+import CountyCityPickerMobile from '../../components/CountyCityPickerMobile';
+import nomenclator from '../../assets/ro-nomenclator.json';
 
 function RadiusSelector({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const options = [10, 20, 50, 100];
@@ -55,6 +57,8 @@ export default function WorkerProfileScreen() {
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
+  const [county, setCounty] = useState('');
+  const [countyLabel, setCountyLabel] = useState('');
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['me'],
@@ -62,11 +66,14 @@ export default function WorkerProfileScreen() {
     onSuccess: (data: any) => {
       setName(data.fullName ?? data.full_name ?? '');
       setCity(data.city ?? '');
+      setCounty(data.county ?? '');
+      const found = nomenclator.counties.find(c => c.id === (data.county ?? ''));
+      setCountyLabel(found?.name ?? '');
     },
   } as any);
 
   const { mutate: saveProfile, isPending: saving } = useMutation({
-    mutationFn: () => api.put('/api/users/me', { full_name: name, city }),
+    mutationFn: () => api.put('/api/users/me', { fullName: name, city, county }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
       setEditing(false);
@@ -134,12 +141,12 @@ export default function WorkerProfileScreen() {
                 onChangeText={setName}
                 autoCapitalize="words"
               />
-              <Text style={styles.label}>City</Text>
-              <TextInput
-                style={styles.input}
-                value={city}
-                onChangeText={setCity}
-                autoCapitalize="words"
+              <CountyCityPickerMobile
+                county={county}
+                countyLabel={countyLabel}
+                city={city}
+                onCountyChange={(id, name) => { setCounty(id); setCountyLabel(name); setCity(''); }}
+                onCityChange={name => setCity(name)}
               />
               <View style={styles.row}>
                 <TouchableOpacity
@@ -165,6 +172,10 @@ export default function WorkerProfileScreen() {
                 <Text style={styles.infoValue}>{displayEmail || '—'}</Text>
               </View>
               <View style={styles.infoRow}>
+                <Text style={styles.infoLabel}>Județ</Text>
+                <Text style={styles.infoValue}>{countyLabel || '—'}</Text>
+              </View>
+              <View style={styles.infoRow}>
                 <Text style={styles.infoLabel}>City</Text>
                 <Text style={styles.infoValue}>{displayCity || '—'}</Text>
               </View>
@@ -179,6 +190,10 @@ export default function WorkerProfileScreen() {
                 onPress={() => {
                   setName(displayName);
                   setCity(displayCity);
+                  const profileCounty = (profile as any)?.county ?? '';
+                  setCounty(profileCounty);
+                  const found = nomenclator.counties.find(c => c.id === profileCounty);
+                  setCountyLabel(found?.name ?? '');
                   setEditing(true);
                 }}
               >

@@ -17,6 +17,7 @@ import { usePostHog } from 'posthog-react-native';
 import api from '../../services/api';
 import { palette, typography } from '../constants/design';
 import LocationPickerMobile from '../../components/LocationPickerMobile';
+import CountyCityPickerMobile from '../../components/CountyCityPickerMobile';
 
 const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
 
@@ -28,6 +29,8 @@ export default function PostJobScreen() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
+  const [county, setCounty] = useState('');
+  const [countyLabel, setCountyLabel] = useState('');
   const [category, setCategory] = useState('electrical');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
@@ -39,6 +42,7 @@ export default function PostJobScreen() {
         title,
         description,
         city,
+        county,
         country: 'RO',
         category,
         budgetMin: budgetMin ? Number(budgetMin) : null,
@@ -57,9 +61,31 @@ export default function PostJobScreen() {
     },
   });
 
+  async function handleCitySelect(cityName: string) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=ro&limit=1&q=${encodeURIComponent(cityName + ', Romania')}`;
+      const res = await fetch(url, { headers: { 'User-Agent': 'HandyLink/1.0' } });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data[0]) {
+        setLocation({
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon),
+          address: cityName,
+        });
+      }
+    } catch {
+      // geocode is best-effort
+    }
+  }
+
   function handleSubmit() {
     if (!title.trim()) {
       Alert.alert('Error', 'Title is required.');
+      return;
+    }
+    if (!county || !city) {
+      Alert.alert('Eroare', 'Județul și orașul sunt obligatorii.');
       return;
     }
     mutate();
@@ -90,14 +116,12 @@ export default function PostJobScreen() {
           numberOfLines={4}
         />
 
-        <Text style={styles.label}>City</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="e.g. Bucharest"
-          placeholderTextColor="#999"
-          value={city}
-          onChangeText={setCity}
-          autoCapitalize="words"
+        <CountyCityPickerMobile
+          county={county}
+          countyLabel={countyLabel}
+          city={city}
+          onCountyChange={(id, name) => { setCounty(id); setCountyLabel(name); setCity(''); }}
+          onCityChange={name => { setCity(name); handleCitySelect(name); }}
         />
 
         <LocationPickerMobile

@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
 import LocationPicker from '../components/LocationPicker';
+import CountyCityPicker from '../components/CountyCityPicker';
 
 function RadiusSelector({ value, onChange }) {
   const options = [10, 20, 50, 100];
@@ -31,8 +32,8 @@ function RadiusSelector({ value, onChange }) {
 const schema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   bio: z.string().optional(),
+  county: z.string().optional(),
   city: z.string().optional(),
-  country: z.string().optional(),
   phone: z.string().optional(),
 });
 
@@ -41,7 +42,7 @@ export default function EditProfilePage() {
   const [workerLocation, setWorkerLocation] = useState({ latitude: null, longitude: null, address: null });
   const [radiusKm, setRadiusKm] = useState(20);
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting, isDirty }, setError } = useForm({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting, isDirty }, setError, setValue, control } = useForm({
     resolver: zodResolver(schema),
   });
 
@@ -50,8 +51,8 @@ export default function EditProfilePage() {
       reset({
         fullName: userProfile.full_name ?? '',
         bio: userProfile.bio ?? '',
+        county: userProfile.county ?? '',
         city: userProfile.city ?? '',
-        country: userProfile.country ?? '',
         phone: userProfile.phone ?? '',
       });
     }
@@ -65,8 +66,9 @@ export default function EditProfilePage() {
         axiosClient.put('/api/users/me', {
           fullName: data.fullName,
           bio: data.bio || null,
+          county: data.county || null,
           city: data.city || null,
-          country: data.country || null,
+          country: userProfile?.country || null,
           phone: data.phone || null,
           avatarUrl: userProfile?.avatar_url ?? null,
         }),
@@ -110,22 +112,12 @@ export default function EditProfilePage() {
             placeholder="Tell clients about yourself…"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">City</label>
-            <input
-              {...register('city')}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Country</label>
-            <input
-              {...register('country')}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
+        <CountyCityPicker
+          register={register}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+        />
         <div>
           <label className="block text-sm font-medium mb-1">Phone</label>
           <input

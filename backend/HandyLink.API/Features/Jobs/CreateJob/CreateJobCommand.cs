@@ -10,6 +10,7 @@ public record CreateJobCommand(
     JobCategory Category,
     string City,
     string Country,
+    string? County,
     string[]? Photos,
     decimal? BudgetMin,
     decimal? BudgetMax,

@@ -6,6 +6,7 @@ public record UserResponseDto(
     string? AvatarUrl,
     string? Phone,
     string? City,
+    string? County,
     string Country,
     string? Bio,
     string Role,

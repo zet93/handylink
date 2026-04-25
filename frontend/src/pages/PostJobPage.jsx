@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { usePostHog } from '@posthog/react';
 import axiosClient from '../api/axiosClient';
 import LocationPicker from '../components/LocationPicker';
+import CountyCityPicker from '../components/CountyCityPicker';
 
 const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'furniture_assembly', 'cleaning', 'general', 'other'];
 
@@ -13,8 +14,8 @@ const schema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters'),
   category: z.enum(CATEGORIES),
-  city: z.string().min(1, 'City is required'),
-  country: z.string().min(1, 'Country is required'),
+  county: z.string().min(1, 'Județul este obligatoriu'),
+  city: z.string().min(1, 'Orașul este obligatoriu'),
   budgetMin: z.coerce.number().positive().optional().or(z.literal('')),
   budgetMax: z.coerce.number().positive().optional().or(z.literal('')),
 });
@@ -23,10 +24,28 @@ export default function PostJobPage() {
   const navigate = useNavigate();
   const posthog = usePostHog()
   const [location, setLocation] = useState({ latitude: null, longitude: null, address: null });
-  const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setError, setValue, control } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { country: 'RO', category: 'general' },
+    defaultValues: { category: 'general' },
   });
+
+  async function handleCitySelect(cityName) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=ro&limit=1&q=${encodeURIComponent(cityName + ', Romania')}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data[0]) {
+        setLocation({
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon),
+          address: cityName,
+        });
+      }
+    } catch {
+      // geocode is best-effort; location stays null
+    }
+  }
 
   async function onSubmit(data) {
     const payload = {
@@ -34,7 +53,8 @@ export default function PostJobPage() {
       description: data.description,
       category: data.category,
       city: data.city,
-      country: data.country,
+      county: data.county,
+      country: 'RO',
       budgetMin: data.budgetMin || null,
       budgetMax: data.budgetMax || null,
       photos: [],
@@ -86,25 +106,13 @@ export default function PostJobPage() {
           </select>
           {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>}
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">City</label>
-            <input
-              {...register('city')}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="e.g. Bucharest"
-            />
-            {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city.message}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Country</label>
-            <input
-              {...register('country')}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.country && <p className="text-red-500 text-xs mt-1">{errors.country.message}</p>}
-          </div>
-        </div>
+        <CountyCityPicker
+          register={register}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+          onCitySelect={handleCitySelect}
+        />
         <LocationPicker
           latitude={location.latitude}
           longitude={location.longitude}

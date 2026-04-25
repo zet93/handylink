@@ -30,7 +30,7 @@ public class CreateJobHandlerTests
         await ctx.SaveChangesAsync();
 
         var cmd = new CreateJobCommand(clientId, "Fix my sink", "Leaking badly",
-            JobCategory.Plumbing, "Bucharest", "RO", null, 100, 300, null, null, null);
+            JobCategory.Plumbing, "Bucharest", "RO", null, null, 100, 300, null, null, null);
         var result = await handler.Handle(cmd, CancellationToken.None);
 
         result.Status.Should().Be(JobStatus.Open);
@@ -51,7 +51,7 @@ public class CreateJobHandlerTests
         await ctx.SaveChangesAsync();
 
         var cmd = new CreateJobCommand(clientId, "Paint wall", "Big wall",
-            JobCategory.Painting, "Cluj", "RO", null, 50, 200, null, null, null);
+            JobCategory.Painting, "Cluj", "RO", null, null, 50, 200, null, null, null);
         await handler.Handle(cmd, CancellationToken.None);
 
         var count = await ctx.Jobs.CountAsync();

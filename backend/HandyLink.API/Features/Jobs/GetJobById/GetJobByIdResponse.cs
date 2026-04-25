@@ -8,6 +8,7 @@ public record GetJobByIdResponse(
     string Category,
     string City,
     string Country,
+    string? County,
     string[] Photos,
     decimal? BudgetMin,
     decimal? BudgetMax,

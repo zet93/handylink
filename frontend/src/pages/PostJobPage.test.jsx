@@ -16,6 +16,33 @@ vi.mock('../api/axiosClient', () => ({
   default: { post: vi.fn() },
 }))
 
+vi.mock('../components/CountyCityPicker', () => ({
+  default: function MockCountyCityPicker({ register, setValue }) {
+    return (
+      <div>
+        <label htmlFor="county-select">Județ</label>
+        <select
+          id="county-select"
+          {...register('county')}
+          onChange={e => setValue('county', e.target.value, { shouldDirty: true })}
+        >
+          <option value="">Selectează județul…</option>
+          <option value="B">București</option>
+        </select>
+        <label htmlFor="city-select">Oraș / Comună</label>
+        <select
+          id="city-select"
+          {...register('city')}
+          onChange={e => setValue('city', e.target.value, { shouldDirty: true })}
+        >
+          <option value="">Selectează orașul…</option>
+          <option value="Sector 1">Sector 1</option>
+        </select>
+      </div>
+    )
+  }
+}))
+
 beforeEach(() => {
   vi.clearAllMocks()
 })
@@ -42,14 +69,16 @@ test('calls axiosClient.post and navigates on valid submit', async () => {
     screen.getByPlaceholderText('Describe the work needed in detail…'),
     'The tap is leaking badly and needs professional repair urgently'
   )
-  await userEvent.type(screen.getByPlaceholderText('e.g. Bucharest'), 'Bucharest')
+  await userEvent.selectOptions(screen.getByLabelText('Județ'), 'B')
+  await userEvent.selectOptions(screen.getByLabelText('Oraș / Comună'), 'Sector 1')
 
   await userEvent.click(screen.getByRole('button', { name: /post job/i }))
 
   expect(axiosClient.post).toHaveBeenCalledWith('/api/jobs', expect.objectContaining({
     title: 'Fixing the kitchen tap now',
     category: 'general',
-    city: 'Bucharest',
+    city: 'Sector 1',
+    county: 'B',
     country: 'RO',
   }))
   expect(mockNavigate).toHaveBeenCalledWith('/jobs/abc123')
