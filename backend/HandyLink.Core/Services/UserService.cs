@@ -49,6 +49,7 @@ public class UserService(IProfileRepository profiles)
         if (dto.AvatarUrl is not null) profile.AvatarUrl = dto.AvatarUrl;
         if (dto.Phone is not null) profile.Phone = dto.Phone;
         if (dto.City is not null) profile.City = dto.City;
+        if (dto.County is not null) profile.County = dto.County;
         if (dto.Country is not null) profile.Country = dto.Country;
         if (dto.Bio is not null) profile.Bio = dto.Bio;
         if (dto.ExpoPushToken is not null) profile.ExpoPushToken = dto.ExpoPushToken;

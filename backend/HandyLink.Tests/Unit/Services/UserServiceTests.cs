@@ -33,7 +33,7 @@ public class UserServiceTests
         ctx.Profiles.Add(profile);
         await ctx.SaveChangesAsync();
 
-        var result = await svc.UpdateCurrentUserAsync(profile.Id, new UpdateUserDto("Bob", null, null, "Bucharest", null, null, null));
+        var result = await svc.UpdateCurrentUserAsync(profile.Id, new UpdateUserDto("Bob", null, null, "Bucharest", null, null, null, null));
 
         Assert.Equal("Bob", result.FullName);
         Assert.Equal("Bucharest", result.City);

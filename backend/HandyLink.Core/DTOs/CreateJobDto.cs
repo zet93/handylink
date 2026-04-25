@@ -8,6 +8,7 @@ public record CreateJobDto(
     JobCategory Category,
     string City,
     string Country,
+    string? County,
     decimal? BudgetMin,
     decimal? BudgetMax,
     string[]? Photos,

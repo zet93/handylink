@@ -5,6 +5,7 @@ public record UpdateUserDto(
     string? AvatarUrl,
     string? Phone,
     string? City,
+    string? County,
     string? Country,
     string? Bio,
     string? ExpoPushToken);
