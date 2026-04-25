@@ -62,15 +62,20 @@ export default function PostJobScreen() {
   });
 
   async function handleCitySelect(cityName: string) {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=ro&limit=1&q=${encodeURIComponent(cityName + ', Romania')}`;
-    const res = await fetch(url, { headers: { 'User-Agent': 'HandyLink/1.0' } });
-    const data = await res.json();
-    if (data[0]) {
-      setLocation({
-        latitude: parseFloat(data[0].lat),
-        longitude: parseFloat(data[0].lon),
-        address: cityName,
-      });
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=ro&limit=1&q=${encodeURIComponent(cityName + ', Romania')}`;
+      const res = await fetch(url, { headers: { 'User-Agent': 'HandyLink/1.0' } });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data[0]) {
+        setLocation({
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon),
+          address: cityName,
+        });
+      }
+    } catch {
+      // geocode is best-effort
     }
   }
 
