@@ -167,12 +167,21 @@ Note: OPS-04 (content moderation) is deferred to a future v2/admin phase per D-1
 ### Phase 16: Add Address Nomenclators
 **Goal**: Address fields across the app use structured nomenclator data (counties, cities) instead of freeform text inputs
 **Depends on**: Phase 15
-**Requirements**: TBD
+**Requirements**: NOM-01, NOM-02, NOM-03, NOM-04, NOM-05, NOM-06
 **Success Criteria** (what must be TRUE):
   1. Address inputs on web and mobile present selectable county/city dropdowns backed by Romanian nomenclator data
   2. Stored addresses are normalized and consistent across job posts and worker profiles
-**Plans:** TBD
+  3. County column exists in public.jobs and public.profiles tables
+  4. Backend persists county through all layers (entity, handler, response)
+  5. D-05 auto-center: selecting a city in PostJobPage/post-job.tsx geocodes via Nominatim and moves the map pin
+**Plans:** 6 plans
 Plans:
+- [ ] 16-01-PLAN.md — SIRUTA-derived ro-nomenclator.json bundle + structural tests (NOM-05, NOM-06)
+- [ ] 16-02-PLAN.md — SQL migration 004_add_county_field.sql (NOM-01, NOM-03)
+- [ ] 16-03-PLAN.md — Backend: County on entities, DTOs, positional records, handlers, UserService, tests (NOM-01, NOM-02, NOM-03, NOM-04)
+- [ ] 16-04-PLAN.md — [BLOCKING] Schema push: run 004_add_county_field.sql in Supabase (NOM-01, NOM-03)
+- [ ] 16-05-PLAN.md — Web: CountyCityPicker.jsx, PostJobPage + EditProfilePage integration (NOM-01, NOM-02, NOM-03, NOM-05, NOM-06)
+- [x] 16-06-PLAN.md — Mobile: CountyCityPickerMobile.tsx, post-job + profile integration (NOM-01, NOM-02, NOM-03)
 
 ## Progress
 
@@ -190,4 +199,4 @@ Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 
 | 13. Notifications + Mobile Testing | Beta Polish | 3/3 | Complete   | 2026-04-09 |
 | 14. Maps & Location | Beta Polish | 0/3 | Not started | - |
 | 15. Analytics + Observability | Beta Polish | 5/6 | In Progress | - |
-| 16. Add Address Nomenclators | Beta Polish | 0/TBD | Not started | - |
+| 16. Add Address Nomenclators | Beta Polish | 6/6 | Complete    | 2026-04-25 |

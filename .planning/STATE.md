@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-29)
 
 **Core value:** A client can find a trusted local tradesperson and a worker can find their next job — without friction, without guesswork.
-**Current focus:** Phase 15 — Analytics + Observability
+**Current focus:** Phase 16 — Add Address Nomenclators
 
 ## Current Position
 
-Phase: 15 (analytics-observability) — Plan 06 complete (all plans complete)
-Next: Phase 15 complete — no further plans
-Status: Phase 15 complete
-Last activity: 2026-04-23
+Phase: 16 (address-nomenclators) — Plan 06 complete (all plans complete)
+Next: Phase 16 complete — no further plans
+Status: Phase 16 complete
+Last activity: 2026-04-25
 
 Progress: [█████████████░░░░░░░] 53% (phases 1-7, 8, 10, 12, 13, 14 complete)
 
@@ -97,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-23T22:12:00Z
-Stopped at: Completed Phase 15 Plan 06 — mobile funnel event captures
+Last session: 2026-04-25T12:42:11Z
+Stopped at: Completed Phase 16 Plan 06 — mobile CountyCityPickerMobile integration
 Resume file: None
