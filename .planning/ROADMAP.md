@@ -183,10 +183,20 @@ Plans:
 - [ ] 16-05-PLAN.md — Web: CountyCityPicker.jsx, PostJobPage + EditProfilePage integration (NOM-01, NOM-02, NOM-03, NOM-05, NOM-06)
 - [x] 16-06-PLAN.md — Mobile: CountyCityPickerMobile.tsx, post-job + profile integration (NOM-01, NOM-02, NOM-03)
 
+### Phase 17: AI Slop Frontend Improvements
+**Goal**: Frontend UX feels polished and trustworthy — remove AI-generated slop patterns, improve visual consistency, and fix interaction rough edges across web and mobile
+**Depends on**: Phase 16
+**Requirements**: TBD
+**Success Criteria** (what must be TRUE):
+  1. Key user flows (browse, post job, bid) feel smooth with no jarring transitions or placeholder-style copy
+  2. Visual consistency across web and mobile — spacing, typography, and color are coherent
+**Plans:** TBD
+Plans:
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15
+Phases execute in numeric order: 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
