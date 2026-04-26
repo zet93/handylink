@@ -35,4 +35,13 @@ describe('ro-nomenclator.json', () => {
       expect(countyIds.has(city.county_id)).toBe(true);
     });
   });
+
+  it('NOM-07: Arad county has at least 50 city entries', () => {
+    const arCities = nomenclator.cities.filter(c => c.county_id === 'AR');
+    expect(arCities.length).toBeGreaterThanOrEqual(50);
+  });
+
+  it('NOM-08: total city count is greater than 1000', () => {
+    expect(nomenclator.cities.length).toBeGreaterThan(1000);
+  });
 });
