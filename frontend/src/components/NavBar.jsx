@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Bell } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
@@ -43,7 +44,7 @@ function NotificationBell() {
         className="relative p-2 rounded-full hover:bg-gray-100"
         aria-label="Notifications"
       >
-        🔔
+        <Bell size={20} />
         {unreadCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -94,8 +95,8 @@ export default function NavBar() {
       <nav className="bg-white border-b px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link to="/" className="font-bold text-lg text-blue-600">HandyLink</Link>
-          <Link to="/jobs" className="text-sm text-gray-700 hover:text-blue-600">Jobs</Link>
-          <Link to="/worker/browse" className="text-sm text-gray-700 hover:text-blue-600">Browse Workers</Link>
+          <NavLink to="/jobs" className={({ isActive }) => `text-sm hover:text-blue-600 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Jobs</NavLink>
+          <NavLink to="/worker/browse" className={({ isActive }) => `text-sm hover:text-blue-600 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Browse Workers</NavLink>
         </div>
         <div className="flex items-center gap-3">
           <Link to="/login" className="text-sm text-gray-700 hover:text-blue-600">Log in</Link>
@@ -109,12 +110,12 @@ export default function NavBar() {
     <nav className="bg-white border-b px-6 py-3 flex items-center justify-between">
       <div className="flex items-center gap-6">
         <Link to="/" className="font-bold text-lg text-blue-600">HandyLink</Link>
-        <Link to="/jobs" className="text-sm text-gray-700 hover:text-blue-600">Jobs</Link>
+        <NavLink to="/jobs" className={({ isActive }) => `text-sm hover:text-blue-600 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Jobs</NavLink>
         {isWorker && (
-          <Link to="/worker/browse" className="text-sm text-gray-700 hover:text-blue-600">Browse Jobs</Link>
+          <NavLink to="/worker/browse" className={({ isActive }) => `text-sm hover:text-blue-600 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Browse Jobs</NavLink>
         )}
-        <Link to="/post-job" className="text-sm text-gray-700 hover:text-blue-600">Post a Job</Link>
-        <Link to="/my-jobs" className="text-sm text-gray-700 hover:text-blue-600">My Jobs</Link>
+        <NavLink to="/post-job" className={({ isActive }) => `text-sm hover:text-blue-600 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>Post a Job</NavLink>
+        <NavLink to="/my-jobs" className={({ isActive }) => `text-sm hover:text-blue-600 ${isActive ? 'text-blue-600 font-semibold' : 'text-gray-700'}`}>My Jobs</NavLink>
       </div>
       <div className="flex items-center gap-3">
         <NotificationBell />
