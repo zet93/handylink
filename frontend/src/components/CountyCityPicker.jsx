@@ -8,12 +8,12 @@ export default function CountyCityPicker({ register, control, setValue, errors, 
     : [];
 
   function handleCountyChange(e) {
-    setValue('county', e.target.value, { shouldDirty: true });
-    setValue('city', '', { shouldDirty: true });
+    setValue('county', e.target.value, { shouldDirty: true, shouldTouch: true });
+    setValue('city', '', { shouldDirty: true, shouldTouch: true });
   }
 
   function handleCityChange(e) {
-    setValue('city', e.target.value, { shouldDirty: true });
+    setValue('city', e.target.value, { shouldDirty: true, shouldTouch: true });
     if (onCitySelect && e.target.value) {
       onCitySelect(e.target.value);
     }
