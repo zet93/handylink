@@ -7,13 +7,12 @@ import { usePostHog } from '@posthog/react';
 import axiosClient from '../api/axiosClient';
 import LocationPicker from '../components/LocationPicker';
 import CountyCityPicker from '../components/CountyCityPicker';
-
-const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'furniture_assembly', 'cleaning', 'general', 'other'];
+import { getCategoryLabel, CATEGORY_KEYS } from '../constants/categories';
 
 const schema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters'),
-  category: z.enum(CATEGORIES),
+  category: z.enum(CATEGORY_KEYS),
   county: z.string().min(1, 'Județul este obligatoriu'),
   city: z.string().min(1, 'Orașul este obligatoriu'),
   budgetMin: z.coerce.number().positive().optional().or(z.literal('')),
@@ -100,8 +99,8 @@ export default function PostJobPage() {
             {...register('category')}
             className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            {CATEGORIES.map(c => (
-              <option key={c} value={c}>{c.replace('_', ' ')}</option>
+            {CATEGORY_KEYS.map(c => (
+              <option key={c} value={c}>{getCategoryLabel(c)}</option>
             ))}
           </select>
           {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>}
