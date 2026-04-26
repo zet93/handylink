@@ -50,7 +50,6 @@ export default function CountyCityPickerMobile({
       <Modal
         visible={countyModalVisible}
         animationType="slide"
-        presentationStyle="pageSheet"
         onRequestClose={() => setCountyModalVisible(false)}
       >
         <SafeAreaView style={styles.modal}>
@@ -83,7 +82,6 @@ export default function CountyCityPickerMobile({
       <Modal
         visible={cityModalVisible}
         animationType="slide"
-        presentationStyle="pageSheet"
         onRequestClose={() => setCityModalVisible(false)}
       >
         <SafeAreaView style={styles.modal}>
