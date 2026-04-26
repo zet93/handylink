@@ -1,9 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
-import { Marker } from 'react-leaflet';
-import JobMap from './JobMap';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({ iconRetinaUrl: markerIcon2x, iconUrl: markerIcon, shadowUrl: markerShadow });
 
 const provider = new OpenStreetMapProvider({ params: { countrycodes: 'ro' } });
+
+function MapRecenter({ lat, lng }) {
+  const map = useMap();
+  useEffect(() => {
+    if (lat && lng) map.flyTo([lat, lng], 14);
+  }, [lat, lng, map]);
+  return null;
+}
 
 function DraggableMarker({ latitude, longitude, address, onChange }) {
   return (
@@ -88,7 +103,22 @@ export default function LocationPicker({ latitude, longitude, address, onChange 
       </div>
       {latitude && longitude && (
         <div className="mt-2">
-          <JobMap latitude={latitude} longitude={longitude} address={address} />
+          <div className="h-64 w-full rounded-lg overflow-hidden border border-gray-200">
+            <MapContainer
+              center={[latitude, longitude]}
+              zoom={14}
+              style={{ height: '100%', width: '100%' }}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
+              <DraggableMarker latitude={latitude} longitude={longitude} address={address} onChange={onChange} />
+              <MapRecenter lat={latitude} lng={longitude} />
+            </MapContainer>
+          </div>
+          {address && <p className="text-xs text-gray-500 mt-1">{address}</p>}
         </div>
       )}
       {latitude && (
