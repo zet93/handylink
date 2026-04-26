@@ -59,6 +59,7 @@ Progress: [█████████████░░░░░░░] 53% (ph
 | Phase 13-notifications-mobile-testing P03 | 0 | 1 tasks | 0 files |
 | Phase 15-analytics-observability P04 | 2min | 2 tasks | 2 files |
 | Phase 15-analytics-observability P06 | 50s | 2 tasks | 2 files |
+| Phase 16-address-nomenclators P08 | 64s | 2 tasks | 2 files |
 | Phase 16-address-nomenclators P09 | 2min | 1 tasks | 1 files |
 
 ## Accumulated Context
