@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { getCategoryLabel } from '../constants/categories';
 
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -25,7 +26,7 @@ export default function JobCard({ job }) {
           <h3 className="font-semibold text-gray-900 leading-tight">{job.title}</h3>
         </div>
         <span className="text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5 whitespace-nowrap capitalize">
-          {job.category.replace('_', ' ')}
+          {getCategoryLabel(job.category)}
         </span>
       </div>
 

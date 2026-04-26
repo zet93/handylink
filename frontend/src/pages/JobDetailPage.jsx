@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { usePostHog } from '@posthog/react';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
+import { getCategoryLabel } from '../constants/categories';
 import PaymentForm from '../components/PaymentForm';
 import AuthPromptModal from '../components/AuthPromptModal';
 import JobMap from '../components/JobMap';
@@ -230,7 +231,7 @@ export default function JobDetailPage() {
           </div>
         )}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-600">
-          <div><span className="font-medium">Category:</span> {job.category.replace('_', ' ')}</div>
+          <div><span className="font-medium">Category:</span> {getCategoryLabel(job.category)}</div>
           <div><span className="font-medium">Location:</span> {job.city}, {job.country}</div>
           {job.budgetMin && <div><span className="font-medium">Min:</span> {job.budgetMin} RON</div>}
           {job.budgetMax && <div><span className="font-medium">Max:</span> {job.budgetMax} RON</div>}
