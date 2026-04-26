@@ -1,5 +1,5 @@
 ---
-status: testing
+status: complete
 phase: 16-address-nomenclators
 source: [16-01-SUMMARY.md, 16-02-SUMMARY.md, 16-03-SUMMARY.md, 16-04-SUMMARY.md, 16-05-SUMMARY.md, 16-06-SUMMARY.md]
 started: 2026-04-25T00:00:00Z
@@ -8,70 +8,100 @@ updated: 2026-04-25T00:00:00Z
 
 ## Current Test
 
-number: 1
-name: Web Post Job — County and city dropdowns replace freeform input
-expected: |
-  Open the Post Job page on the web app. Where the "City" text field used to be, you
-  should now see two dropdowns side by side: "Județ" (county) and "Oraș / Comună" (city).
-  The city dropdown should be greyed out with the text "Selectează județul întâi" until
-  a county is chosen.
-awaiting: user response
+[testing complete]
 
 ## Tests
 
-### 1. Web Post Job — County and city dropdowns replace freeform input
-expected: Open Post Job page on web. Two dropdowns side-by-side — "Județ" (county) and "Oraș / Comună" (city). City dropdown is grey/disabled showing "Selectează județul întâi" until county is chosen.
-result: [pending]
+### 1. Web Post Job — County and city dropdowns + cascade
+expected: Open Post Job page on web. Two dropdowns side-by-side — "Județ" (county) and "Oraș / Comună" (city). City dropdown is grey/disabled showing "Selectează județul întâi" until county is chosen. Selecting a county populates the city list with only that county's cities.
+result: pass
 
-### 2. Web Post Job — County → city cascade
-expected: Select a county from the first dropdown (e.g. "Cluj"). The city dropdown becomes enabled and shows only cities in that county (e.g. "Cluj-Napoca", "Dej", "Turda"). Selecting a different county replaces the city list.
-result: [pending]
+### 2. Web Post Job — D-05 map auto-centers on city selection
+expected: After selecting a county and then a city, the map automatically pans/zooms to that city. Changing to a different city should move the map again.
+result: issue
+reported: "Yes, but after selecting another City from the dropdown, the map does not move to the newly selected city"
+severity: major
 
-### 3. Web Post Job — D-05 map auto-centers on city selection
-expected: After selecting a county and then a city, the map on the Post Job page automatically pans/zooms to that city as a starting location. The pin can still be moved manually after the auto-center.
-result: [pending]
+### 3. Web Edit Profile — County and city dropdowns replace freeform input
+expected: Open the Edit Profile page on web. The "City" text field is replaced by "Județ" and "Oraș / Comună" dropdowns. If a county/city was previously saved, the dropdowns are pre-populated.
+result: pass
 
-### 4. Web Edit Profile — County and city dropdowns replace freeform input
-expected: Open the Edit Profile / worker profile page on web. The "City" text field is replaced by "Județ" and "Oraș / Comună" dropdowns. If you had a county/city saved previously, the dropdowns should be pre-populated.
-result: [pending]
-
-### 5. Web Edit Profile — Save button activates after county change
+### 4. Web Edit Profile — Save button activates after county change
 expected: On the Edit Profile page, change the selected county. The Save button should become enabled/active. Submit the form — the county and city are saved and visible when you return to the profile.
-result: [pending]
+result: issue
+reported: "No, and the city dropdown contains only the cities, does not contain all the villages from the county"
+severity: major
+sub_issues:
+  - "Save button does not activate after changing county (shouldDirty not working on county select)"
+  - "Communes (comune) missing from city list — dropdown label says 'Oraș / Comună' but only cities/towns are present"
 
-### 6. Mobile Post Job — County picker opens as full-screen modal
+### 5. Mobile Post Job — County picker opens as full-screen modal
 expected: On the mobile Post Job screen, tap the "Județ" field. A full-screen modal slides up with a scrollable list of all 42 Romanian counties. Tapping a county closes the modal and shows the selected county name in the field.
-result: [pending]
+result: pass
 
-### 7. Mobile Post Job — City modal filters to selected county
+### 6. Mobile Post Job — City modal filters to selected county
 expected: After selecting a county on mobile Post Job, tap the "Oraș / Comună" field. A full-screen modal slides up showing only cities for the selected county. Tapping a city closes the modal and shows the city name in the field.
-result: [pending]
+result: pass
+note: "User confirmed cascade works but also wants communes/villages added — same data gap as Test 4"
 
-### 8. Mobile Post Job — D-05 map auto-centers on city selection
+### 7. Mobile Post Job — D-05 map auto-centers on city selection
 expected: After selecting both county and city on mobile Post Job, the map automatically moves to center on that city. The pin is then adjustable for the exact location.
-result: [pending]
+result: pass
 
-### 9. Mobile Worker Profile — County picker visible in edit mode
+### 8. Mobile Worker Profile — County picker visible in edit mode
 expected: On the mobile worker profile, tap "Edit Profile". The "Județ" and "Oraș / Comună" picker fields appear. Tapping either opens a full-screen modal. After selecting county and city, saving the profile persists the values.
-result: [pending]
+result: issue
+reported: "tapping does nothing"
+severity: major
 
-### 10. Mobile Worker Profile — County displayed in read-only view
+### 9. Mobile Worker Profile — County displayed in read-only view
 expected: After saving a county+city to the worker profile on mobile, the profile read-only view shows a "Județ" row displaying the selected county name.
-result: [pending]
+result: pass
 
-### 11. Job detail includes county in API response
-expected: Post a job with a county+city selected. View the job detail — the county field is visible alongside city. (Can also verify via dev tools: GET /api/jobs/{id} response includes a "county" field with the selected value.)
-result: [pending]
+### 10. Job detail includes county in API response
+expected: Post a job with a county+city selected. View the job detail — the county field is visible alongside city.
+result: skipped
+reason: "user skipped"
 
 ## Summary
 
-total: 11
-passed: 0
-issues: 0
-pending: 11
-skipped: 0
+total: 10
+passed: 6
+issues: 3
+pending: 0
+skipped: 1
 blocked: 0
 
 ## Gaps
 
-[none yet]
+- truth: "Changing to a different city from the dropdown should re-center the map to that city (D-05)"
+  status: failed
+  reason: "User reported: map auto-centers on first city selection but does not move when a different city is selected from the dropdown"
+  severity: major
+  test: 2
+  artifacts: []
+  missing: []
+
+- truth: "Save button on Edit Profile activates when county or city is changed (shouldDirty: true)"
+  status: failed
+  reason: "User reported: Save button does not activate after changing county"
+  severity: major
+  test: 4
+  artifacts: []
+  missing: []
+
+- truth: "City/Comună dropdown lists both cities/towns AND communes across web and mobile (Oraș / Comună label covers both)"
+  status: failed
+  reason: "User reported on web (Test 4) and mobile (Test 6): dropdown contains only cities, not communes/villages — SIRUTA data filtered too aggressively"
+  severity: major
+  test: 4
+  artifacts: []
+  missing: []
+
+- truth: "Mobile worker profile county/city picker opens a full-screen modal when tapped in edit mode"
+  status: failed
+  reason: "User reported: tapping the county/city picker fields does nothing — modal does not open"
+  severity: major
+  test: 8
+  artifacts: []
+  missing: []
