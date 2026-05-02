@@ -143,7 +143,7 @@ export default function WorkerBrowseScreen() {
                 ) : null}
                 <View style={styles.cardMeta}>
                   {item.city ? <Text style={styles.metaText}>{item.city}</Text> : null}
-                  {item.category ? <Text style={styles.metaText}>{item.category}</Text> : null}
+                  {item.category ? <Text style={styles.metaText}>{getCategoryLabel(item.category)}</Text> : null}
                   {item.budgetMax ? (
                     <Text style={styles.metaText}>Up to {item.budgetMax} RON</Text>
                   ) : null}
