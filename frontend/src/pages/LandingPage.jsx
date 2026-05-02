@@ -1,31 +1,35 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Zap, Wrench, Paintbrush, Hammer, Armchair, Sparkles, Home, MoreHorizontal } from 'lucide-react';
 import axiosClient from '../api/axiosClient';
 import JobCard from '../components/JobCard';
+import { getCategoryLabel } from '../constants/categories';
 
 const CATEGORIES = [
-  { emoji: '⚡', label: 'Electrical' },
-  { emoji: '🔧', label: 'Plumbing' },
-  { emoji: '🎨', label: 'Painting' },
-  { emoji: '🪚', label: 'Carpentry' },
-  { emoji: '🛋️', label: 'Furniture' },
-  { emoji: '🏠', label: 'General' },
+  { key: 'electrical',         Icon: Zap },
+  { key: 'plumbing',           Icon: Wrench },
+  { key: 'painting',           Icon: Paintbrush },
+  { key: 'carpentry',          Icon: Hammer },
+  { key: 'furniture_assembly', Icon: Armchair },
+  { key: 'cleaning',           Icon: Sparkles },
+  { key: 'general',            Icon: Home },
+  { key: 'other',              Icon: MoreHorizontal },
 ];
 
 const CLIENT_STEPS = [
-  { n: '1', title: 'Post a job', desc: 'Describe what you need done and set your budget.' },
-  { n: '2', title: 'Receive bids', desc: 'Qualified workers bid on your job within hours.' },
-  { n: '3', title: 'Hire & pay', desc: 'Pick the best offer, approve the work, and pay securely.' },
+  { n: '1', title: 'Postează o lucrare', desc: 'Descrie ce ai nevoie și stabilește bugetul.' },
+  { n: '2', title: 'Primești oferte', desc: 'Meșteri calificați licitează pe lucrarea ta în câteva ore.' },
+  { n: '3', title: 'Angajează și plătește', desc: 'Alege cea mai bună ofertă, aprobă lucrarea și plătește în siguranță.' },
 ];
 
 const WORKER_STEPS = [
-  { n: '1', title: 'Browse jobs', desc: 'Find jobs that match your skills and location.' },
-  { n: '2', title: 'Submit a bid', desc: 'Propose your price and message to the client.' },
-  { n: '3', title: 'Get paid', desc: 'Complete the job and receive payment through the platform.' },
+  { n: '1', title: 'Răsfoiești lucrări', desc: 'Găsești lucrări care se potrivesc cu abilitățile și locația ta.' },
+  { n: '2', title: 'Trimiți o ofertă', desc: 'Propui prețul tău și un mesaj clientului.' },
+  { n: '3', title: 'Ești plătit', desc: 'Finalizezi lucrarea și primești plata prin platformă.' },
 ];
 
 export default function LandingPage() {
-  const { data: recentJobs, isLoading: jobsLoading, isError: jobsError } = useQuery({
+  const { data: recentJobs, isLoading: jobsLoading } = useQuery({
     queryKey: ['landing-jobs'],
     queryFn: () => axiosClient.get('/api/jobs', { params: { status: 'Open', pageSize: 6 } })
       .then(r => r.data.items ?? r.data),
@@ -35,33 +39,33 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
       <header className="py-20 px-6 text-center" style={{ backgroundColor: 'var(--accent)', color: '#ffffff' }}>
-        <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--color-bg)' }}>Find trusted tradespeople near you</h1>
+        <h1 className="text-4xl font-bold mb-4" style={{ color: 'var(--color-bg)' }}>Găsești meșterul potrivit în orașul tău</h1>
         <p className="text-lg mb-8 max-w-xl mx-auto" style={{ color: 'var(--color-panel)' }}>
-          Post a job or bid on work — HandyLink connects clients with skilled workers globally.
+          Postează o lucrare sau găsește clienți — HandyLink conectează meșteri de încredere cu oamenii care au nevoie de ei.
         </p>
         <div className="flex gap-4 justify-center flex-wrap" style={{ justifyContent: 'center' }}>
           <Link to="/register" className="font-semibold px-6 py-3 rounded-lg" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--accent)' }}>
-            Post a Job
+            Postează o lucrare
           </Link>
           <Link to="/register" className="border font-semibold px-6 py-3 rounded-lg" style={{ borderColor: 'var(--color-bg)', color: 'var(--color-bg)' }}>
-            Find Work
+            Găsește lucrări
           </Link>
         </div>
       </header>
 
       <main>
         <section className="py-16 px-6 max-w-5xl mx-auto" style={{ backgroundColor: 'var(--color-bg)' }}>
-          <h2 className="text-2xl font-bold text-center mb-10">Browse by category</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {CATEGORIES.map(({ emoji, label }) => (
+          <h2 className="text-2xl font-bold text-center mb-10">Caută după categorie</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4">
+            {CATEGORIES.map(({ key, Icon }) => (
               <Link
-                key={label}
+                key={key}
                 to="/jobs"
                 className="flex flex-col items-center gap-2 p-4 border rounded-xl hover:border-blue-400 hover:bg-blue-50 text-center"
                 style={{ borderColor: 'var(--border)', backgroundColor: 'var(--color-panel)', color: 'var(--color-text)' }}
               >
-                <span className="text-3xl">{emoji}</span>
-                <span className="text-sm font-medium" style={{ color: 'var(--color-muted)' }}>{label}</span>
+                <Icon size={28} style={{ color: 'var(--accent)' }} />
+                <span className="text-sm font-medium" style={{ color: 'var(--color-muted)' }}>{getCategoryLabel(key)}</span>
               </Link>
             ))}
           </div>
@@ -70,7 +74,7 @@ export default function LandingPage() {
         <section className="py-16 px-6" style={{ backgroundColor: 'var(--color-panel)' }}>
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-2xl font-bold mb-6">For clients</h2>
+              <h2 className="text-2xl font-bold mb-6">Pentru clienți</h2>
               <div className="space-y-6">
                 {CLIENT_STEPS.map(({ n, title, desc }) => (
                   <div key={n} className="flex gap-4">
@@ -86,7 +90,7 @@ export default function LandingPage() {
               </div>
             </div>
             <div>
-              <h2 className="text-2xl font-bold mb-6">For workers</h2>
+              <h2 className="text-2xl font-bold mb-6">Pentru meșteri</h2>
               <div className="space-y-6">
                 {WORKER_STEPS.map(({ n, title, desc }) => (
                   <div key={n} className="flex gap-4">
@@ -102,6 +106,27 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="py-16 px-6 max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-10">Lucrări recente</h2>
+          {jobsLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="border rounded-xl p-4 animate-pulse" style={{ backgroundColor: 'var(--color-panel)' }}>
+                  <div className="h-4 rounded mb-3" style={{ backgroundColor: 'var(--border)', width: '60%' }} />
+                  <div className="h-3 rounded mb-2" style={{ backgroundColor: 'var(--border)', width: '80%' }} />
+                  <div className="h-3 rounded" style={{ backgroundColor: 'var(--border)', width: '40%' }} />
+                </div>
+              ))}
+            </div>
+          ) : !recentJobs?.length ? (
+            <p className="text-center text-sm" style={{ color: 'var(--color-muted)' }}>Nu există lucrări disponibile momentan.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {recentJobs.map(job => <JobCard key={job.id} job={job} />)}
+            </div>
+          )}
         </section>
       </main>
 
