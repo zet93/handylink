@@ -16,10 +16,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { usePostHog } from 'posthog-react-native';
 import api from '../../services/api';
 import { palette, typography } from '../constants/design';
+import { getCategoryLabel, CATEGORY_KEYS } from '../../constants/categories';
 import LocationPickerMobile from '../../components/LocationPickerMobile';
 import CountyCityPickerMobile from '../../components/CountyCityPickerMobile';
 
-const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
 
 export default function PostJobScreen() {
   const router = useRouter();
@@ -138,8 +138,8 @@ export default function PostJobScreen() {
             onValueChange={setCategory}
             style={styles.picker}
           >
-            {CATEGORIES.map(c => (
-              <Picker.Item key={c} label={c.charAt(0).toUpperCase() + c.slice(1)} value={c} />
+            {CATEGORY_KEYS.map(c => (
+              <Picker.Item key={c} label={getCategoryLabel(c)} value={c} />
             ))}
           </Picker>
         </View>

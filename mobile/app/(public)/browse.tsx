@@ -11,6 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useRouter } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
+import { getCategoryLabel } from '../../constants/categories';
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   open: { bg: '#DBEAFE', text: '#1D4ED8' },
@@ -89,7 +90,7 @@ export default function PublicBrowseScreen() {
                 ) : null}
                 <View style={styles.cardMeta}>
                   {item.city ? <Text style={styles.metaText}>{item.city}</Text> : null}
-                  {item.category ? <Text style={styles.metaText}>{item.category}</Text> : null}
+                  {item.category ? <Text style={styles.metaText}>{getCategoryLabel(item.category)}</Text> : null}
                   {item.budgetMax ? (
                     <Text style={styles.metaText}>Up to {item.budgetMax} RON</Text>
                   ) : null}

@@ -15,8 +15,9 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { usePostHog } from 'posthog-react-native';
 import api from '../../services/api';
+import { getCategoryLabel, CATEGORY_KEYS } from '../../constants/categories';
 
-const CATEGORIES = ['all', 'electrical', 'plumbing', 'painting', 'carpentry', 'cleaning', 'other'];
+const FILTER_CATEGORIES = ['all', ...CATEGORY_KEYS];
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   open: { bg: '#DBEAFE', text: '#1D4ED8' },
@@ -94,14 +95,14 @@ export default function WorkerBrowseScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.chips}
         >
-          {CATEGORIES.map(cat => (
+          {FILTER_CATEGORIES.map(cat => (
             <TouchableOpacity
               key={cat}
               style={[styles.chip, category === cat && styles.chipSelected]}
               onPress={() => handleCategoryChange(cat)}
             >
               <Text style={[styles.chipText, category === cat && styles.chipTextSelected]}>
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {cat === 'all' ? 'Toate' : getCategoryLabel(cat)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -164,7 +165,7 @@ export default function WorkerBrowseScreen() {
           {selectedJob ? (
             <>
               <Text style={styles.sheetTitle}>{selectedJob.title}</Text>
-              <Text style={styles.sheetSub}>{selectedJob.city} · {selectedJob.category}</Text>
+              <Text style={styles.sheetSub}>{selectedJob.city} · {getCategoryLabel(selectedJob.category)}</Text>
 
               <Text style={styles.label}>Your Price (RON)</Text>
               <TextInput

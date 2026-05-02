@@ -13,6 +13,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import api from '../../services/api';
 import AuthPromptSheet from '../../components/AuthPromptSheet';
+import { getCategoryLabel } from '../../constants/categories';
 
 const GATED_STATUSES = ['open', 'bidding'];
 
@@ -55,7 +56,7 @@ export default function PublicJobDetailScreen() {
         <View style={styles.metaRow}>
           {job.city ? <Text style={styles.metaText}>{job.city}</Text> : null}
           {job.country ? <Text style={styles.metaText}>{job.country}</Text> : null}
-          {job.category ? <Text style={styles.metaText}>{job.category}</Text> : null}
+          {job.category ? <Text style={styles.metaText}>{getCategoryLabel(job.category)}</Text> : null}
         </View>
 
         <View style={styles.budgetRow}>
