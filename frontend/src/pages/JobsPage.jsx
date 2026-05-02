@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Briefcase } from 'lucide-react';
 import axiosClient from '../api/axiosClient';
 import JobCard from '../components/JobCard';
+import { getCategoryLabel, CATEGORY_KEYS } from '../constants/categories';
 
-const CATEGORIES = ['electrical', 'plumbing', 'painting', 'carpentry', 'furniture_assembly', 'cleaning', 'general', 'other'];
 const STATUSES = ['open', 'bidding', 'accepted', 'in_progress', 'completed', 'cancelled'];
 
 export default function JobsPage() {
-  const [filters, setFilters] = useState({ category: '', city: '', country: '', status: '', page: 1 });
+  const [filters, setFilters] = useState({ category: '', city: '', status: '', page: 1 });
 
   const { data, isLoading } = useQuery({
     queryKey: ['jobs', filters],
@@ -15,7 +16,6 @@ export default function JobsPage() {
       const params = new URLSearchParams();
       if (filters.category) params.set('category', filters.category);
       if (filters.city) params.set('city', filters.city);
-      if (filters.country) params.set('country', filters.country);
       if (filters.status) params.set('status', filters.status);
       params.set('page', filters.page);
       return axiosClient.get(`/api/jobs?${params}`).then(r => r.data);
@@ -38,7 +38,7 @@ export default function JobsPage() {
             onChange={e => set('category', e.target.value)}
           >
             <option value="">All categories</option>
-            {CATEGORIES.map(c => <option key={c} value={c}>{c.replace('_', ' ')}</option>)}
+            {CATEGORY_KEYS.map(c => <option key={c} value={c}>{getCategoryLabel(c)}</option>)}
           </select>
         </div>
         <div>
@@ -48,15 +48,6 @@ export default function JobsPage() {
             value={filters.city}
             onChange={e => set('city', e.target.value)}
             placeholder="e.g. Bucharest"
-          />
-        </div>
-        <div>
-          <label className="block text-xs text-gray-500 mb-1">Country</label>
-          <input
-            className="w-full border rounded-lg px-2 py-1.5 text-sm"
-            value={filters.country}
-            onChange={e => set('country', e.target.value)}
-            placeholder="e.g. RO"
           />
         </div>
         <div>
@@ -74,9 +65,21 @@ export default function JobsPage() {
 
       <div className="flex-1">
         {isLoading ? (
-          <p className="text-gray-400 text-sm">Loading…</p>
+          <div className="space-y-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="border rounded-xl p-4 animate-pulse bg-white">
+                <div className="h-4 bg-gray-200 rounded mb-3 w-1/2" />
+                <div className="h-3 bg-gray-100 rounded mb-2 w-3/4" />
+                <div className="h-3 bg-gray-100 rounded w-1/4" />
+              </div>
+            ))}
+          </div>
         ) : data?.items?.length === 0 ? (
-          <p className="text-gray-500 text-sm">No jobs found.</p>
+          <div className="flex flex-col items-center gap-3 py-16 text-gray-400">
+            <Briefcase size={40} strokeWidth={1.5} />
+            <p className="text-sm font-medium">Nu am găsit lucrări care să corespundă filtrelor.</p>
+            <p className="text-xs">Încearcă să schimbi categoria sau orașul.</p>
+          </div>
         ) : (
           <>
             <div className="space-y-3 mb-6">
