@@ -1,178 +1,198 @@
 ---
 phase: 16-address-nomenclators
-verified: 2026-04-25T14:00:00Z
-status: gaps_found
-score: 3/5 success criteria verified
+verified: 2026-04-26T08:30:00Z
+status: human_needed
+score: 7/7 must-haves verified
 overrides_applied: 0
-gaps:
-  - truth: "Stored addresses are normalized and consistent across job posts and worker profiles"
-    status: failed
-    reason: "UserResponseDto has no County field and UserService.ToDto omits p.County. GET /api/users/me returns no county. Web EditProfilePage resets with userProfile.county which is always undefined. Mobile profile.tsx onSuccess sets county from data.county which is always undefined. County written via UpdateUserDto is accepted by the backend but can never be read back — profile edit forms cannot pre-populate the county picker on load."
-    artifacts:
-      - path: "backend/HandyLink.Core/DTOs/UserResponseDto.cs"
-        issue: "Record has no County field — missing string? County parameter"
-      - path: "backend/HandyLink.Core/Services/UserService.cs"
-        issue: "ToDto method maps Profile to UserResponseDto without including p.County (line 62)"
-      - path: "frontend/src/pages/EditProfilePage.jsx"
-        issue: "reset() on line 54 sets county: userProfile.county ?? '' — will always be '' because userProfile.county is undefined"
-      - path: "mobile/app/(worker)/profile.tsx"
-        issue: "onSuccess sets setCounty(data.county ?? '') — data.county is always undefined because API omits county from response"
-    missing:
-      - "Add string? County to UserResponseDto after string? City"
-      - "Add p.County to UserService.ToDto call positionally after p.City"
-  - truth: "Backend persists county through all layers (entity, handler, response)"
-    status: failed
-    reason: "County flows correctly through the Jobs layer (CreateJobCommand → CreateJobHandler → CreateJobResponse → GetJobByIdResponse). However the Users layer is incomplete: UserResponseDto and UserService.ToDto omit County so the profile response layer does not include county. Additionally, mobile profile.tsx PUT /api/users/me sends full_name (snake_case) instead of fullName (camelCase) — the ASP.NET Core JSON deserializer expects camelCase for UpdateUserDto.FullName, so the FullName update is silently discarded on every save from the mobile profile screen."
-    artifacts:
-      - path: "backend/HandyLink.Core/DTOs/UserResponseDto.cs"
-        issue: "Missing string? County — profile response never carries county back to callers"
-      - path: "backend/HandyLink.Core/Services/UserService.cs"
-        issue: "ToDto omits p.County from UserResponseDto construction"
-      - path: "mobile/app/(worker)/profile.tsx"
-        issue: "Line 76: mutationFn sends full_name: name (snake_case). UpdateUserDto.FullName binds from fullName (camelCase). The FullName update is silently ignored."
-    missing:
-      - "Add string? County to UserResponseDto"
-      - "Add p.County to UserService.ToDto"
-      - "Change mobile profile.tsx line 76: full_name → fullName in the PUT payload"
+re_verification:
+  previous_status: gaps_found
+  previous_score: 3/5
+  gaps_closed:
+    - "UserResponseDto missing County — County field added at position 6; UserService.ToDto now passes p.County"
+    - "Mobile profile.tsx sent full_name (snake_case) — fixed to fullName (camelCase) on line 76"
+    - "City dropdown showed partial localities (11 for Arad) — regenerated to 2898 entries including all communes"
+    - "Map did not re-center on second city selection — MapRecenter component with flyTo added to LocationPicker.jsx"
+    - "Save button stayed disabled after county change — shouldTouch: true added to all setValue calls"
+    - "Android modal did not open on tap — presentationStyle removed from both Modal elements"
+  gaps_remaining: []
+  regressions: []
 human_verification:
-  - test: "County picker pre-population on profile edit"
-    expected: "After fixing UserResponseDto + ToDto, reloading the Edit Profile page (web) or tapping Edit Profile (mobile) should show the previously saved county pre-selected in the picker"
-    why_human: "Requires a live profile with a saved county value and a running API to verify round-trip"
-  - test: "D-05 auto-center under network failure"
-    expected: "If Nominatim is unreachable, selecting a city should fail gracefully — no crash, map stays at previous position"
-    why_human: "Nominatim handleCitySelect has no try/catch; WR-02/WR-03 warnings; behavior under network failure needs manual smoke test"
+  - test: "Map re-centers on second city selection"
+    expected: "After selecting one city (map appears), selecting a different city should visually fly the map to the new city's coordinates"
+    why_human: "Requires a running Vite dev server and user interaction with the city dropdown — cannot drive Leaflet flyTo programmatically in a test environment"
+  - test: "Save button activates after county change in EditProfilePage"
+    expected: "User loads Edit Profile (county already set from API), changes the Județ dropdown to a different county — Save button should become enabled"
+    why_human: "Requires a live API with a user that has a previously saved county; isDirty state is RHF runtime behavior not verifiable by static analysis"
+  - test: "County picker pre-populates on Edit Profile reload (regression check for WR-01 fix)"
+    expected: "Reload EditProfilePage after saving a county — county picker shows the previously saved county pre-selected"
+    why_human: "Round-trip requires live API + Supabase database with a real user session"
+  - test: "Mobile county modal opens on Android tap"
+    expected: "Tapping the Județ field in edit mode on the worker profile opens a full-screen slide-in modal listing all 42 counties"
+    why_human: "Modal behavior on Android requires a device/emulator; presentationStyle removal effectiveness cannot be verified by static analysis"
+  - test: "Mobile city modal opens after county is selected"
+    expected: "After selecting a county in the mobile picker, tapping Oraș / Comună field opens a modal listing communes/cities for that county"
+    why_human: "Same as above — requires Android device or emulator"
 ---
 
-# Phase 16: Add Address Nomenclators — Verification Report
+# Phase 16: Address Nomenclators — Re-Verification Report
 
-**Phase Goal:** Address fields across the app use structured nomenclator data (counties, cities) instead of freeform text inputs
-**Verified:** 2026-04-25T14:00:00Z
-**Status:** gaps_found
-**Re-verification:** No — initial verification
+**Phase Goal:** Close 4 UAT gaps — map re-centers on city change; Edit Profile Save activates after county change; communes in city dropdown; mobile worker profile modal opens on tap.
+**Verified:** 2026-04-26T08:30:00Z
+**Status:** human_needed
+**Re-verification:** Yes — after gap closure (previous status: gaps_found, score 3/5)
+
+## Re-verification Summary
+
+All 6 previously failing items are now closed. The 2 original structural gaps (UserResponseDto County, mobile full_name key) were fixed alongside the 4 new UAT gap fixes from plans 07/08/09. All 7 must-haves now pass static verification. Status is human_needed because 5 behavioral items require a running app or device to confirm.
+
+---
 
 ## Goal Achievement
 
-### Observable Truths (from ROADMAP.md Success Criteria)
+### Observable Truths
 
 | # | Truth | Status | Evidence |
 |---|-------|--------|----------|
-| 1 | Address inputs on web and mobile present selectable county/city dropdowns backed by Romanian nomenclator data | VERIFIED | CountyCityPicker.jsx and CountyCityPickerMobile.tsx both exist, import ro-nomenclator.json, render cascading county+city selects/modals. Both integrated into PostJobPage, EditProfilePage, post-job.tsx, profile.tsx |
-| 2 | Stored addresses are normalized and consistent across job posts and worker profiles | FAILED | UserResponseDto missing County field; UserService.ToDto omits p.County; county written via UpdateUserDto can never be read back — profile forms cannot pre-populate county picker |
-| 3 | County column exists in public.jobs and public.profiles tables | VERIFIED | Plan 04 human checkpoint completed; 004_add_county_field.sql executed in Supabase SQL editor; developer confirmed both columns present |
-| 4 | Backend persists county through all layers (entity, handler, response) | FAILED | Jobs layer complete; Users layer incomplete — UserResponseDto/ToDto omit county; additionally mobile profile.tsx sends full_name (snake_case) where UpdateUserDto expects fullName (camelCase) |
-| 5 | D-05 auto-center: selecting a city in PostJobPage/post-job.tsx geocodes via Nominatim and moves the map pin | VERIFIED | handleCitySelect present in both PostJobPage.jsx (line 32-43) and post-job.tsx (line 64-75), both fetch Nominatim and call setLocation — no error handling but flow is wired |
+| 1 | City dropdown shows communes (not just municipalities/towns) | VERIFIED | ro-nomenclator.json regenerated: 2898 entries (was 359); AR county: 74 entries (was 11); all entries from SIRUTA source without `comuna` field (top-level localities) |
+| 2 | Selecting a second city moves the Leaflet map to the new city | VERIFIED (static) | `MapRecenter` component at LocationPicker.jsx:15-21 uses `useMap().flyTo([lat, lng], 14)` in `useEffect` watching `lat, lng, map`; rendered as `<MapRecenter lat={latitude} lng={longitude} />` inside `MapContainer` at line 118 |
+| 3 | Save button in EditProfilePage activates after county dropdown change | VERIFIED (static) | CountyCityPicker.jsx `handleCountyChange` calls `setValue('county', e.target.value, { shouldDirty: true, shouldTouch: true })` and `setValue('city', '', { shouldDirty: true, shouldTouch: true })`; `handleCityChange` also uses `shouldTouch: true` — 3 occurrences confirmed |
+| 4 | Tapping Județ/Oraș fields on mobile opens the picker modal | VERIFIED (static) | CountyCityPickerMobile.tsx has zero `presentationStyle` occurrences; both Modal elements retain `animationType="slide"` and `onRequestClose` — 2 occurrences each |
+| 5 | Web and mobile use identical nomenclator data | VERIFIED | frontend/src/data/ro-nomenclator.json: 2898 cities; mobile/assets/ro-nomenclator.json: 2898 cities — files confirmed identical by count |
+| 6 | County round-trips through backend to profile response | VERIFIED | UserResponseDto.cs line 9: `string? County`; UserService.cs line 62: `p.County` passed to ToDto constructor — gap WR-01 closed |
+| 7 | Mobile profile save persists name correctly | VERIFIED | mobile/app/(worker)/profile.tsx line 76: `api.put('/api/users/me', { fullName: name, city, county })` — camelCase key; gap WR-04 closed |
 
-**Score:** 3/5 success criteria verified
+**Score:** 7/7 must-haves verified
 
-### Required Artifacts
+### Deferred Items
 
-| Artifact | Expected | Status | Details |
-|----------|----------|--------|---------|
-| `frontend/src/data/ro-nomenclator.json` | 42 counties + cities, flat shape | VERIFIED | Exists; 42 counties AB-VN+B; București has 6 sectors; diacritics present (Timișoara, Argeș, etc.) |
-| `mobile/assets/ro-nomenclator.json` | Identical copy | VERIFIED | Exists |
-| `frontend/src/data/__tests__/ro-nomenclator.test.js` | 5 structural tests (NOM-05, NOM-06) | VERIFIED | Exists; all 5 tests present; tests not run due to environment restriction |
-| `backend/HandyLink.Infrastructure/Data/Migrations/004_add_county_field.sql` | 2x ADD COLUMN IF NOT EXISTS county TEXT | VERIFIED | Exists; correct content; both jobs and profiles; no NOT NULL/DEFAULT |
-| `backend/HandyLink.Core/Entities/Job.cs` | County property | VERIFIED | `public string? County { get; set; }` present (line 20) |
-| `backend/HandyLink.Core/Entities/Profile.cs` | County property | VERIFIED | `public string? County { get; set; }` present (line 10) |
-| `backend/HandyLink.API/Features/Jobs/CreateJob/CreateJobCommand.cs` | string? County | VERIFIED | Present at position 7 after Country |
-| `backend/HandyLink.API/Features/Jobs/CreateJob/CreateJobResponse.cs` | string? County | VERIFIED | Present at position 8 after Country |
-| `backend/HandyLink.API/Features/Jobs/GetJobById/GetJobByIdResponse.cs` | string? County | VERIFIED | Present at position 8 after Country |
-| `backend/HandyLink.Core/DTOs/UpdateUserDto.cs` | string? County | VERIFIED | Present at position 5 after City |
-| `backend/HandyLink.Core/DTOs/UserResponseDto.cs` | string? County | STUB/MISSING | No County field — omitted from record; this is the root cause of WR-01 |
-| `frontend/src/components/CountyCityPicker.jsx` | shouldDirty, useWatch, ro-nomenclator, disabled state | VERIFIED | All required patterns present |
-| `frontend/src/pages/PostJobPage.jsx` | CountyCityPicker, handleCitySelect, county in payload | VERIFIED | All present |
-| `frontend/src/pages/EditProfilePage.jsx` | CountyCityPicker, county in reset(), county in payload | PARTIAL | Component integrated and county in payload; reset sets county: userProfile.county which is always undefined due to WR-01 |
-| `mobile/components/CountyCityPickerMobile.tsx` | initialNumToRender=20, modals, minHeight: 44 | VERIFIED | All required patterns present |
-| `mobile/app/(client)/post-job.tsx` | CountyCityPickerMobile, handleCitySelect, county in payload | VERIFIED | All present |
-| `mobile/app/(worker)/profile.tsx` | CountyCityPickerMobile, county in payload, Județ display row | PARTIAL | Component integrated, Județ display row present; county never pre-populates due to WR-01; full_name key bug (WR-04) |
-
-### Key Link Verification
-
-| From | To | Via | Status | Details |
-|------|----|-----|--------|---------|
-| CountyCityPicker.jsx | ro-nomenclator.json | import nomenclator from '../data/ro-nomenclator.json' | WIRED | Line 2 |
-| CountyCityPickerMobile.tsx | ro-nomenclator.json | import nomenclator from '../assets/ro-nomenclator.json' | WIRED | Line 6 |
-| PostJobPage.jsx | CountyCityPicker.jsx | `<CountyCityPicker onCitySelect={handleCitySelect}>` | WIRED | Line 104-110 |
-| PostJobPage.jsx handleCitySelect | Nominatim API | fetch nominatim.openstreetmap.org | WIRED | Lines 33-42; no error handling (WR-02) |
-| EditProfilePage.jsx | CountyCityPicker.jsx | `<CountyCityPicker>` without onCitySelect | WIRED | Line 115-120 |
-| post-job.tsx | CountyCityPickerMobile.tsx | `<CountyCityPickerMobile>` | WIRED | Line 114-120 |
-| post-job.tsx handleCitySelect | Nominatim API | fetch nominatim.openstreetmap.org | WIRED | Lines 65-75; no error handling (WR-03) |
-| profile.tsx | CountyCityPickerMobile.tsx | `<CountyCityPickerMobile>` in editing block | WIRED | Lines 144-150 |
-| JobsController.cs | CreateJobCommand | dto.County passed as 7th arg | WIRED | Line 25 |
-| CreateJobHandler.cs | Job entity | County = command.County | WIRED | Line 22 |
-| CreateJobHandler.cs | CreateJobResponse | job.County in response | WIRED | Line 38 |
-| GetJobByIdHandler.cs | GetJobByIdResponse | job.County in response | WIRED | Line 18 |
-| UserService.UpdateCurrentUserAsync | Profile.County | if (dto.County is not null) profile.County = dto.County | WIRED | Line 52 |
-| UserService.ToDto | UserResponseDto | p.County NOT included | NOT_WIRED | ToDto line 62 omits county — root cause of WR-01 |
-
-### Data-Flow Trace (Level 4)
-
-| Artifact | Data Variable | Source | Produces Real Data | Status |
-|----------|---------------|--------|-------------------|--------|
-| EditProfilePage.jsx | county (from reset) | userProfile.county from AuthContext → GET /api/users/me | No — UserResponseDto.County absent | HOLLOW — county picker never pre-populates from saved data |
-| profile.tsx (worker) | county state | data.county from useQuery → GET /api/users/me | No — UserResponseDto.County absent | HOLLOW — county picker never pre-populates from saved data |
-| post-job.tsx | county state | local state only (user input) | Yes — user selects; county written to API | FLOWING |
-| PostJobPage.jsx | county form field | local RHF state (user selects) | Yes — submitted to /api/jobs | FLOWING |
-
-### Behavioral Spot-Checks
-
-Step 7b: SKIPPED — these artifacts require a running Expo/Vite dev server. Static checks run instead.
-
-| Behavior | Check | Result | Status |
-|----------|-------|--------|--------|
-| Nomenclator has 42 counties | Count `{ "id":` entries in counties array before `"cities":` | 42 entries (AB,AR,AG,BC,BH,BN,BT,BV,BR,B,BZ,CS,CL,CJ,CT,CV,DB,DJ,GL,GR,GJ,HR,HD,IL,IS,IF,MM,MH,MS,NT,OT,PH,SM,SJ,SB,SV,TR,TM,TL,VS,VL,VN) | PASS |
-| București has 6 sectors | grep `county_id.*B` in nomenclator | 6 entries B-S1 through B-S6 | PASS |
-| Diacritics preserved | grep `Timișoara` in nomenclator | Found at TM-009 | PASS |
-| 004 migration has 2 ADD COLUMN statements | grep `ADD COLUMN IF NOT EXISTS county TEXT` | 2 matches | PASS |
-| UserResponseDto missing County | Read file | No County field — confirmed | FAIL |
-| mobile profile.tsx sends full_name | grep `full_name` in mutation | Line 76: `full_name: name` — wrong key | FAIL |
-
-### Requirements Coverage
-
-NOM-01 through NOM-06 are phase-internal requirements defined in plan frontmatter. They are not tracked in REQUIREMENTS.md (which covers v1 Beta requirements BUG-, UX-, DSG-, SEC-, MOB-, AUTH-, MAP-, NOTF-, ANLX-, OPS- only). Phase 16 is listed in ROADMAP.md as an additional phase beyond the Beta Polish milestone. No requirement IDs from REQUIREMENTS.md are claimed by this phase — no orphaned requirements.
-
-| Requirement | Plans | Description | Status | Evidence |
-|-------------|-------|-------------|--------|----------|
-| NOM-01 | 02, 03, 04, 05, 06 | County column + backend persistence | PARTIAL | Column exists; Jobs layer complete; Users layer missing County in response DTO |
-| NOM-02 | 03, 05, 06 | County in create/update payloads | PARTIAL | CreateJob payload complete; UpdateUser payload accepted but never returned in response |
-| NOM-03 | 02, 03, 04, 05, 06 | Profiles county stored | PARTIAL | Update path works; read path broken (WR-01) |
-| NOM-04 | 03 | All C# positional records updated | VERIFIED | All records updated; build compiles; tests pass |
-| NOM-05 | 01, 05 | 42 county entries in nomenclator | VERIFIED | 42 counties in ro-nomenclator.json; Zod schema in web forms |
-| NOM-06 | 01, 05 | București has 6 sector cities | VERIFIED | B-S1 through B-S6 confirmed; structural test present |
-
-### Anti-Patterns Found
-
-| File | Line | Pattern | Severity | Impact |
-|------|------|---------|----------|--------|
-| `mobile/app/(worker)/profile.tsx` | 76 | `full_name: name` in PUT payload (snake_case) | Blocker | UpdateUserDto.FullName expects camelCase (`fullName`); name update silently discarded on every mobile profile save |
-| `frontend/src/pages/PostJobPage.jsx` | 32-43 | `handleCitySelect` async function with no try/catch | Warning | Nominatim network failure causes unhandled promise rejection; city selection silently fails, map stays centered; no user feedback |
-| `mobile/app/(client)/post-job.tsx` | 64-75 | `handleCitySelect` async function with no try/catch | Warning | Same as above for mobile |
-
-### Human Verification Required
-
-#### 1. County Pre-population After Fix
-
-**Test:** After fixing `UserResponseDto` and `UserService.ToDto`, log in as a worker, save a county via Edit Profile, then reload the page. Tap Edit Profile again.
-**Expected:** The county picker should show the previously saved county pre-selected; city picker should be enabled.
-**Why human:** Round-trip requires live API + Supabase database with a real user session.
-
-#### 2. Nominatim Error Handling (WR-02/WR-03)
-
-**Test:** Temporarily disable network or use browser DevTools to block requests to nominatim.openstreetmap.org. Select a city in Post Job.
-**Expected:** The form should not crash; an error boundary or silent fallback should prevent the unhandled rejection from breaking the form.
-**Why human:** Requires network manipulation; behavior under failure is a graceful degradation check.
-
-### Gaps Summary
-
-Two gaps block full goal achievement:
-
-**Gap 1 — UserResponseDto missing County (WR-01):** The phase added County to `UpdateUserDto` so it can be written, and to all job-related DTOs so job county round-trips correctly. However `UserResponseDto` (the response DTO for `GET /api/users/me`) was never updated to include County. `UserService.ToDto` builds this DTO without `p.County`. The result: county is persisted to the database when a user saves their profile, but the API response never carries it back. Both the web `EditProfilePage` and mobile `profile.tsx` pre-populate their county pickers from `userProfile.county` / `data.county` respectively — which is always `undefined`. The county picker will always start empty even for users who have saved a county.
-
-**Gap 2 — Mobile profile sends wrong JSON key for FullName (WR-04):** `profile.tsx` mutation (line 76) sends `{ full_name: name, city, county }`. ASP.NET Core's default JSON deserializer binds `full_name` to nothing in `UpdateUserDto` — the DTO property `FullName` binds from `fullName` (camelCase). Every time a worker saves their profile from the mobile app, the name change is silently discarded. This is unrelated to the nomenclator feature but was introduced alongside it and affects the same file.
-
-These two gaps share a single root area: the Users API response layer was not fully updated as part of Plan 03. Both are small changes: add `string? County` to `UserResponseDto`, add `p.County` to `ToDto`, and fix the `full_name` key in profile.tsx.
+None.
 
 ---
 
-_Verified: 2026-04-25T14:00:00Z_
+## Required Artifacts
+
+| Artifact | Expected | Status | Details |
+|----------|----------|--------|---------|
+| `frontend/src/data/ro-nomenclator.json` | Full communes — 2898 entries | VERIFIED | 2898 cities; 42 counties; AR=74; B=6 sectors |
+| `mobile/assets/ro-nomenclator.json` | Identical copy | VERIFIED | 2898 cities — matches web |
+| `frontend/src/data/__tests__/ro-nomenclator.test.js` | NOM-07 (AR>=50) + NOM-08 (total>1000) tests | VERIFIED | Lines 39-47: NOM-07 and NOM-08 present; 7 total tests |
+| `frontend/src/components/LocationPicker.jsx` | MapRecenter with useMap().flyTo() | VERIFIED | Lines 15-21: `function MapRecenter({ lat, lng })` using `useMap()` + `useEffect` with `flyTo`; used at line 118 inside `MapContainer` |
+| `frontend/src/components/CountyCityPicker.jsx` | shouldTouch: true in all setValue calls | VERIFIED | Lines 11, 12, 16: all 3 setValue calls include `{ shouldDirty: true, shouldTouch: true }` |
+| `mobile/components/CountyCityPickerMobile.tsx` | No presentationStyle on either Modal | VERIFIED | Zero occurrences of `presentationStyle`; both Modals retain `animationType="slide"` |
+| `backend/HandyLink.Core/DTOs/UserResponseDto.cs` | string? County field | VERIFIED | Line 9: `string? County,` — previously missing, now present |
+
+---
+
+## Key Link Verification
+
+| From | To | Via | Status | Details |
+|------|----|-----|--------|---------|
+| LocationPicker.jsx `MapContainer` | MapRecenter | `<MapRecenter lat={latitude} lng={longitude} />` at line 118 | WIRED | Inside MapContainer; receives live latitude/longitude props |
+| MapRecenter | Leaflet map | `useMap().flyTo([lat, lng], 14)` in useEffect | WIRED | Triggered on lat/lng change |
+| CountyCityPicker.jsx `handleCountyChange` | RHF isDirty | `setValue('county', ..., { shouldDirty: true, shouldTouch: true })` | WIRED | Both county and city cleared with shouldTouch |
+| CountyCityPickerMobile.tsx county trigger | County Modal | `onPress={() => setCountyModalVisible(true)}` | WIRED | No presentationStyle blocking; animationType="slide" |
+| CountyCityPickerMobile.tsx city trigger | City Modal | `onPress={() => setCityModalVisible(true)}` | WIRED | No presentationStyle blocking; animationType="slide" |
+| ro-nomenclator.json | CountyCityPicker.jsx | `import nomenclator from '../data/ro-nomenclator.json'` | WIRED | 2898 cities available to county/city dropdowns |
+| ro-nomenclator.json | CountyCityPickerMobile.tsx | `import nomenclator from '../assets/ro-nomenclator.json'` | WIRED | 2898 cities available to mobile modals |
+| UserService.ToDto | UserResponseDto | `p.County` at position 6 in constructor call | WIRED | Previously omitted; now included |
+| mobile profile.tsx mutation | PUT /api/users/me | `{ fullName: name, city, county }` | WIRED | camelCase key; binds to UpdateUserDto.FullName |
+
+---
+
+## Data-Flow Trace (Level 4)
+
+| Artifact | Data Variable | Source | Produces Real Data | Status |
+|----------|---------------|--------|-------------------|--------|
+| LocationPicker.jsx MapRecenter | `lat`, `lng` props | `latitude`/`longitude` props from parent (PostJobPage city selection flow) | Yes — geocoded from Nominatim on city select | FLOWING |
+| CountyCityPicker.jsx | `cities` | `nomenclator.cities.filter(c => c.county_id === countyId)` | Yes — 2898-entry JSON, up to 74 for Arad | FLOWING |
+| CountyCityPickerMobile.tsx | `cities` | `nomenclator.cities.filter(c => c.county_id === county)` | Yes — same 2898-entry JSON | FLOWING |
+| EditProfilePage.jsx | `county` (reset) | `userProfile.county` from GET /api/users/me → UserResponseDto.County | Yes — County now in response DTO | FLOWING |
+| mobile profile.tsx | `county` state | `data.county` from useQuery → GET /api/users/me | Yes — County now in response DTO | FLOWING |
+
+---
+
+## Behavioral Spot-Checks
+
+Step 7b: SKIPPED — all artifacts require a running Vite dev server or Expo app. Static structure checks confirm implementation is in place.
+
+| Behavior | Static Check | Result | Status |
+|----------|-------------|--------|--------|
+| Nomenclator 2898 entries | `node -e` count on JSON | 2898 | PASS |
+| AR county 74 entries | `node -e` filter on JSON | 74 | PASS |
+| B sectors 6 | `node -e` filter on JSON | 6 | PASS |
+| MapRecenter exists and uses flyTo | grep on LocationPicker.jsx | Lines 15-21 confirmed | PASS |
+| JobMap import removed | grep on LocationPicker.jsx | Zero matches | PASS |
+| shouldTouch in CountyCityPicker | grep on CountyCityPicker.jsx | 3 matches on lines 11, 12, 16 | PASS |
+| presentationStyle absent in mobile picker | grep on CountyCityPickerMobile.tsx | Zero matches | PASS |
+| animationType preserved | grep on CountyCityPickerMobile.tsx | 2 matches | PASS |
+| UserResponseDto has County | grep on UserResponseDto.cs | Line 9 confirmed | PASS |
+| UserService.ToDto passes p.County | grep on UserService.cs | Line 62 confirmed | PASS |
+| Mobile profile.tsx uses fullName | grep on profile.tsx | Line 76 confirmed | PASS |
+| Mobile nomenclator matches web | `node -e` count | 2898 | PASS |
+
+---
+
+## Requirements Coverage
+
+| Requirement | Plans | Description | Status | Evidence |
+|-------------|-------|-------------|--------|----------|
+| NOM-DATA | 07 | Full commune coverage in nomenclator | VERIFIED | 2898 entries; AR=74; NOM-07 and NOM-08 tests added |
+| D-05 | 08 | Map re-centers on city selection | VERIFIED (static) | MapRecenter flyTo wired in LocationPicker.jsx |
+| D-03 | 08 | Save activates on county change | VERIFIED (static) | shouldTouch: true in all setValue calls |
+| D-02 | 09 | Mobile picker modal opens on tap | VERIFIED (static) | presentationStyle removed from both modals |
+
+---
+
+## Anti-Patterns Found
+
+| File | Line | Pattern | Severity | Impact |
+|------|------|---------|----------|--------|
+| `frontend/src/pages/PostJobPage.jsx` | ~33-43 | `handleCitySelect` has no try/catch around Nominatim fetch | Warning | Pre-existing; unhandled rejection on network failure; not introduced by these plans |
+| `mobile/app/(client)/post-job.tsx` | ~65-75 | `handleCitySelect` has no try/catch around Nominatim fetch | Warning | Pre-existing; same risk as above |
+
+No new anti-patterns introduced by plans 07, 08, or 09.
+
+---
+
+## Human Verification Required
+
+### 1. Map Re-center on Second City Selection
+
+**Test:** Open Post Job page, select a county and city — map appears. Without refreshing, change the city dropdown to a different city.
+**Expected:** Map visually animates (flyTo) to the new city's coordinates; map pin moves.
+**Why human:** Leaflet flyTo is a runtime side-effect triggered by React's useEffect; cannot drive in static test.
+
+### 2. Save Button Activates After County Change
+
+**Test:** Log in as a user with a saved county. Open Edit Profile — county is pre-populated. Change the Județ dropdown to a different county.
+**Expected:** Save button becomes enabled (isDirty = true).
+**Why human:** isDirty computation depends on RHF runtime state after reset(); requires live form interaction.
+
+### 3. County Pre-population on Edit Profile (WR-01 regression check)
+
+**Test:** Save a county via Edit Profile (web or mobile). Reload the page or re-enter edit mode.
+**Expected:** County picker shows the previously saved county pre-selected.
+**Why human:** Round-trip requires live API + Supabase database with a real user session.
+
+### 4. Mobile County Modal Opens on Tap (Android)
+
+**Test:** On an Android device or emulator, open the worker profile, tap Edit Profile, tap the Județ field.
+**Expected:** Full-screen slide-up modal appears listing all 42 Romanian counties.
+**Why human:** Modal render behavior on Android requires a device/emulator; presentationStyle removal cannot be verified by static analysis.
+
+### 5. Mobile City Modal Opens After County Selected
+
+**Test:** After selecting a county in the worker profile edit mode, tap the Oraș / Comună field.
+**Expected:** Modal opens with the list of communes/cities for the selected county (up to 74 for Arad).
+**Why human:** Same constraint as above — requires Android device or emulator.
+
+---
+
+## Gaps Summary
+
+No gaps. All 7 must-haves pass static verification. The 2 gaps from the previous verification (WR-01 UserResponseDto County, WR-04 mobile full_name key) are confirmed closed. The 4 UAT gap fixes from plans 07/08/09 are confirmed present and wired. Status is human_needed because 5 behavioral tests require a running app or Android device.
+
+---
+
+_Verified: 2026-04-26T08:30:00Z_
 _Verifier: Claude (gsd-verifier)_

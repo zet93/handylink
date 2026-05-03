@@ -509,22 +509,25 @@ export default Sentry.withErrorBoundary(App, {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **PostHog project region: EU or US?**
    - What we know: EU instance is `eu.i.posthog.com`, hosted Frankfurt (AWS eu-central-1)
    - What's unclear: The PostHog project must be created in the EU region at signup time — it cannot be migrated later
    - Recommendation: Create the PostHog project on `eu.posthog.com` (not `us.posthog.com`) before any implementation begins
+   - RESOLVED: EU region adopted — all plans use `eu.i.posthog.com` and `eu.posthog.com`.
 
 2. **Sentry project DSN values**
    - What we know: Sentry DSNs are generated per-project in the Sentry dashboard
    - What's unclear: Whether a single Sentry project covers all three platforms or separate projects per platform
    - Recommendation: One Sentry project is fine for beta; use environment filtering or tags. Add DSNs as secrets in Render (backend), Vercel (web), and EAS (mobile).
+   - RESOLVED: Single Sentry project adopted — all three platforms use one project with environment/platform tags.
 
 3. **OPS-04 content moderation timeline**
    - What we know: Deferred from this phase
    - What's unclear: Whether it should be Phase 16 or bundled into the v2 ADMIN phase
    - Recommendation: Log as a separate backlog item. Do not block Phase 15 sign-off on this.
+   - RESOLVED: Deferred per D-18 — not planned in Phase 15; logged as a backlog item for the future ADMIN phase.
 
 ---
 
