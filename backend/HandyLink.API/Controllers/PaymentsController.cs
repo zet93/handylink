@@ -4,6 +4,7 @@ using HandyLink.API.Features.Payments.WorkerConnectOnboard;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace HandyLink.API.Controllers;
 
@@ -12,6 +13,7 @@ namespace HandyLink.API.Controllers;
 public class PaymentsController(IMediator mediator) : BaseController
 {
     [HttpPost("create-intent")]
+    [EnableRateLimiting("api_write")]
     public async Task<IActionResult> CreateIntent([FromBody] CreateIntentRequest req, CancellationToken ct)
     {
         var result = await mediator.Send(new CreatePaymentIntentCommand(req.JobId, GetUserId()), ct);

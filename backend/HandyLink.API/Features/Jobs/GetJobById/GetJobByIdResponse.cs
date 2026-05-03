@@ -8,8 +8,12 @@ public record GetJobByIdResponse(
     string Category,
     string City,
     string Country,
+    string? County,
     string[] Photos,
     decimal? BudgetMin,
     decimal? BudgetMax,
     string Status,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address);

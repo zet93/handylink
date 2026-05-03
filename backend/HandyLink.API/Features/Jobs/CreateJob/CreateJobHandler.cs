@@ -19,9 +19,13 @@ public class CreateJobHandler(HandyLinkDbContext context)
             Category = command.Category,
             City = command.City,
             Country = command.Country,
+            County = command.County,
             Photos = command.Photos ?? [],
             BudgetMin = command.BudgetMin,
             BudgetMax = command.BudgetMax,
+            Latitude = command.Latitude,
+            Longitude = command.Longitude,
+            Address = command.Address,
             Status = JobStatus.Open,
             CreatedAt = DateTimeOffset.UtcNow,
             UpdatedAt = DateTimeOffset.UtcNow
@@ -31,7 +35,8 @@ public class CreateJobHandler(HandyLinkDbContext context)
         await context.SaveChangesAsync(cancellationToken);
 
         return new CreateJobResponse(job.Id, job.ClientId, job.Title, job.Description,
-            job.Category.ToString(), job.City, job.Country,
-            job.BudgetMin, job.BudgetMax, job.Status, job.CreatedAt);
+            job.Category.ToString(), job.City, job.Country, job.County,
+            job.BudgetMin, job.BudgetMax, job.Status, job.CreatedAt,
+            job.Latitude, job.Longitude, job.Address);
     }
 }

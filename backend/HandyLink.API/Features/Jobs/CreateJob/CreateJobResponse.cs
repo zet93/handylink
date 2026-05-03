@@ -10,7 +10,11 @@ public record CreateJobResponse(
     string Category,
     string City,
     string Country,
+    string? County,
     decimal? BudgetMin,
     decimal? BudgetMax,
     JobStatus Status,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address);

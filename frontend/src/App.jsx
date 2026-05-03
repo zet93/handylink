@@ -16,6 +16,9 @@ import MyJobsPage from './pages/MyJobsPage';
 import WorkerProfilePage from './pages/WorkerProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
+import RoleSelectPage from './pages/RoleSelectPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
+import PasswordGate from './components/PasswordGate';
 
 const queryClient = new QueryClient();
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -33,6 +36,7 @@ function AuthLayout() {
 
 export default function App() {
   return (
+    <PasswordGate>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Elements stripe={stripePromise}>
@@ -41,13 +45,19 @@ export default function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/auth-callback" element={<AuthCallbackPage />} />
+            <Route path="/select-role" element={<RoleSelectPage />} />
             <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>}>
               <Route path="/jobs" element={<JobsPage />} />
               <Route path="/jobs/:id" element={<JobDetailPage />} />
-              <Route path="/post-job" element={<PostJobPage />} />
               <Route path="/worker/browse" element={<WorkerBrowsePage />} />
-              <Route path="/my-jobs" element={<MyJobsPage />} />
               <Route path="/worker/:id" element={<WorkerProfilePage />} />
+            </Route>
+
+            {/* Protected routes — require auth */}
+            <Route element={<ProtectedRoute><AuthLayout /></ProtectedRoute>}>
+              <Route path="/post-job" element={<PostJobPage />} />
+              <Route path="/my-jobs" element={<MyJobsPage />} />
               <Route path="/profile" element={<EditProfilePage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
             </Route>
@@ -56,5 +66,6 @@ export default function App() {
         </Elements>
       </AuthProvider>
     </QueryClientProvider>
+    </PasswordGate>
   );
 }

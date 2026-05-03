@@ -1,22 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
+import LocationPicker from '../components/LocationPicker';
+import CountyCityPicker from '../components/CountyCityPicker';
+
+function RadiusSelector({ value, onChange }) {
+  const options = [10, 20, 50, 100];
+  return (
+    <div className="flex gap-2">
+      {options.map(km => (
+        <button
+          key={km}
+          type="button"
+          onClick={() => onChange(km)}
+          className={`px-4 py-2 rounded-lg text-sm ${
+            value === km
+              ? 'bg-blue-600 text-white font-semibold'
+              : 'bg-slate-50 text-gray-900 border border-gray-300'
+          }`}
+        >
+          {km} km
+        </button>
+      ))}
+    </div>
+  );
+}
 
 const schema = z.object({
   fullName: z.string().min(2, 'Full name is required'),
   bio: z.string().optional(),
+  county: z.string().optional(),
   city: z.string().optional(),
-  country: z.string().optional(),
   phone: z.string().optional(),
 });
 
 export default function EditProfilePage() {
   const { userProfile } = useAuth();
+  const [workerLocation, setWorkerLocation] = useState({ latitude: null, longitude: null, address: null });
+  const [radiusKm, setRadiusKm] = useState(20);
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting, isDirty }, setError } = useForm({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting, isDirty }, setError, setValue, control } = useForm({
     resolver: zodResolver(schema),
   });
 
@@ -25,30 +51,43 @@ export default function EditProfilePage() {
       reset({
         fullName: userProfile.full_name ?? '',
         bio: userProfile.bio ?? '',
+        county: userProfile.county ?? '',
         city: userProfile.city ?? '',
-        country: userProfile.country ?? '',
         phone: userProfile.phone ?? '',
       });
     }
   }, [userProfile, reset]);
 
+  const isWorker = userProfile?.role === 'worker' || userProfile?.role === 'both';
+
   async function onSubmit(data) {
     try {
-      await axiosClient.put('/api/users/me', {
-        fullName: data.fullName,
-        bio: data.bio || null,
-        city: data.city || null,
-        country: data.country || null,
-        phone: data.phone || null,
-        avatarUrl: userProfile?.avatar_url ?? null,
-      });
+      const calls = [
+        axiosClient.put('/api/users/me', {
+          fullName: data.fullName,
+          bio: data.bio || null,
+          county: data.county || null,
+          city: data.city || null,
+          country: userProfile?.country || null,
+          phone: data.phone || null,
+          avatarUrl: userProfile?.avatar_url ?? null,
+        }),
+      ];
+      if (isWorker) {
+        calls.push(
+          axiosClient.put('/api/users/me/location', {
+            latitude: workerLocation.latitude,
+            longitude: workerLocation.longitude,
+            serviceRadiusKm: workerLocation.latitude ? radiusKm : null,
+          })
+        );
+      }
+      await Promise.all(calls);
       reset(data);
     } catch (err) {
       setError('root', { message: err.response?.data?.error ?? 'Failed to save profile' });
     }
   }
-
-  const isWorker = userProfile?.role === 'worker' || userProfile?.role === 'both';
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -73,22 +112,12 @@ export default function EditProfilePage() {
             placeholder="Tell clients about yourself…"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">City</label>
-            <input
-              {...register('city')}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Country</label>
-            <input
-              {...register('country')}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
+        <CountyCityPicker
+          register={register}
+          control={control}
+          setValue={setValue}
+          errors={errors}
+        />
         <div>
           <label className="block text-sm font-medium mb-1">Phone</label>
           <input
@@ -122,6 +151,26 @@ export default function EditProfilePage() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {isWorker && (
+        <div className="bg-white border rounded-xl p-6 mt-6">
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold">Service Area (optional)</h2>
+            <LocationPicker
+              latitude={workerLocation.latitude}
+              longitude={workerLocation.longitude}
+              address={workerLocation.address}
+              onChange={setWorkerLocation}
+            />
+            {workerLocation.latitude && (
+              <div>
+                <label className="block text-sm font-semibold mb-1">Work radius</label>
+                <RadiusSelector value={radiusKm} onChange={setRadiusKm} />
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

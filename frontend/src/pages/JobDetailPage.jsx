@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { usePostHog } from '@posthog/react';
 import { useAuth } from '../context/AuthContext';
 import axiosClient from '../api/axiosClient';
+import { getCategoryLabel } from '../constants/categories';
 import PaymentForm from '../components/PaymentForm';
+import AuthPromptModal from '../components/AuthPromptModal';
+import JobMap from '../components/JobMap';
 
 const bidSchema = z.object({
   priceEstimate: z.coerce.number().positive('Must be a positive number'),
@@ -99,6 +103,7 @@ function ClientView({ job, bids, onStatusChange }) {
 
 function WorkerView({ job, bids, userId }) {
   const queryClient = useQueryClient();
+  const posthog = usePostHog()
   const myBid = bids.find(b => b.workerId === userId);
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
@@ -108,6 +113,7 @@ function WorkerView({ job, bids, userId }) {
   const submitBid = useMutation({
     mutationFn: data => axiosClient.post(`/api/jobs/${job.id}/bids`, data),
     onSuccess: () => {
+      posthog?.capture('bid_submitted', { job_id: job.id })
       queryClient.invalidateQueries({ queryKey: ['bids', job.id] });
       reset();
     },
@@ -178,8 +184,10 @@ function WorkerView({ job, bids, userId }) {
 
 export default function JobDetailPage() {
   const { id } = useParams();
-  const { userProfile } = useAuth();
+  const location = useLocation();
+  const { user, userProfile } = useAuth();
   const queryClient = useQueryClient();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const { data: job, isLoading: jobLoading } = useQuery({
     queryKey: ['job', id],
@@ -189,7 +197,7 @@ export default function JobDetailPage() {
   const { data: bids = [] } = useQuery({
     queryKey: ['bids', id],
     queryFn: () => axiosClient.get(`/api/jobs/${id}/bids`).then(r => r.data),
-    enabled: !!job,
+    enabled: !!job && !!user,
   });
 
   const updateStatus = useMutation({
@@ -205,6 +213,8 @@ export default function JobDetailPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white border rounded-xl p-6 mb-6">
+      <div className="mb-4 rounded-lg border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">Secure your work: Workers should submit a bid using the form, and clients can choose the best offer and proceed by marking in progress. Communicate openly in bid messages.</div>
+
         <div className="flex items-start justify-between gap-4 mb-3">
           <h1 className="text-2xl font-bold">{job.title}</h1>
           <span className={`text-sm px-3 py-1 rounded-full capitalize whitespace-nowrap ${
@@ -214,8 +224,14 @@ export default function JobDetailPage() {
           </span>
         </div>
         <p className="text-gray-700 mb-4">{job.description}</p>
+        {job.latitude && job.longitude && (
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-2">Location</h2>
+            <JobMap latitude={job.latitude} longitude={job.longitude} address={job.address} />
+          </div>
+        )}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm text-gray-600">
-          <div><span className="font-medium">Category:</span> {job.category.replace('_', ' ')}</div>
+          <div><span className="font-medium">Category:</span> {getCategoryLabel(job.category)}</div>
           <div><span className="font-medium">Location:</span> {job.city}, {job.country}</div>
           {job.budgetMin && <div><span className="font-medium">Min:</span> {job.budgetMin} RON</div>}
           {job.budgetMax && <div><span className="font-medium">Max:</span> {job.budgetMax} RON</div>}
@@ -224,9 +240,25 @@ export default function JobDetailPage() {
 
       {isOwner ? (
         <ClientView job={job} bids={bids} onStatusChange={s => updateStatus.mutate(s)} />
-      ) : (
+      ) : user ? (
         <WorkerView job={job} bids={bids} userId={userProfile?.id} />
-      )}
+      ) : (job.status === 'open' || job.status === 'bidding') ? (
+        <div className="border rounded-xl p-4 bg-white text-center">
+          <h2 className="font-semibold mb-2">Interested in this job?</h2>
+          <p className="text-sm text-gray-500 mb-4">Log in to submit a bid.</p>
+          <button
+            onClick={() => setShowAuthModal(true)}
+            className="bg-blue-600 text-white rounded-lg px-6 py-2 text-sm font-medium hover:bg-blue-700"
+          >
+            Submit a Bid
+          </button>
+          <AuthPromptModal
+            isOpen={showAuthModal}
+            onClose={() => setShowAuthModal(false)}
+            returnPath={location.pathname}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

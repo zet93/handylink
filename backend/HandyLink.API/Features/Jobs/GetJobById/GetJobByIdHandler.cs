@@ -15,7 +15,8 @@ public class GetJobByIdHandler(HandyLinkDbContext context)
             ?? throw new NotFoundException("Job not found.");
 
         return new GetJobByIdResponse(job.Id, job.ClientId, job.Title, job.Description,
-            job.Category.ToString(), job.City, job.Country, job.Photos,
-            job.BudgetMin, job.BudgetMax, job.Status.ToString(), job.CreatedAt);
+            job.Category.ToString(), job.City, job.Country, job.County, job.Photos,
+            job.BudgetMin, job.BudgetMax, job.Status.ToString(), job.CreatedAt,
+            job.Latitude, job.Longitude, job.Address);
     }
 }

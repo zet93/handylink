@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const schema = z.object({
@@ -10,8 +10,9 @@ const schema = z.object({
 });
 
 export default function LoginPage() {
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm({
     resolver: zodResolver(schema),
   });
@@ -22,7 +23,8 @@ export default function LoginPage() {
       setError('root', { message: error.message });
       return;
     }
-    navigate('/jobs');
+    const returnTo = searchParams.get('return') || '/jobs';
+    navigate(returnTo);
   }
 
   return (
@@ -57,9 +59,21 @@ export default function LoginPage() {
             {isSubmitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+        <div className="flex items-center gap-3 my-2">
+          <hr className="flex-1 border-gray-200" />
+          <span className="text-xs text-gray-400">or</span>
+          <hr className="flex-1 border-gray-200" />
+        </div>
+        <button
+          type="button"
+          onClick={signInWithGoogle}
+          className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 font-medium hover:bg-gray-50"
+        >
+          Continue with Google
+        </button>
         <p className="mt-4 text-sm text-center text-gray-600">
           No account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">Create one</Link>
+          <Link to={`/register${searchParams.get('return') ? `?return=${searchParams.get('return')}` : ''}`} className="text-blue-600 hover:underline">Create one</Link>
         </p>
       </div>
     </div>

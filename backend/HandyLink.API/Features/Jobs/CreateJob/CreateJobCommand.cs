@@ -10,7 +10,11 @@ public record CreateJobCommand(
     JobCategory Category,
     string City,
     string Country,
+    string? County,
     string[]? Photos,
     decimal? BudgetMin,
-    decimal? BudgetMax
+    decimal? BudgetMax,
+    decimal? Latitude,
+    decimal? Longitude,
+    string? Address
 ) : IRequest<CreateJobResponse>;
