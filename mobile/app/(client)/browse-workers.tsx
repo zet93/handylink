@@ -7,7 +7,7 @@ const WORKERS = [
   { id: '3', name: 'Alex Dobre', rating: 4.7, reviewCount: 18, jobCount: 72, location: 'Timisoara' },
 ];
 
-function WorkerCard({ worker }) {
+function WorkerCard({ worker }: { worker: typeof WORKERS[number] }) {
   return (
     <View style={styles.card}>
       <Text style={styles.name}>{worker.name}</Text>

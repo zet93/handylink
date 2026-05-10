@@ -15,6 +15,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../services/supabase';
 import api from '../../services/api';
 
+interface ProfileData {
+  fullName?: string;
+  full_name?: string;
+  city?: string;
+  email?: string;
+  role?: string;
+}
+
 export default function ClientProfileScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -22,13 +30,9 @@ export default function ClientProfileScreen() {
   const [name, setName] = useState('');
   const [city, setCity] = useState('');
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading } = useQuery<ProfileData>({
     queryKey: ['me'],
     queryFn: () => api.get('/api/users/me').then(r => r.data),
-    onSuccess: (data: any) => {
-      setName(data.fullName ?? data.full_name ?? '');
-      setCity(data.city ?? '');
-    },
   } as any);
 
   const { mutate: saveProfile, isPending: saving } = useMutation({
