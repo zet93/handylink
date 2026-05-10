@@ -70,22 +70,14 @@ export function AuthProvider({ children }) {
   }
 
   async function signUp(email, password, fullName, role) {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name: fullName, role } },
+    });
     if (error) return { error };
 
-    const userId = data.user.id;
-
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .insert({ id: userId, full_name: fullName, role });
-    if (profileError) return { error: profileError };
-
     posthog?.capture('account_created', { role });
-
-    if (role === 'worker' || role === 'both') {
-      await supabase.from('worker_profiles').insert({ id: userId });
-    }
-
     return { data };
   }
 
