@@ -51,6 +51,15 @@ function RadiusSelector({ value, onChange }: { value: number; onChange: (v: numb
   );
 }
 
+interface ProfileData {
+  fullName?: string;
+  full_name?: string;
+  city?: string;
+  county?: string;
+  email?: string;
+  role?: string;
+}
+
 export default function WorkerProfileScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -60,16 +69,9 @@ export default function WorkerProfileScreen() {
   const [county, setCounty] = useState('');
   const [countyLabel, setCountyLabel] = useState('');
 
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading } = useQuery<ProfileData>({
     queryKey: ['me'],
     queryFn: () => api.get('/api/users/me').then(r => r.data),
-    onSuccess: (data: any) => {
-      setName(data.fullName ?? data.full_name ?? '');
-      setCity(data.city ?? '');
-      setCounty(data.county ?? '');
-      const found = nomenclator.counties.find(c => c.id === (data.county ?? ''));
-      setCountyLabel(found?.name ?? '');
-    },
   } as any);
 
   const { mutate: saveProfile, isPending: saving } = useMutation({

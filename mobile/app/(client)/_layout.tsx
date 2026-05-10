@@ -12,7 +12,6 @@ export default function ClientLayout() {
           tabBarStyle: { backgroundColor: palette.panel },
           tabBarActiveTintColor: palette.accent,
           tabBarInactiveTintColor: palette.muted,
-          sceneContainerStyle: { backgroundColor: palette.background },
         }}
       >
         <Tabs.Screen
