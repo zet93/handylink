@@ -9,16 +9,12 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-      - uses: supabase/setup-cli@v1
+      - uses: actions/checkout@v4
 
-      - name: Start Supabase services
-        run: supabase start
+      - uses: supabase/setup-cli@v1
 
       - name: Dump database
         run: supabase db dump --db-url "${{ secrets.SUPABASE_DB_URL }}" -f backup.sql
-
-      - name: Stop Supabase services
-        run: supabase stop
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
