@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Ping backend
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://handylink.onrender.com/health)
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 https://handylink.onrender.com/health || echo "000")
           echo "Backend responded with HTTP $STATUS"
