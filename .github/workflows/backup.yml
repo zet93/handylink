@@ -21,7 +21,7 @@ jobs:
           sudo apt-get install -y postgresql-client-17
 
       - name: Dump database
-        run: pg_dump --no-check-version "${{ secrets.SUPABASE_DB_URL }}" -f backup.sql
+        run: /usr/lib/postgresql/17/bin/pg_dump --no-check-version "${{ secrets.SUPABASE_DB_URL }}" -f backup.sql
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
